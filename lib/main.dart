@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:x_clone/features/auth/view/login.dart';
+import 'package:x_clone/features/auth/view/authenticate.dart';
 import 'package:x_clone/theme/app_theme.dart';
-
-import 'features/auth/auth.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +14,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.darkTheme(),
-      home: const LogIn(),
+      home: const Authenticate(),
     );
   }
 }

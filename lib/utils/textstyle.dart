@@ -8,7 +8,7 @@ TextStyle kTextStyle(
   return TextStyle(
     fontSize: size,
     fontWeight: fontWeight ?? FontWeight.normal,
-    color: color ?? Colors.black,
+    color: color ?? Colors.white,
     fontFamily: 'Roboto',
   );
 }
