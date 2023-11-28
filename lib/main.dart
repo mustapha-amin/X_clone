@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:x_clone/theme/app_theme.dart';
 
 import 'features/auth/view/authenticate.dart';
 
@@ -13,7 +14,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Authentication(),
+      theme: AppTheme.darkTheme(),
+      home: const Authentication(),
     );
   }
 }
