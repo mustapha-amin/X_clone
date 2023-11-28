@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-
-import 'features/auth/view/authenticate.dart';
+import 'package:x_clone/features/auth/view/authenticate.dart';
+import 'package:x_clone/theme/app_theme.dart';
 
 void main() {
-  runApp(const MyApp(
-  ));
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -13,7 +12,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Authentication(),
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.darkTheme(),
+      home: const Authenticate(),
     );
   }
 }
