@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "329082446091",
-    "project_id": "x-clone-25017",
-    "storage_bucket": "x-clone-25017.appspot.com"
+    "project_number": "626883868212",
+    "project_id": "x-clone-cf3dd",
+    "storage_bucket": "x-clone-cf3dd.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:329082446091:android:7bda507fb05a0fe8e3820e",
+        "mobilesdk_app_id": "1:626883868212:android:6af59c107bb89c8c527c61",
         "android_client_info": {
           "package_name": "com.mustapha.x_clone"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyA8e1hl1Eh4geYGEDjTxSL3xrkhXft9iak"
+          "current_key": "AIzaSyD2s1Dj458ADiZGbVL_tTGWhLw54_qYa3E"
         }
       ],
       "services": {

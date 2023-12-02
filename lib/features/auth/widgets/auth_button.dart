@@ -30,7 +30,7 @@ class AuthButton extends StatelessWidget {
           style: ElevatedButton.styleFrom(
             backgroundColor: bgColor ?? Colors.white,
           ),
-          onPressed: onPressed,
+          onPressed:  onPressed,
           child: Row(
             mainAxisAlignment:
                 isGoogle! ? MainAxisAlignment.start : MainAxisAlignment.center,
