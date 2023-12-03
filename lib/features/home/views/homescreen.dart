@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:x_clone/common/x_avatar.dart';
 import 'package:x_clone/constants/svg_paths.dart';
 import 'package:x_clone/core/core.dart';
 import 'package:x_clone/utils/extensions.dart';
@@ -25,20 +26,7 @@ class HomeScreen extends ConsumerWidget {
           return [
             SliverAppBar(
               leadingWidth: context.screenWidth * .2,
-              leading: InkWell(
-                onTap: () => Scaffold.of(context).openDrawer(),
-                child: Container(
-                  decoration: const BoxDecoration(
-                    color: Colors.grey,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Center(
-                      child: Text(
-                    user!.displayName![0],
-                    style: kTextStyle(20),
-                  )),
-                ).padAll(10),
-              ),
+              leading: const XAvatar(),
               title: SvgPicture.asset(
                 SvgPaths.x_icon,
                 colorFilter: const ColorFilter.mode(

@@ -2,6 +2,7 @@ import 'package:feather_icons/feather_icons.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:x_clone/common/x_avatar.dart';
 import 'package:x_clone/utils/utils.dart';
 import '../../../core/core.dart';
 
@@ -22,20 +23,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
       slivers: [
         SliverAppBar(
           leadingWidth: context.screenWidth * .2,
-          leading: InkWell(
-            onTap: () => Scaffold.of(context).openDrawer(),
-            child: Container(
-              decoration: const BoxDecoration(
-                color: Colors.grey,
-                shape: BoxShape.circle,
-              ),
-              child: Center(
-                  child: Text(
-                user!.displayName![0],
-                style: kTextStyle(20),
-              )),
-            ).padAll(10),
-          ),
+          leading: const XAvatar(),
           title: SearchBar(
             controller: searchController,
             constraints: BoxConstraints(

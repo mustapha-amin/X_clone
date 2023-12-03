@@ -87,9 +87,11 @@ class _XBottomNavBarState extends ConsumerState<XBottomNavBar> {
                 label: '',
               ),
               BottomNavigationBarItem(
-                icon: Icon(index == 3
-                    ? Icons.local_post_office
-                    : Icons.local_post_office_outlined),
+                icon: Icon(
+                  index == 3
+                      ? Icons.local_post_office
+                      : Icons.local_post_office_outlined,
+                ),
                 label: '',
               ),
             ],
