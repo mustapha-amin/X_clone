@@ -24,11 +24,12 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
         SliverAppBar(
           leadingWidth: context.screenWidth * .2,
           leading: const XAvatar(),
+          titleSpacing: 0,
           title: SearchBar(
             controller: searchController,
             constraints: BoxConstraints(
               minHeight: context.screenHeight * .065,
-              minWidth: context.screenWidth * .6,
+              minWidth: context.screenWidth * .8,
             ),
             shape: MaterialStatePropertyAll(
               RoundedRectangleBorder(
