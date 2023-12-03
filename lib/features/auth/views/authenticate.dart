@@ -34,8 +34,9 @@ class _AuthenticateState extends ConsumerState<Authenticate> {
   @override
   Widget build(BuildContext context) {
     bool isLoading = ref.watch(authControllerProvider);
+    bool isLoadingGoogle = ref.watch(googleAuthProvider);
     return Scaffold(
-      body: isLoading
+      body: isLoading || isLoadingGoogle
           ? const XLoader()
           : Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25),

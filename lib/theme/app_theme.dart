@@ -11,6 +11,15 @@ class AppTheme {
         backgroundColor: AppColors.blueColor,
         foregroundColor: Colors.white,
       ),
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: AppColors.blueColor,
+        brightness: Brightness.dark,
+      ),
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        backgroundColor: Colors.black,
+        selectedIconTheme: IconThemeData(color: Colors.white),
+        unselectedIconTheme: IconThemeData(color: Colors.white),
+      ),
     );
   }
 
@@ -22,6 +31,10 @@ class AppTheme {
       floatingActionButtonTheme: const FloatingActionButtonThemeData(
         backgroundColor: AppColors.blueColor,
         foregroundColor: Colors.white,
+      ),
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: AppColors.blueColor,
+        brightness: Brightness.light,
       ),
     );
   }

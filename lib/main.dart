@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:x_clone/common/x_loader.dart';
 import 'package:x_clone/features/auth/auth.dart';
 import 'package:x_clone/features/home/home.dart';
-import 'package:x_clone/services/auth_service.dart';
+import 'package:x_clone/features/nav%20bar/nav_bar.dart';
 import 'package:x_clone/theme/app_theme.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import 'core/core.dart';
 import 'firebase_options.dart';
 
 Future main() async {
@@ -26,13 +26,13 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var user = ref.watch(userProvider);
+    var user = ref.watch(authChangesProvider);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.darkTheme(),
       home: user.when(
         data: (userData) =>
-            userData != null ? const HomeScreen() : const Authenticate(),
+            userData != null ? const XBottomNavBar() : const Authenticate(),
         error: (_, __) => const ErrorScreen(),
         loading: () => const XLoader(),
       ),

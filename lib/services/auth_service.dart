@@ -11,10 +11,6 @@ final authServiceProvider = Provider((ref) {
   return AuthService(firebaseAuth: authProvider);
 });
 
-final userProvider = StreamProvider((ref) {
-  return ref.watch(firebaseAuthProvider).authStateChanges();
-});
-
 class AuthService extends BaseAuthService {
   final FirebaseAuth firebaseAuth;
 
