@@ -6,6 +6,7 @@ import 'package:x_clone/features/explore/views/explore_screen.dart';
 import 'package:x_clone/features/home/home.dart';
 import 'package:x_clone/features/messaging/views/message_screen.dart';
 import 'package:x_clone/features/nav%20bar/widgets/XFab.dart';
+import 'package:x_clone/theme/pallete.dart';
 import 'package:x_clone/utils/spacing.dart';
 import '../notification/views/notification_screen.dart';
 
@@ -97,48 +98,76 @@ class _XBottomNavBarState extends ConsumerState<XBottomNavBar> {
             ],
           ),
         ),
-        floatingActionButton: index != 0
-            ? const SizedBox()
-            : switch (isExpanded) {
-                true => Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      XFab(
-                        label: "Go Live",
-                        onTap: () {},
-                        iconData: FeatherIcons.video,
+        floatingActionButton: switch (index) {
+          0 => switch (isExpanded) {
+              true => Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    XFab(
+                      label: "Go Live",
+                      onTap: () {},
+                      iconData: FeatherIcons.video,
+                    ),
+                    VerticalSpacing(size: 10),
+                    XFab(
+                      label: "Spaces",
+                      onTap: () {},
+                      iconData: FeatherIcons.mic,
+                    ),
+                    VerticalSpacing(size: 10),
+                    XFab(
+                      label: "Photos",
+                      onTap: () {},
+                      iconData: Icons.photo,
+                    ),
+                    VerticalSpacing(size: 10),
+                    XFab(
+                      isMain: true,
+                      bgColor: Colors.blue,
+                      fgColor: Colors.white,
+                      label: "Post",
+                      onTap: toggleExpanded,
+                      iconData: FeatherIcons.feather,
+                    ),
+                  ],
+                ),
+              (_) => XFab(
+                  isMain: true,
+                  bgColor: Colors.blue,
+                  fgColor: Colors.white,
+                  onTap: toggleExpanded,
+                  iconData: Icons.add,
+                ),
+            },
+          3 => Stack(
+              alignment: Alignment.center,
+              children: [
+                XFab(
+                  isMain: true,
+                  bgColor: Colors.blue,
+                  fgColor: Colors.white,
+                  onTap: () {},
+                  iconData: Icons.local_post_office_outlined,
+                ),
+                Positioned(
+                  right: 10,
+                  bottom: 15,
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      color: AppColors.blueColor,
+                    ),
+                    child: const Center(
+                      child: Icon(
+                        Icons.add,
+                        size: 14,
                       ),
-                      VerticalSpacing(size: 10),
-                      XFab(
-                        label: "Spaces",
-                        onTap: () {},
-                        iconData: FeatherIcons.mic,
-                      ),
-                      VerticalSpacing(size: 10),
-                      XFab(
-                        label: "Photos",
-                        onTap: () {},
-                        iconData: Icons.photo,
-                      ),
-                      VerticalSpacing(size: 10),
-                      XFab(
-                        isMain: true,
-                        bgColor: Colors.blue,
-                        fgColor: Colors.white,
-                        label: "Post",
-                        onTap: toggleExpanded,
-                        iconData: FeatherIcons.feather,
-                      ),
-                    ],
+                    ),
                   ),
-                (_) => XFab(
-                    isMain: true,
-                    bgColor: Colors.blue,
-                    fgColor: Colors.white,
-                    onTap: toggleExpanded,
-                    iconData: Icons.add,
-                  ),
-              },
+                )
+              ],
+            ),
+          _ => const SizedBox(),
+        },
       ),
     );
   }
