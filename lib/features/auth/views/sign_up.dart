@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:x_clone/common/x_loader.dart';
@@ -24,6 +26,8 @@ class _SignUpState extends ConsumerState<SignUp> {
   ValueNotifier<bool> passwordFieldTapped = ValueNotifier(false);
   ValueNotifier<String?> emailErrorText = ValueNotifier<String?>(null);
   ValueNotifier<String?> passwordErrorText = ValueNotifier<String?>(null);
+  FocusNode focusNode1 = FocusNode();
+  FocusNode focusNode2 = FocusNode();
   bool isObscure = true;
 
   void displayEmailError() {
@@ -66,6 +70,7 @@ class _SignUpState extends ConsumerState<SignUp> {
     return isLoading
         ? const XLoader()
         : Scaffold(
+            resizeToAvoidBottomInset: false,
             appBar: XWidgets.appBar(
               leading: IconButton(
                 icon: const Icon(Icons.clear),
@@ -76,115 +81,145 @@ class _SignUpState extends ConsumerState<SignUp> {
             ),
             body: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 18),
-              child: SingleChildScrollView(
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      VerticalSpacing(size: 10),
-                      Text(
-                        "Create an account",
-                        style: kTextStyle(35, fontWeight: FontWeight.bold)
-                            .copyWith(
-                          letterSpacing: 1,
-                        ),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    VerticalSpacing(size: 10),
+                    Text(
+                      "Create an account",
+                      style:
+                          kTextStyle(35, fontWeight: FontWeight.bold).copyWith(
+                        letterSpacing: 1,
                       ),
-                      VerticalSpacing(size: 25),
-                      ValueListenableBuilder(
-                        valueListenable: emailErrorText,
-                        builder: (context, error, _) => TextFormField(
-                          controller: emailController,
-                          decoration: InputDecoration(
-                            label: Text(
-                              "Email",
-                              style: kTextStyle(15, color: Colors.grey),
-                            ),
-                            errorText: error,
-                            labelStyle:
-                                kTextStyle(15, color: AppColors.blueColor),
-                            focusedBorder: const OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: AppColors.blueColor,
-                                width: 2,
+                    ),
+                    VerticalSpacing(size: 25),
+                    Column(
+                      children: [
+                        ValueListenableBuilder(
+                          valueListenable: emailErrorText,
+                          builder: (context, error, _) => TextFormField(
+                            focusNode: focusNode1,
+                            controller: emailController,
+                            decoration: InputDecoration(
+                              label: Text(
+                                "Email",
+                                style: kTextStyle(15, color: Colors.grey),
                               ),
+                              errorText: error,
+                              labelStyle:
+                                  kTextStyle(15, color: AppColors.blueColor),
+                              focusedBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: AppColors.blueColor,
+                                  width: 2,
+                                ),
+                              ),
+                              focusColor: AppColors.blueColor,
+                              contentPadding:
+                                  const EdgeInsets.symmetric(horizontal: 8),
+                              border: const OutlineInputBorder(),
                             ),
-                            focusColor: AppColors.blueColor,
-                            contentPadding:
-                                const EdgeInsets.symmetric(horizontal: 8),
-                            border: const OutlineInputBorder(),
+                            textInputAction: TextInputAction.next,
+                            onFieldSubmitted: (_) {
+                              focusNode1.unfocus();
+                              FocusScope.of(context).requestFocus(focusNode2);
+                            },
+                            onChanged: (_) {
+                              if (emailFieldTapped.value) {
+                                displayEmailError();
+                              }
+                            },
                           ),
-                          onChanged: (_) {
-                            if (emailFieldTapped.value) {
+                        ),
+                        VerticalSpacing(size: 20),
+                        ValueListenableBuilder(
+                          valueListenable: passwordErrorText,
+                          builder: (context, error, _) => TextFormField(
+                            focusNode: focusNode2,
+                            obscureText: isObscure,
+                            controller: passwordController,
+                            decoration: InputDecoration(
+                              errorText: error,
+                              errorMaxLines: 4,
+                              label: Text(
+                                "Password",
+                                style: kTextStyle(15, color: Colors.grey),
+                              ),
+                              labelStyle:
+                                  kTextStyle(15, color: AppColors.blueColor),
+                              focusedBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: AppColors.blueColor,
+                                  width: 2,
+                                ),
+                              ),
+                              suffixIcon: IconButton(
+                                icon: Icon(isObscure
+                                    ? Icons.visibility
+                                    : Icons.visibility_off),
+                                onPressed: () {
+                                  setState(() {
+                                    isObscure = !isObscure;
+                                  });
+                                },
+                              ),
+                              focusColor: AppColors.blueColor,
+                              contentPadding:
+                                  const EdgeInsets.symmetric(horizontal: 8),
+                              border: const OutlineInputBorder(),
+                            ),
+                            textInputAction: TextInputAction.done,
+                            onFieldSubmitted: (_) {
+                              focusNode2.unfocus();
+                            },
+                            onChanged: (_) {
+                              if (passwordFieldTapped.value) {
+                                displayPasswordError();
+                              }
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    VerticalSpacing(size: context.screenWidth * .2),
+                    const SignUpTermsTwo(),
+                    ListenableBuilder(
+                      listenable: Listenable.merge(
+                        [
+                          emailController,
+                          passwordController,
+                        ],
+                      ),
+                      builder: (context, child) {
+                        bool isEnabled = isValidEmail(emailController.text) &&
+                            isValidPassword(passwordController.text);
+                        return AuthButton(
+                          label: "Sign up",
+                          onPressed: () {
+                            if (isValidEmail(emailController.text) &&
+                                isValidPassword(passwordController.text)) {
+                              try {
+                                signUp();
+                                navigateAndReplace(
+                                    context, const UserDetails());
+                              } catch (e) {
+                                log(e.toString());
+                              }
+                            } else {
+                              toggleFieldsTapped();
                               displayEmailError();
-                            }
-                          },
-                        ),
-                      ),
-                      VerticalSpacing(size: 20),
-                      ValueListenableBuilder(
-                        valueListenable: passwordErrorText,
-                        builder: (context, error, _) => TextFormField(
-                          obscureText: isObscure,
-                          controller: passwordController,
-                          decoration: InputDecoration(
-                            errorText: error,
-                            errorMaxLines: 4,
-                            label: Text(
-                              "Password",
-                              style: kTextStyle(15, color: Colors.grey),
-                            ),
-                            labelStyle:
-                                kTextStyle(15, color: AppColors.blueColor),
-                            focusedBorder: const OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: AppColors.blueColor,
-                                width: 2,
-                              ),
-                            ),
-                            suffixIcon: IconButton(
-                              icon: Icon(isObscure
-                                  ? Icons.visibility
-                                  : Icons.visibility_off),
-                              onPressed: () {
-                                setState(() {
-                                  isObscure = !isObscure;
-                                });
-                              },
-                            ),
-                            focusColor: AppColors.blueColor,
-                            contentPadding:
-                                const EdgeInsets.symmetric(horizontal: 8),
-                            border: const OutlineInputBorder(),
-                          ),
-                          onChanged: (_) {
-                            if (passwordFieldTapped.value) {
                               displayPasswordError();
                             }
                           },
-                        ),
-                      ),
-                      VerticalSpacing(size: context.screenWidth * .2),
-                      const SignUpTermsTwo(),
-                      AuthButton(
-                        label: "Sign up",
-                        onPressed: () {
-                          if (isValidEmail(emailController.text) &&
-                              isValidPassword(passwordController.text)) {
-                            try {
-                              signUp();
-                              navigateAndReplace(context, const UserDetails());
-                            } catch (e) {}
-                          } else {
-                            toggleFieldsTapped();
-                            displayEmailError();
-                            displayPasswordError();
-                          }
-                        },
-                        bgColor: AppColors.blueColor,
-                        fgColor: Colors.white,
-                      ),
-                    ],
-                  ),
+                          bgColor:
+                              isEnabled ? AppColors.blueColor : Colors.grey,
+                          fgColor: Colors.white,
+                        );
+                      },
+                    )
+                  ],
                 ),
               ),
             ),

@@ -11,6 +11,6 @@ abstract class BaseAuthService {
     required String email,
     required String password,
   });
-  
+
   FutureVoid signOut();
 }
