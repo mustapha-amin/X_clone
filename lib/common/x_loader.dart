@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:x_clone/constants/svg_paths.dart';
+import 'package:x_clone/constants/images_paths.dart';
 import '/utils/utils.dart';
 import '/theme/theme.dart';
 
@@ -21,7 +21,7 @@ class XLoader extends StatelessWidget {
                   const CircularProgressIndicator(color: AppColors.blueColor),
             ),
             SvgPicture.asset(
-              SvgPaths.x_icon,
+              ImagesPaths.x_icon,
               color: Colors.white,
               width: 30,
             ),

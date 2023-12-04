@@ -15,7 +15,7 @@ import 'package:x_clone/services/auth/google_auth.dart';
 import 'package:x_clone/utils/extensions.dart';
 import 'package:x_clone/utils/navigation.dart';
 import 'package:x_clone/utils/textstyle.dart';
-import '../../../constants/svg_paths.dart';
+import '../../../constants/images_paths.dart';
 import '../../../utils/spacing.dart';
 import '../widgets/divider.dart';
 
@@ -47,7 +47,7 @@ class _AuthenticateState extends ConsumerState<Authenticate> {
                     VerticalSpacing(size: context.screenHeight * .05),
                     Center(
                       child: SvgPicture.asset(
-                        SvgPaths.x_icon,
+                        ImagesPaths.x_icon,
                         color: Colors.white,
                         width: 25,
                       ),

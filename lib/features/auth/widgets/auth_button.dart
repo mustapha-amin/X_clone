@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:x_clone/constants/svg_paths.dart';
+import 'package:x_clone/constants/images_paths.dart';
 import 'package:x_clone/utils/textstyle.dart';
 
 class AuthButton extends StatelessWidget {
@@ -30,7 +30,7 @@ class AuthButton extends StatelessWidget {
           style: ElevatedButton.styleFrom(
             backgroundColor: bgColor ?? Colors.white,
           ),
-          onPressed:  onPressed,
+          onPressed: onPressed,
           child: Row(
             mainAxisAlignment:
                 isGoogle! ? MainAxisAlignment.start : MainAxisAlignment.center,
@@ -39,7 +39,7 @@ class AuthButton extends StatelessWidget {
                   ? Padding(
                       padding: const EdgeInsets.all(5.0),
                       child: SvgPicture.asset(
-                        SvgPaths.google,
+                        ImagesPaths.google,
                       ),
                     )
                   : const SizedBox(),

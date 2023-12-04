@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:x_clone/utils/textstyle.dart';
-import '../../../constants/svg_paths.dart';
+import '../constants/images_paths.dart';
 
 class DrawerTile extends StatelessWidget {
   String? title;
@@ -10,9 +10,11 @@ class DrawerTile extends StatelessWidget {
   VoidCallback? onTap;
   bool? _isX = false;
 
-  DrawerTile({this.title, this.iconData, this.onTap, this.titleSize, super.key});
+  DrawerTile(
+      {this.title, this.iconData, this.onTap, this.titleSize, super.key});
 
-  DrawerTile.withX({super.key, this.title, this.onTap, this.titleSize}) : _isX = true;
+  DrawerTile.withX({super.key, this.title, this.onTap, this.titleSize})
+      : _isX = true;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +22,7 @@ class DrawerTile extends StatelessWidget {
       child: ListTile(
         leading: _isX!
             ? SvgPicture.asset(
-                SvgPaths.x_icon,
+                ImagesPaths.x_icon,
                 width: 20,
                 colorFilter: const ColorFilter.mode(
                   Colors.white,

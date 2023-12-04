@@ -1,5 +1,9 @@
+import 'dart:developer';
+import 'dart:io';
+import 'package:x_clone/constants/images_paths.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:x_clone/theme/pallete.dart';
 import 'package:x_clone/utils/utils.dart';
 
@@ -17,6 +21,26 @@ class _UserDetailsState extends ConsumerState<UserDetails> {
   FocusNode focusNode1 = FocusNode();
   FocusNode focusNode2 = FocusNode();
   FocusNode focusNode3 = FocusNode();
+  File? profileImage;
+  File? coverImage;
+
+  Future<void> selectImage({bool? isProfileImage = true}) async {
+    try {
+      final ImagePicker imagePicker = ImagePicker();
+      XFile? image = await imagePicker.pickImage(source: ImageSource.gallery);
+      if (image != null && isProfileImage!) {
+        setState(() {
+          profileImage = File(image.path);
+        });
+      } else if (image != null && !isProfileImage!) {
+        setState(() {
+          coverImage = File(image.path);
+        });
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+  }
 
   InputDecoration textfieldDecoration({String? hint}) {
     return InputDecoration(
@@ -50,71 +74,118 @@ class _UserDetailsState extends ConsumerState<UserDetails> {
             Expanded(
               child: SingleChildScrollView(
                 child: Center(
-                    child: Column(
-                  children: [
-                    VerticalSpacing(size: 20),
-                    Stack(
-                      children: [
-                        CircleAvatar(
-                          radius: context.screenWidth * .2,
-                          child: const Icon(
-                            Icons.person,
-                            size: 80,
+                  child: Column(
+                    children: [
+                      VerticalSpacing(size: 20),
+                      Stack(
+                        children: [
+                          Stack(
+                            alignment: Alignment.bottomLeft,
+                            children: [
+                              InkWell(
+                                onTap: () => selectImage(isProfileImage: false),
+                                child: Container(
+                                  height: context.screenHeight * .2,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: Colors.grey.withOpacity(0.3),
+                                    image: coverImage != null
+                                        ? DecorationImage(
+                                            fit: BoxFit.fitWidth,
+                                            image: FileImage(coverImage!),
+                                          )
+                                        : null,
+                                  ),
+                                  child: Center(
+                                    child: Icon(
+                                      Icons.photo_camera_outlined,
+                                      color: Colors.white.withOpacity(0.6),
+                                      size: 45,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                left: 5,
+                                child: Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    Container(
+                                      width: context.screenWidth * .17,
+                                      height: context.screenWidth * .17,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          width: 2,
+                                          color: Colors.black.withOpacity(0.8),
+                                        ),
+                                        color: Colors.grey.withOpacity(0.3),
+                                        image: profileImage != null
+                                            ? DecorationImage(
+                                                fit: BoxFit.cover,
+                                                image: FileImage(profileImage!),
+                                              )
+                                            : null,
+                                      ),
+                                    ),
+                                    InkWell(
+                                      onTap: () => selectImage(),
+                                      child: Icon(
+                                        Icons.photo_camera_outlined,
+                                        size: 30,
+                                        color: Colors.white.withOpacity(0.6),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
+                        ],
+                      ),
+                      VerticalSpacing(size: 40),
+                      TextField(
+                        focusNode: focusNode1,
+                        controller: nameController,
+                        decoration: textfieldDecoration(
+                          hint: "Name",
                         ),
-                        Positioned(
-                          bottom: -4,
-                          right: -2,
-                          child: IconButton(
-                            iconSize: 30,
-                            onPressed: () {},
-                            icon: const Icon(Icons.photo_camera),
-                          ),
-                        )
-                      ],
-                    ),
-                    VerticalSpacing(size: 20),
-                    TextField(
-                      focusNode: focusNode1,
-                      controller: nameController,
-                      decoration: textfieldDecoration(
-                        hint: "Name",
+                        textInputAction: TextInputAction.next,
+                        onSubmitted: (_) {
+                          focusNode1.unfocus();
+                          FocusScope.of(context).requestFocus(focusNode2);
+                        },
                       ),
-                      textInputAction: TextInputAction.next,
-                      onSubmitted: (_) {
-                        focusNode1.unfocus();
-                        FocusScope.of(context).requestFocus(focusNode2);
-                      },
-                    ),
-                    VerticalSpacing(size: 10),
-                    TextField(
-                      focusNode: focusNode2,
-                      controller: usernameController,
-                      decoration: textfieldDecoration(
-                        hint: "Username",
+                      VerticalSpacing(size: 10),
+                      TextField(
+                        focusNode: focusNode2,
+                        controller: usernameController,
+                        decoration: textfieldDecoration(
+                          hint: "Username",
+                        ),
+                        textInputAction: TextInputAction.next,
+                        onSubmitted: (_) {
+                          focusNode2.unfocus();
+                          FocusScope.of(context).requestFocus(focusNode3);
+                        },
                       ),
-                      textInputAction: TextInputAction.next,
-                      onSubmitted: (_) {
-                        focusNode2.unfocus();
-                        FocusScope.of(context).requestFocus(focusNode3);
-                      },
-                    ),
-                    VerticalSpacing(size: 10),
-                    TextField(
-                      focusNode: focusNode3,
-                      controller: bioController,
-                      decoration: textfieldDecoration(
-                        hint: "Bio",
+                      VerticalSpacing(size: 10),
+                      TextField(
+                        focusNode: focusNode3,
+                        controller: bioController,
+                        decoration: textfieldDecoration(
+                          hint: "Bio",
+                        ),
+                        maxLength: 50,
+                        textInputAction: TextInputAction.done,
+                        maxLines: 3,
+                        onSubmitted: (_) {
+                          focusNode3.unfocus();
+                        },
                       ),
-                      maxLength: 50,
-                      textInputAction: TextInputAction.done,
-                      maxLines: 3,
-                      onSubmitted: (_) {
-                        focusNode3.unfocus();
-                      },
-                    ),
-                  ],
-                )),
+                    ],
+                  ),
+                ),
               ),
             ),
             SizedBox(
