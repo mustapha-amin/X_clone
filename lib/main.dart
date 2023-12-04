@@ -30,15 +30,12 @@ class MyApp extends ConsumerWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.darkTheme(),
-      home: UserDetails(),
+      home: user.when(
+        data: (userData) =>
+            userData != null ? const XBottomNavBar() : const Authenticate(),
+        error: (_, __) => const ErrorScreen(),
+        loading: () => const XLoader(),
+      ),
     );
   }
 }
-
-
-// user.when(
-//         data: (userData) =>
-//             userData != null ? const XBottomNavBar() : const Authenticate(),
-//         error: (_, __) => const ErrorScreen(),
-//         loading: () => const XLoader(),
-//       ),

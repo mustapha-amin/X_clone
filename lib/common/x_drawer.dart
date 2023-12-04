@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:x_clone/common/x_drawer_tiles.dart';
+import 'package:x_clone/common/x_modal_sheet.dart';
 import 'package:x_clone/core/core.dart';
 import 'package:x_clone/utils/extensions.dart';
 import 'package:x_clone/utils/spacing.dart';
@@ -15,9 +16,8 @@ class XDrawer extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     User? user = ref.watch(userProvider);
     ValueNotifier<bool> isExpanded = ValueNotifier(false);
-    return Drawer(
-      backgroundColor: Colors.black,
-      shape: const RoundedRectangleBorder(),
+    return Container(
+      color: Colors.black,
       width: context.screenWidth * .85,
       key: ref.watch(scaffoldKeyProvider),
       child: Column(
@@ -36,16 +36,26 @@ class XDrawer extends ConsumerWidget {
                           CircleAvatar(
                             child: Text(user!.displayName![0]),
                           ),
-                          Container(
-                            padding: const EdgeInsets.all(3),
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.white),
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Center(
-                              child: Icon(
-                                Icons.more_vert_rounded,
-                                size: 18,
+                          InkWell(
+                            onTap: () async {
+                              await showModalBottomSheet(
+                                context: context,
+                                builder: (context) {
+                                  return const XBtmModalSheet();
+                                },
+                              );
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(3),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.white),
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Center(
+                                child: Icon(
+                                  Icons.more_vert_rounded,
+                                  size: 18,
+                                ),
                               ),
                             ),
                           )

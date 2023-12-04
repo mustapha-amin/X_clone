@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:x_clone/common/x_loader.dart';
+import 'package:x_clone/features/auth/auth.dart';
 import 'package:x_clone/features/auth/widgets/auth_button.dart';
 import 'package:x_clone/features/auth/widgets/signup_terms_two.dart';
 import 'package:x_clone/features/home/home.dart';
@@ -216,7 +217,7 @@ class _SignUpState extends ConsumerState<SignUp> {
                               usernameController.text.isNotEmpty) {
                             try {
                               signUp();
-                              navigateAndReplace(context, const HomeScreen());
+                              navigateAndReplace(context, const UserDetails());
                             } catch (e) {}
                           } else {
                             toggleFieldsTapped();
