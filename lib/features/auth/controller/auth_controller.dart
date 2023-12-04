@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:x_clone/services/google_auth.dart';
+import 'package:x_clone/services/auth/google_auth.dart';
 import '/../services/services.dart';
 import '/../utils/utils.dart';
 
@@ -47,9 +47,10 @@ class AuthController extends StateNotifier<bool> {
   }) async {
     state = true;
     final res = await authService!.signUp(
-        email: email.trim(),
-        password: password.trim(),
-        username: username.trim());
+      email: email.trim(),
+      password: password.trim(),
+      username: username.trim(),
+    );
     state = false;
     res.fold(
       (l) => showErrorDialog(context: context, message: l.message),

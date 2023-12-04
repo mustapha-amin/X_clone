@@ -1,3 +1,3 @@
-export 'auth_service.dart';
-export 'base_auth_service.dart';
+export 'auth/auth_service.dart';
+export 'auth/base_auth_service.dart';
 export 'theme_prefs.dart';

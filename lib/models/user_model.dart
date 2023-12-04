@@ -68,4 +68,38 @@ class XUser {
       'coverPicUrl': coverPicUrl,
     };
   }
+
+  XUser copyWith({
+    String? uid,
+    String? name,
+    String? username,
+    String? email,
+    String? bio,
+    int? tweetCount,
+    int? likesCount,
+    String? location,
+    DateTime? joined,
+    List<String>? followers,
+    List<String>? following,
+    String? website,
+    String? profilePicUrl,
+    String? coverPicUrl,
+  }) {
+    return XUser(
+      uid: uid ?? this.uid,
+      name: name ?? this.name,
+      username: username ?? this.username,
+      email: email ?? this.email,
+      bio: bio ?? this.bio,
+      tweetCount: tweetCount ?? this.tweetCount,
+      likesCount: likesCount ?? this.likesCount,
+      location: location ?? this.location,
+      joined: joined ?? this.joined,
+      followers: followers ?? this.followers,
+      following: following ?? this.following,
+      website: website ?? this.website,
+      profilePicUrl: profilePicUrl ?? this.profilePicUrl,
+      coverPicUrl: coverPicUrl ?? this.coverPicUrl,
+    );
+  }
 }

@@ -11,7 +11,7 @@ import 'package:x_clone/features/auth/controller/auth_controller.dart';
 import 'package:x_clone/features/auth/widgets/auth_button.dart';
 import 'package:x_clone/features/auth/widgets/signup_terms_one.dart';
 import 'package:x_clone/features/auth/widgets/signup_terms_two.dart';
-import 'package:x_clone/services/google_auth.dart';
+import 'package:x_clone/services/auth/google_auth.dart';
 import 'package:x_clone/utils/extensions.dart';
 import 'package:x_clone/utils/navigation.dart';
 import 'package:x_clone/utils/textstyle.dart';

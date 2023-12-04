@@ -4,7 +4,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:x_clone/core/failure.dart';
 import 'package:x_clone/core/providers.dart';
 import 'package:x_clone/core/typedefs.dart';
-import 'package:x_clone/services/base_auth_service.dart';
+import 'package:x_clone/services/auth/base_auth_service.dart';
 
 final authServiceProvider = Provider((ref) {
   final authProvider = ref.watch(firebaseAuthProvider);
