@@ -4,7 +4,6 @@ import 'package:x_clone/core/typedefs.dart';
 abstract class BaseAuthService {
   FutureEither<UserCredential> signUp({
     required String email,
-    required String username,
     required String password,
   });
 

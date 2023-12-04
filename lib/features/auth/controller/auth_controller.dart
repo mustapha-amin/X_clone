@@ -42,14 +42,12 @@ class AuthController extends StateNotifier<bool> {
   void signUp({
     required BuildContext context,
     required String email,
-    required String username,
     required String password,
   }) async {
     state = true;
     final res = await authService!.signUp(
       email: email.trim(),
       password: password.trim(),
-      username: username.trim(),
     );
     state = false;
     res.fold(

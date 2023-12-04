@@ -45,7 +45,6 @@ class AuthService extends BaseAuthService {
   @override
   FutureEither<UserCredential> signUp({
     required String email,
-    required String username,
     required String password,
   }) async {
     try {
@@ -53,7 +52,6 @@ class AuthService extends BaseAuthService {
         email: email,
         password: password,
       );
-      userCredential.user!.updateDisplayName(username);
       return right(userCredential);
     } on FirebaseAuthException catch (e, stackTrace) {
       String? error;

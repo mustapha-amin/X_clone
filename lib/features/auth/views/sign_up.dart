@@ -4,7 +4,6 @@ import 'package:x_clone/common/x_loader.dart';
 import 'package:x_clone/features/auth/auth.dart';
 import 'package:x_clone/features/auth/widgets/auth_button.dart';
 import 'package:x_clone/features/auth/widgets/signup_terms_two.dart';
-import 'package:x_clone/features/home/home.dart';
 import 'package:x_clone/utils/utils.dart';
 import 'package:x_clone/features/auth/controller/auth_controller.dart';
 import 'package:x_clone/common/x_appbar.dart';
@@ -20,14 +19,11 @@ class SignUp extends ConsumerStatefulWidget {
 class _SignUpState extends ConsumerState<SignUp> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController emailController = TextEditingController();
-  TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   ValueNotifier<bool> emailFieldTapped = ValueNotifier(false);
-  ValueNotifier<bool> usernameFieldTapped = ValueNotifier(false);
   ValueNotifier<bool> passwordFieldTapped = ValueNotifier(false);
   ValueNotifier<String?> emailErrorText = ValueNotifier<String?>(null);
   ValueNotifier<String?> passwordErrorText = ValueNotifier<String?>(null);
-  ValueNotifier<String?> usernameErrorText = ValueNotifier<String?>(null);
   bool isObscure = true;
 
   void displayEmailError() {
@@ -43,7 +39,6 @@ class _SignUpState extends ConsumerState<SignUp> {
   toggleFieldsTapped() {
     emailFieldTapped.value = true;
     passwordFieldTapped.value = true;
-    usernameFieldTapped.value = true;
   }
 
   void displayPasswordError() {
@@ -57,20 +52,12 @@ class _SignUpState extends ConsumerState<SignUp> {
     }
   }
 
-  void displayUsernameError() {
-    if (usernameController.text.isEmpty) {
-      usernameErrorText.value = "username cannot be empty";
-    } else {
-      usernameErrorText.value = null;
-    }
-  }
-
   void signUp() {
     ref.read(authControllerProvider.notifier).signUp(
-        context: context,
-        email: emailController.text,
-        username: usernameController.text,
-        password: passwordController.text);
+          context: context,
+          email: emailController.text,
+          password: passwordController.text,
+        );
   }
 
   @override
@@ -135,37 +122,6 @@ class _SignUpState extends ConsumerState<SignUp> {
                       ),
                       VerticalSpacing(size: 20),
                       ValueListenableBuilder(
-                        valueListenable: usernameErrorText,
-                        builder: (context, error, _) => TextFormField(
-                          controller: usernameController,
-                          decoration: InputDecoration(
-                            label: Text(
-                              "Username",
-                              style: kTextStyle(15, color: Colors.grey),
-                            ),
-                            errorText: error,
-                            labelStyle:
-                                kTextStyle(15, color: AppColors.blueColor),
-                            focusedBorder: const OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Color.fromARGB(255, 46, 88, 116),
-                                width: 2,
-                              ),
-                            ),
-                            focusColor: AppColors.blueColor,
-                            contentPadding:
-                                const EdgeInsets.symmetric(horizontal: 8),
-                            border: const OutlineInputBorder(),
-                          ),
-                          onChanged: (_) {
-                            if (usernameFieldTapped.value) {
-                              displayUsernameError();
-                            }
-                          },
-                        ),
-                      ),
-                      VerticalSpacing(size: 20),
-                      ValueListenableBuilder(
                         valueListenable: passwordErrorText,
                         builder: (context, error, _) => TextFormField(
                           obscureText: isObscure,
@@ -213,8 +169,7 @@ class _SignUpState extends ConsumerState<SignUp> {
                         label: "Sign up",
                         onPressed: () {
                           if (isValidEmail(emailController.text) &&
-                              isValidPassword(passwordController.text) &&
-                              usernameController.text.isNotEmpty) {
+                              isValidPassword(passwordController.text)) {
                             try {
                               signUp();
                               navigateAndReplace(context, const UserDetails());
@@ -223,7 +178,6 @@ class _SignUpState extends ConsumerState<SignUp> {
                             toggleFieldsTapped();
                             displayEmailError();
                             displayPasswordError();
-                            displayUsernameError();
                           }
                         },
                         bgColor: AppColors.blueColor,
