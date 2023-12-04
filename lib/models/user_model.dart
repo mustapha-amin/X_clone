@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class XUser {
   final String uid;
   final String name;
@@ -40,8 +42,8 @@ class XUser {
       bio: json['bio'],
       tweetCount: json['tweetCount'],
       likesCount: json['likesCount'],
-      location: json['location'],
-      joined: DateTime.parse(json['joined']),
+      location: json['location'] ,
+      joined: (json['join'] as Timestamp).toDate(),
       followers: List<String>.from(json['followers']),
       following: List<String>.from(json['following']),
       website: json['website'],

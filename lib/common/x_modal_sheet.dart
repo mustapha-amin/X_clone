@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:x_clone/features/auth/controller/auth_controller.dart';
 import 'package:x_clone/services/auth/auth_service.dart';
+import 'package:x_clone/services/auth/google_auth.dart';
 import 'package:x_clone/utils/extensions.dart';
 import 'package:x_clone/utils/textstyle.dart';
 
@@ -46,8 +48,9 @@ class _XBtmModalSheetState extends ConsumerState<XBtmModalSheet> {
                         TextButton(
                           onPressed: () {
                             Navigator.of(context).pop();
-
-                            ref.read(authServiceProvider).signOut();
+                            ref
+                                .read(googleAuthProvider.notifier)
+                                .signOutWithGoogle();
                           },
                           child: const Text("Yes"),
                         ),

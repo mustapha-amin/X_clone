@@ -16,8 +16,9 @@ enum Status {
 class UserDataController extends StateNotifier<Status> {
   UserDataService? userDataService;
   AuthService? authService;
-  
-  UserDataController({this.userDataService, this.authService}) : super(Status.initial);
+
+  UserDataController({this.userDataService, this.authService})
+      : super(Status.initial);
 
   FutureVoid saveUserData(
     BuildContext context, {
@@ -25,9 +26,8 @@ class UserDataController extends StateNotifier<Status> {
     String? name,
     String? username,
     String? bio,
-    String? location,
-    String? website,
-    String? imgPath,
+    String? profilePicUrl,
+    String? coverPicUrl,
   }) async {
     state = Status.loading;
     XUser xUser = XUser(
@@ -38,24 +38,30 @@ class UserDataController extends StateNotifier<Status> {
       bio: bio!,
       tweetCount: 0,
       likesCount: 0,
-      location: location,
+      location: "",
       joined: DateTime.now(),
       followers: [],
       following: [],
       website: "",
-      profilePicUrl: "",
-      coverPicUrl: "",
+      profilePicUrl: profilePicUrl!,
+      coverPicUrl: coverPicUrl!,
     );
     try {
-      XUser user = await userDataService!.updateImageUrl(xUser, imgPath!);
-      if (user.coverPicUrl.isNotEmpty) {
-        user = await userDataService!.updateImageUrl(
+      XUser? updatedUser;
+      if (xUser.profilePicUrl.isNotEmpty) {
+        updatedUser = await userDataService!.updateImageUrl(
           xUser,
-          imgPath,
+          profilePicUrl,
+        );
+      }
+      if (xUser.coverPicUrl.isNotEmpty) {
+        updatedUser = await userDataService!.updateImageUrl(
+          xUser,
+          coverPicUrl,
           isProfilePic: false,
         );
       }
-      await userDataService!.saveUserData(user);
+      await userDataService!.saveUserData(updatedUser!);
       state = Status.success;
     } catch (e) {
       state = Status.failure;

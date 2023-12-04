@@ -18,11 +18,23 @@ class _UserDetailsState extends ConsumerState<UserDetails> {
   TextEditingController nameController = TextEditingController();
   TextEditingController usernameController = TextEditingController();
   TextEditingController bioController = TextEditingController();
+  ValueNotifier<bool> nameFieldTapped = ValueNotifier(false);
+  ValueNotifier<bool> usernameFieldTapped = ValueNotifier(false);
+  ValueNotifier<bool> bioFieldTapped = ValueNotifier(false);
+  ValueNotifier<String?> nameErrorText = ValueNotifier<String?>(null);
+  ValueNotifier<String?> usernameErrorText = ValueNotifier<String?>(null);
+  ValueNotifier<String?> bioErrorText = ValueNotifier<String?>(null);
   FocusNode focusNode1 = FocusNode();
   FocusNode focusNode2 = FocusNode();
   FocusNode focusNode3 = FocusNode();
   File? profileImage;
   File? coverImage;
+
+  toggleFieldsTapped() {
+    nameFieldTapped.value = true;
+    usernameFieldTapped.value = true;
+    bioFieldTapped.value = true;
+  }
 
   Future<void> selectImage({bool? isProfileImage = true}) async {
     try {
@@ -39,6 +51,30 @@ class _UserDetailsState extends ConsumerState<UserDetails> {
       }
     } catch (e) {
       log(e.toString());
+    }
+  }
+
+  void displayNameError() {
+    if (nameController.text.isEmpty) {
+      nameErrorText.value = "name cannot be empty";
+    } else {
+      nameErrorText.value = null;
+    }
+  }
+
+  void displayUsernameError() {
+    if (usernameController.text.isEmpty) {
+      nameErrorText.value = "username cannot be empty";
+    } else {
+      usernameErrorText.value = null;
+    }
+  }
+
+  void displayBioError() {
+    if (bioController.text.isEmpty) {
+      bioErrorText.value = "bio cannot be empty";
+    } else {
+      bioErrorText.value = null;
     }
   }
 
@@ -144,43 +180,79 @@ class _UserDetailsState extends ConsumerState<UserDetails> {
                         ],
                       ),
                       VerticalSpacing(size: 40),
-                      TextField(
-                        focusNode: focusNode1,
-                        controller: nameController,
-                        decoration: textfieldDecoration(
-                          hint: "Name",
-                        ),
-                        textInputAction: TextInputAction.next,
-                        onSubmitted: (_) {
-                          focusNode1.unfocus();
-                          FocusScope.of(context).requestFocus(focusNode2);
+                      ValueListenableBuilder(
+                        valueListenable: nameErrorText,
+                        builder: (context, error, _) {
+                          return TextField(
+                            focusNode: focusNode1,
+                            controller: nameController,
+                            decoration: textfieldDecoration(
+                              hint: "Name",
+                            ).copyWith(
+                              errorText: error,
+                            ),
+                            textInputAction: TextInputAction.next,
+                            onSubmitted: (_) {
+                              focusNode1.unfocus();
+                              FocusScope.of(context).requestFocus(focusNode2);
+                            },
+                            onChanged: (_) {
+                              if (nameFieldTapped.value) {
+                                displayNameError();
+                              }
+                            },
+                          );
                         },
                       ),
                       VerticalSpacing(size: 10),
-                      TextField(
-                        focusNode: focusNode2,
-                        controller: usernameController,
-                        decoration: textfieldDecoration(
-                          hint: "Username",
-                        ),
-                        textInputAction: TextInputAction.next,
-                        onSubmitted: (_) {
-                          focusNode2.unfocus();
-                          FocusScope.of(context).requestFocus(focusNode3);
+                      ValueListenableBuilder(
+                        valueListenable: usernameErrorText,
+                        builder: (context, error, _) {
+                          return TextField(
+                            focusNode: focusNode2,
+                            controller: usernameController,
+                            decoration: textfieldDecoration(
+                              hint: "username",
+                            ).copyWith(
+                              errorText: error,
+                            ),
+                            textInputAction: TextInputAction.next,
+                            onSubmitted: (_) {
+                              focusNode2.unfocus();
+                              FocusScope.of(context).requestFocus(focusNode3);
+                            },
+                            onChanged: (_) {
+                              if (usernameFieldTapped.value) {
+                                displayBioError();
+                              }
+                            },
+                          );
                         },
                       ),
                       VerticalSpacing(size: 10),
-                      TextField(
-                        focusNode: focusNode3,
-                        controller: bioController,
-                        decoration: textfieldDecoration(
-                          hint: "Bio",
-                        ),
-                        maxLength: 50,
-                        textInputAction: TextInputAction.done,
-                        maxLines: 3,
-                        onSubmitted: (_) {
-                          focusNode3.unfocus();
+                      ValueListenableBuilder(
+                        valueListenable: bioErrorText,
+                        builder: (context, error, _) {
+                          return TextField(
+                            focusNode: focusNode3,
+                            controller: bioController,
+                            decoration: textfieldDecoration(
+                              hint: "Bio",
+                            ).copyWith(
+                              errorText: error,
+                            ),
+                            maxLength: 50,
+                            textInputAction: TextInputAction.done,
+                            maxLines: 3,
+                            onSubmitted: (_) {
+                              focusNode3.unfocus();
+                            },
+                            onChanged: (_) {
+                              if (bioFieldTapped.value) {
+                                displayBioError();
+                              }
+                            },
+                          );
                         },
                       ),
                     ],
@@ -210,7 +282,20 @@ class _UserDetailsState extends ConsumerState<UserDetails> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      if (usernameController.text.isNotEmpty &&
+                          nameController.text.isNotEmpty &&
+                          bioController.text.isNotEmpty) {
+                        try {
+                          
+                        } catch (e) {}
+                      } else {
+                        toggleFieldsTapped();
+                        displayNameError();
+                        displayBioError();
+                        displayUsernameError();
+                      }
+                    },
                     child: Text(
                       "Next",
                       style: kTextStyle(17),

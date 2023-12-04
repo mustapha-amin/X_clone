@@ -24,27 +24,21 @@ class GoogleAuthService {
     required this.firebaseAuth,
   });
 
-  FutureEither<UserCredential> googleLogin() async {
-    UserCredential? userCredential;
+  FutureVoid googleLogin() async {
     try {
       final googleUser = await googleSignIn.signIn();
 
       if (googleUser != null) {
-        final googleAuth = await googleUser.authentication;
+        final googleAuth = await googleUser!.authentication;
         final credential = GoogleAuthProvider.credential(
           accessToken: googleAuth.accessToken,
           idToken: googleAuth.idToken,
         );
-        try {
-          userCredential =
-              await firebaseAuth!.signInWithCredential(credential);
-        } catch (e, stackTrace) {
-          return left(Failure(message: e.toString(), stackTrace: stackTrace));
-        }
+
+        await firebaseAuth!.signInWithCredential(credential);
       }
-      return right(userCredential!);
-    } catch (e, stackTrace) {
-      return left(Failure(message: e.toString(), stackTrace: stackTrace));
+    } catch (e) {
+      log(e.toString());
     }
   }
 

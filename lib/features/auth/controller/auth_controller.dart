@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:x_clone/features/auth/auth.dart';
 import 'package:x_clone/services/auth/google_auth.dart';
 import '/../services/services.dart';
 import '/../utils/utils.dart';
@@ -75,10 +76,6 @@ class GoogleAuthContoller extends StateNotifier<bool> {
   void signInWithGoogle(BuildContext context) async {
     state = true;
     final res = await googleAuthService!.googleLogin();
-    res.fold(
-      (l) => showErrorDialog(context: context),
-      (r) => print(r.user!.displayName),
-    );
     state = false;
   }
 
