@@ -23,7 +23,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
       slivers: [
         SliverAppBar(
           leadingWidth: context.screenWidth * .2,
-          leading: const XAvatar(),
+          leading: XAvatar(),
           titleSpacing: 0,
           title: SearchBar(
             controller: searchController,

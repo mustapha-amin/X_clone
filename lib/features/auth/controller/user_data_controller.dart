@@ -13,11 +13,22 @@ enum Status {
   success,
 }
 
-final userDataProvider = StateNotifierProvider((ref) {
+final userDataProvider =
+    StateNotifierProvider<UserDataController, Status>((ref) {
   return UserDataController(
     userDataService: ref.watch(userDataServiceProvider),
     authService: ref.watch(authServiceProvider),
   );
+});
+
+final xUserProvider = StreamProvider((ref) {
+  final notifier = ref.watch(userDataProvider.notifier);
+  return notifier.getUserInfo();
+});
+
+final xUserDetailExistsProvider = FutureProvider((ref) async {
+  final user = ref.watch(userDataProvider.notifier);
+  return user.userDetailsExist();
 });
 
 class UserDataController extends StateNotifier<Status> {
@@ -54,14 +65,13 @@ class UserDataController extends StateNotifier<Status> {
       coverPicUrl: coverPicUrl!,
     );
     try {
-    
-      if (xUser.profilePicUrl.isNotEmpty) {
+      if (xUser.profilePicUrl!.isNotEmpty) {
         xUser = await userDataService!.updateImageUrl(
           xUser,
           profilePicUrl,
         );
       }
-      if (xUser.coverPicUrl.isNotEmpty) {
+      if (xUser.coverPicUrl!.isNotEmpty) {
         xUser = await userDataService!.updateImageUrl(
           xUser,
           coverPicUrl,
@@ -76,5 +86,16 @@ class UserDataController extends StateNotifier<Status> {
         showErrorDialog(context: context, message: "An error occured");
       }
     }
+  }
+
+  Stream<XUser?> getUserInfo() {
+    return userDataService!
+        .fetchUserData(authService!.firebaseAuth.currentUser!.uid);
+  }
+
+  Future<bool?> userDetailsExist() async {
+    bool exists = await userDataService!
+        .userDetailsInDB(authService!.firebaseAuth.currentUser!.uid);
+    return exists;
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:x_clone/common/x_avatar.dart';
 import 'package:x_clone/constants/images_paths.dart';
 import 'package:x_clone/core/core.dart';
+import 'package:x_clone/features/auth/controller/user_data_controller.dart';
 import 'package:x_clone/utils/extensions.dart';
 import 'package:x_clone/utils/textstyle.dart';
 
@@ -18,7 +19,6 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var user = ref.watch(userProvider);
     return DefaultTabController(
       length: 2,
       child: NestedScrollView(
@@ -26,7 +26,7 @@ class HomeScreen extends ConsumerWidget {
           return [
             SliverAppBar(
               leadingWidth: context.screenWidth * .2,
-              leading: const XAvatar(),
+              leading: XAvatar(),
               title: SvgPicture.asset(
                 ImagesPaths.x_icon,
                 colorFilter: const ColorFilter.mode(

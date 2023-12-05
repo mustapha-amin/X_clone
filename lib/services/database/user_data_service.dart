@@ -60,4 +60,20 @@ class UserDataService implements BaseUserDataService {
       throw Exception("An error occured");
     }
   }
+
+  Stream<XUser?> fetchUserData(String? uid) {
+    return firebaseFirestore!
+        .collection(FirebaseConstants.usersCollection)
+        .doc(uid!)
+        .snapshots()
+        .map((user) => XUser.fromJson(user.data() as Map<String, dynamic>));
+  }
+
+  Future<bool> userDetailsInDB(String? uid) async {
+    final data = await firebaseFirestore!
+        .collection(FirebaseConstants.usersCollection)
+        .doc(uid)
+        .get();
+    return data.exists;
+  }
 }

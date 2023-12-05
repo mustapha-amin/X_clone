@@ -22,7 +22,7 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
       slivers: [
         SliverAppBar(
           leadingWidth: context.screenWidth * .2,
-          leading: const XAvatar(),
+          leading: XAvatar(),
           title: Text(
             "Notifications",
             style: kTextStyle(

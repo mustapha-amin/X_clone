@@ -97,7 +97,7 @@ class _UserDetailsState extends ConsumerState<UserDetails> {
 
   @override
   Widget build(BuildContext context) {
-    Status status = ref.watch(userDataProvider.notifier).state;
+    Status status = ref.watch(userDataProvider);
     return SafeArea(
       child: Scaffold(
         body: status == Status.loading
@@ -191,7 +191,7 @@ class _UserDetailsState extends ConsumerState<UserDetails> {
                                       },
                                       onChanged: (_) {
                                         if (usernameFieldTapped.value) {
-                                          displayBioError();
+                                          displayUsernameError();
                                         }
                                       },
                                     );
@@ -299,9 +299,13 @@ class _UserDetailsState extends ConsumerState<UserDetails> {
                                       profilePicUrl: profileImage!.path,
                                       coverPicUrl: coverImage!.path,
                                     );
-                                navigateAndReplace(
-                                    context, const XBottomNavBar());
-                              } catch (e) {}
+                                if (context.mounted) {
+                                  navigateAndReplace(
+                                      context, const XBottomNavBar());
+                                }
+                              } catch (e) {
+                                log(e.toString());
+                              }
                             } else {
                               toggleFieldsTapped();
                               displayNameError();

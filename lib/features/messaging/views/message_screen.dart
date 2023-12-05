@@ -21,7 +21,7 @@ class _MessageScreenState extends ConsumerState<MessageScreen> {
         SliverAppBar(
           titleSpacing: 0,
           leadingWidth: context.screenWidth * .2,
-          leading: const XAvatar(),
+          leading: XAvatar(),
           title: SearchBar(
             controller: searchController,
             constraints: BoxConstraints(

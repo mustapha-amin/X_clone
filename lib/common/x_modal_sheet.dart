@@ -1,9 +1,13 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:x_clone/core/core.dart';
+import 'package:x_clone/features/auth/auth.dart';
 import 'package:x_clone/features/auth/controller/auth_controller.dart';
-import 'package:x_clone/services/auth/auth_service.dart';
-import 'package:x_clone/services/auth/google_auth.dart';
+import 'package:x_clone/main.dart';
 import 'package:x_clone/utils/extensions.dart';
+import 'package:x_clone/utils/navigation.dart';
 import 'package:x_clone/utils/textstyle.dart';
 
 class XBtmModalSheet extends ConsumerStatefulWidget {
@@ -36,9 +40,9 @@ class _XBtmModalSheetState extends ConsumerState<XBtmModalSheet> {
           SizedBox(
             width: context.screenWidth * .7,
             child: OutlinedButton(
-              onPressed: () {
+              onPressed: () async {
                 Navigator.of(context).pop();
-                showDialog(
+                await showDialog(
                   context: context,
                   builder: (context) {
                     return AlertDialog(
@@ -47,10 +51,12 @@ class _XBtmModalSheetState extends ConsumerState<XBtmModalSheet> {
                       actions: [
                         TextButton(
                           onPressed: () {
+                            Navigator.of(context).pop();
+                            ref.read(authControllerProvider.notifier).signOut();
                             ref
                                 .read(googleAuthProvider.notifier)
                                 .signOutWithGoogle();
-                            Navigator.of(context).pop();
+                            navigateAndReplace(context, Authenticate());
                           },
                           child: const Text("Yes"),
                         ),

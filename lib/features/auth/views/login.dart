@@ -4,6 +4,7 @@ import 'package:x_clone/common/x_appbar.dart';
 import 'package:x_clone/common/x_loader.dart';
 import 'package:x_clone/features/auth/controller/auth_controller.dart';
 import 'package:x_clone/features/home/home.dart';
+import 'package:x_clone/features/nav%20bar/nav_bar.dart';
 import 'package:x_clone/theme/theme.dart';
 import 'package:x_clone/utils/utils.dart';
 
@@ -207,7 +208,7 @@ class _LogInState extends ConsumerState<LogIn> {
                                     passwordController.text.isNotEmpty) {
                                   try {
                                     signIn();
-                                    navigateAndReplace(context, const HomeScreen());
+                                    navigateAndReplace(context, const XBottomNavBar());
                                   } catch (e) {}
                                 } else {
                                   toggleFieldsTapped();

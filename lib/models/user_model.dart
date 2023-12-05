@@ -1,36 +1,36 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class XUser {
-  final String uid;
-  final String name;
-  final String username;
-  final String email;
-  final String bio;
-  final int tweetCount;
-  final int likesCount;
-  final String? location;
-  final DateTime joined;
-  final List<String> followers;
-  final List<String> following;
-  final String website;
-  final String profilePicUrl;
-  final String coverPicUrl;
+  String? uid;
+  String? name;
+  String? username;
+  String? email;
+  String? bio;
+  int? tweetCount;
+  int? likesCount;
+  String? location;
+  DateTime? joined;
+  List<String>? followers;
+  List<String>? following;
+  String? website;
+  String? profilePicUrl;
+  String? coverPicUrl;
 
   XUser({
-    required this.uid,
-    required this.name,
-    required this.username,
-    required this.email,
-    required this.bio,
-    required this.tweetCount,
-    required this.likesCount,
-    required this.location,
-    required this.joined,
-    required this.followers,
-    required this.following,
-    required this.website,
-    required this.profilePicUrl,
-    required this.coverPicUrl,
+    this.uid,
+    this.name,
+    this.username,
+    this.email,
+    this.bio,
+    this.tweetCount,
+    this.likesCount,
+    this.location,
+    this.joined,
+    this.followers,
+    this.following,
+    this.website,
+    this.profilePicUrl,
+    this.coverPicUrl,
   });
 
   factory XUser.fromJson(Map<String, dynamic> json) {
@@ -42,10 +42,10 @@ class XUser {
       bio: json['bio'],
       tweetCount: json['tweetCount'],
       likesCount: json['likesCount'],
-      location: json['location'] ,
-      joined: (json['join'] as Timestamp).toDate(),
-      followers: List<String>.from(json['followers']),
-      following: List<String>.from(json['following']),
+      location: json['location'],
+      joined: (json['joined'] as Timestamp).toDate(),
+      followers: List.from( json['followers'] ?? []),
+      following: List.from( json['following'] ?? []),
       website: json['website'],
       profilePicUrl: json['profilePicUrl'],
       coverPicUrl: json['coverPicUrl'],
