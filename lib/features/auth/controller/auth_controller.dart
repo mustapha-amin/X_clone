@@ -75,7 +75,7 @@ class GoogleAuthContoller extends StateNotifier<bool> {
 
   void signInWithGoogle(BuildContext context) async {
     state = true;
-    final res = await googleAuthService!.googleLogin();
+    await googleAuthService!.googleLogin();
     state = false;
   }
 

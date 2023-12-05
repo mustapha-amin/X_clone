@@ -47,10 +47,10 @@ class _XBtmModalSheetState extends ConsumerState<XBtmModalSheet> {
                       actions: [
                         TextButton(
                           onPressed: () {
-                            Navigator.of(context).pop();
                             ref
                                 .read(googleAuthProvider.notifier)
                                 .signOutWithGoogle();
+                            Navigator.of(context).pop();
                           },
                           child: const Text("Yes"),
                         ),

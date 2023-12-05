@@ -48,7 +48,8 @@ class _AuthenticateState extends ConsumerState<Authenticate> {
                     Center(
                       child: SvgPicture.asset(
                         ImagesPaths.x_icon,
-                        color: Colors.white,
+                        colorFilter: const ColorFilter.mode(
+                            Colors.white, BlendMode.srcIn),
                         width: 25,
                       ),
                     ),
@@ -59,9 +60,11 @@ class _AuthenticateState extends ConsumerState<Authenticate> {
                     ),
                     VerticalSpacing(size: context.screenHeight * .15),
                     AuthButton(
-                      label: "Continue with google",
+                      label: "Continue with Google",
                       isGoogle: true,
-                      onPressed: () => signInGoogle(context),
+                      onPressed: () => {
+                        signInGoogle(context),
+                      },
                     ),
                     const AuthDivider(),
                     AuthButton(

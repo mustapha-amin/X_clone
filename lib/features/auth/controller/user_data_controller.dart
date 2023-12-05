@@ -13,6 +13,13 @@ enum Status {
   success,
 }
 
+final userDataProvider = StateNotifierProvider((ref) {
+  return UserDataController(
+    userDataService: ref.watch(userDataServiceProvider),
+    authService: ref.watch(authServiceProvider),
+  );
+});
+
 class UserDataController extends StateNotifier<Status> {
   UserDataService? userDataService;
   AuthService? authService;
@@ -22,7 +29,7 @@ class UserDataController extends StateNotifier<Status> {
 
   FutureVoid saveUserData(
     BuildContext context, {
-    Ref? ref,
+    WidgetRef? ref,
     String? name,
     String? username,
     String? bio,
@@ -47,21 +54,21 @@ class UserDataController extends StateNotifier<Status> {
       coverPicUrl: coverPicUrl!,
     );
     try {
-      XUser? updatedUser;
+    
       if (xUser.profilePicUrl.isNotEmpty) {
-        updatedUser = await userDataService!.updateImageUrl(
+        xUser = await userDataService!.updateImageUrl(
           xUser,
           profilePicUrl,
         );
       }
       if (xUser.coverPicUrl.isNotEmpty) {
-        updatedUser = await userDataService!.updateImageUrl(
+        xUser = await userDataService!.updateImageUrl(
           xUser,
           coverPicUrl,
           isProfilePic: false,
         );
       }
-      await userDataService!.saveUserData(updatedUser!);
+      await userDataService!.saveUserData(xUser);
       state = Status.success;
     } catch (e) {
       state = Status.failure;
