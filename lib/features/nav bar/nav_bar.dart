@@ -6,8 +6,10 @@ import 'package:x_clone/features/explore/views/explore_screen.dart';
 import 'package:x_clone/features/home/home.dart';
 import 'package:x_clone/features/messaging/views/message_screen.dart';
 import 'package:x_clone/features/nav%20bar/widgets/XFab.dart';
+import 'package:x_clone/features/tweet/views/tweet_screen.dart';
 import 'package:x_clone/theme/pallete.dart';
 import 'package:x_clone/utils/spacing.dart';
+import '../../utils/navigation.dart';
 import '../auth/controller/auth_controller.dart';
 import '../notification/views/notification_screen.dart';
 
@@ -127,8 +129,7 @@ class _XBottomNavBarState extends ConsumerState<XBottomNavBar> {
                       bgColor: Colors.blue,
                       fgColor: Colors.white,
                       label: "Post",
-                      onTap: () =>
-                          ref.read(authControllerProvider.notifier).signOut(),
+                      onTap: () => navigateTo(context, const TweetScreen()),
                       iconData: FeatherIcons.feather,
                     ),
                   ],
