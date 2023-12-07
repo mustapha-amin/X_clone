@@ -1,11 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:x_clone/models/comment_model.dart';
 
 class PostModel {
   String? uid;
   String? postID;
   String? text;
   List<String>? imagesUrl;
-  List<String>? commentIDs;
+  List<CommentModel>? comments;
   List<String>? likesIDs;
   int? repostCount;
   DateTime? timeCreated;
@@ -15,7 +16,7 @@ class PostModel {
     this.postID,
     this.text,
     this.imagesUrl,
-    this.commentIDs,
+    this.comments,
     this.likesIDs,
     this.repostCount,
     this.timeCreated,
@@ -27,7 +28,7 @@ class PostModel {
       postID: json["postID"],
       text: json["text"],
       imagesUrl: List.from(json["imagesUrl"] ?? []),
-      commentIDs: json["commentID"],
+      comments: List.from(json["comments"].map((comment) => CommentModel.fromJson(comment))),
       likesIDs: List.from(json["likesID"] ?? []),
       repostCount: json["repostCount"],
       timeCreated: (json["timeCreated"] as Timestamp).toDate(),
@@ -40,7 +41,7 @@ class PostModel {
       "postID": postID,
       "text": text,
       "imagesUrl": imagesUrl,
-      "commentIDs": commentIDs,
+      "comments": comments!.map((e) => e.toJson()),
       "likesID": likesIDs,
       "repostCount": repostCount,
       "timeCreated": timeCreated,

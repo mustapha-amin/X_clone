@@ -6,7 +6,7 @@ import 'package:x_clone/features/explore/views/explore_screen.dart';
 import 'package:x_clone/features/home/home.dart';
 import 'package:x_clone/features/messaging/views/message_screen.dart';
 import 'package:x_clone/features/nav%20bar/widgets/XFab.dart';
-import 'package:x_clone/features/tweet/views/tweet_screen.dart';
+import 'package:x_clone/features/post/views/post_screen.dart';
 import 'package:x_clone/theme/pallete.dart';
 import 'package:x_clone/utils/spacing.dart';
 import '../../utils/navigation.dart';
@@ -47,8 +47,7 @@ class _XBottomNavBarState extends ConsumerState<XBottomNavBar> {
     return SafeArea(
       child: Scaffold(
         drawer: const XDrawer(),
-        body: InkWell(
-          splashColor: Colors.transparent,
+        body: GestureDetector(
           onTap: () => isExpanded ? toggleExpanded() : null,
           child: IndexedStack(
             index: index,
@@ -129,7 +128,7 @@ class _XBottomNavBarState extends ConsumerState<XBottomNavBar> {
                       bgColor: Colors.blue,
                       fgColor: Colors.white,
                       label: "Post",
-                      onTap: () => navigateTo(context, const TweetScreen()),
+                      onTap: () => navigateTo(context, const PostScreen()),
                       iconData: FeatherIcons.feather,
                     ),
                   ],
