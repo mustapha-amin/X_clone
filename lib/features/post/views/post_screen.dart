@@ -25,6 +25,7 @@ class PostScreen extends ConsumerStatefulWidget {
 class _PostScreenState extends ConsumerState<PostScreen> {
   TextEditingController postTextEditingController = TextEditingController();
   List<File> pickedImages = [];
+  FocusNode postFieldFocus = FocusNode();
 
   FutureVoid pickImageFromCamera() async {
     ImagePicker imagePicker = ImagePicker();
@@ -49,6 +50,10 @@ class _PostScreenState extends ConsumerState<PostScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Future.delayed(Duration(microseconds: 200),
+          () => FocusScope.of(context).requestFocus(postFieldFocus));
+    });
   }
 
   @override
@@ -88,6 +93,7 @@ class _PostScreenState extends ConsumerState<PostScreen> {
                                 child: Column(
                                   children: [
                                     TextField(
+                                      focusNode: postFieldFocus,
                                       controller: postTextEditingController,
                                       maxLines: null,
                                       decoration: InputDecoration(
