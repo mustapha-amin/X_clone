@@ -47,4 +47,27 @@ class PostModel {
       "timeCreated": timeCreated,
     };
   }
+
+  PostModel copyWith({
+    String? uid,
+    String? postID,
+    String? text,
+    List<String>? imagesUrl,
+    List<CommentModel>? comments,
+    List<String>? likesIDs,
+    int? repostCount,
+    DateTime? timeCreated,
+  }) {
+    return PostModel(
+      uid: uid ?? this.uid,
+      postID: postID ?? this.postID,
+      text: text ?? this.text,
+      imagesUrl: imagesUrl ?? this.imagesUrl,
+      comments: comments ?? this.comments,
+      likesIDs: likesIDs ?? this.likesIDs,
+      repostCount: repostCount ?? this.repostCount,
+      timeCreated: timeCreated ?? this.timeCreated,
+    );
+  }
+
 }
