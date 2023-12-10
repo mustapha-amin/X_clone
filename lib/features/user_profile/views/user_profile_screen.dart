@@ -76,7 +76,10 @@ class UserProfileScreen extends ConsumerWidget {
                     : ListView.builder(
                         itemCount: posts.length,
                         itemBuilder: (context, index) {
-                          return PostCard(post: posts[index]);
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: PostCard(post: posts[index]),
+                          );
                         },
                       ),
                 error: (_, __) => Text("Error loading posts"),

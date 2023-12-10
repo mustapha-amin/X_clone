@@ -5,11 +5,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:x_clone/common/x_loader.dart';
 import 'package:x_clone/features/auth/controller/user_data_controller.dart';
 import 'package:x_clone/features/home/widgets/post_icon_buttons.dart';
+import 'package:x_clone/features/user_profile/views/user_profile_screen.dart';
 import 'package:x_clone/models/post_model.dart';
 import 'package:x_clone/utils/extensions.dart';
 import 'package:x_clone/utils/spacing.dart';
 import 'package:x_clone/utils/textstyle.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:x_clone/utils/utils.dart';
 
 class PostCard extends ConsumerStatefulWidget {
   final PostModel? post;
@@ -29,9 +31,18 @@ class _PostCardState extends ConsumerState<PostCard> {
             return Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CircleAvatar(
-                  backgroundImage: NetworkImage(user!.profilePicUrl!),
-                  radius: 24,
+                GestureDetector(
+                  onTap: () {
+                    navigateTo(
+                        context,
+                        UserProfileScreen(
+                          user: user,
+                        ));
+                  },
+                  child: CircleAvatar(
+                    backgroundImage: NetworkImage(user!.profilePicUrl!),
+                    radius: 24,
+                  ),
                 ),
                 HorizontalSpacing(size: 15),
                 Expanded(
