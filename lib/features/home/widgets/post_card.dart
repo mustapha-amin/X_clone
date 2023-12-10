@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -19,6 +20,8 @@ class PostCard extends ConsumerStatefulWidget {
 }
 
 class _PostCardState extends ConsumerState<PostCard> {
+  int currentPage = 0;
+
   @override
   Widget build(BuildContext context) {
     return ref.watch(otherUserProvider(widget.post!.uid!)).when(
@@ -70,17 +73,35 @@ class _PostCardState extends ConsumerState<PostCard> {
                       SizedBox(
                         width: context.screenWidth,
                         height: context.screenHeight * .3,
-                        child: GridView(
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount:
-                                widget.post!.imagesUrl!.length == 1 ? 1 : 2,
-                          ),
+                        child: Stack(
+                          alignment: Alignment.topRight,
                           children: [
-                            ...widget.post!.imagesUrl!.map(
-                              (image) => Image.network(
-                                image,
-                                fit: BoxFit.contain,
+                            CarouselSlider(
+                              items: [
+                                ...widget.post!.imagesUrl!.map(
+                                  (e) => Image.network(e),
+                                ),
+                              ],
+                              options: CarouselOptions(
+                                initialPage: currentPage,
+                                enableInfiniteScroll: false,
+                                height: context.screenHeight * .3,
+                                onPageChanged: (newPage, _) {
+                                  setState(() {
+                                    currentPage = newPage;
+                                  });
+                                },
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.all(6),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.grey.withOpacity(0.6),
+                              ),
+                              child: Text(
+                                "${currentPage + 1} / ${widget.post!.imagesUrl!.length}",
+                                style: kTextStyle(12),
                               ),
                             )
                           ],
