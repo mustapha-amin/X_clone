@@ -22,3 +22,15 @@ extension WidgetExtensions on Widget {
         child: this,
       );
 }
+
+extension JoinTimeFormatting on DateTime {
+  String get formatJoinTime {
+    final months = [
+      '', // Leave the first element empty for index alignment
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+
+    return '${months[month]}, $year';
+  }
+}

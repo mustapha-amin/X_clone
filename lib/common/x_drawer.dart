@@ -5,7 +5,9 @@ import 'package:x_clone/common/x_drawer_tiles.dart';
 import 'package:x_clone/common/x_modal_sheet.dart';
 import 'package:x_clone/core/core.dart';
 import 'package:x_clone/features/auth/controller/user_data_controller.dart';
+import 'package:x_clone/features/user_profile/views/user_profile_screen.dart';
 import 'package:x_clone/utils/extensions.dart';
+import 'package:x_clone/utils/navigation.dart';
 import 'package:x_clone/utils/spacing.dart';
 import 'package:x_clone/utils/textstyle.dart';
 
@@ -118,7 +120,14 @@ class XDrawer extends ConsumerWidget {
                 DrawerTile(
                   title: "Profile",
                   iconData: Icons.person_2_outlined,
-                  onTap: () {},
+                  onTap: () {
+                    navigateTo(
+                      context,
+                      UserProfileScreen(
+                        user: user.value,
+                      ),
+                    );
+                  },
                 ),
                 DrawerTile.withX(
                   title: "Premium",
