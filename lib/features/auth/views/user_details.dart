@@ -61,7 +61,7 @@ class _UserDetailsState extends ConsumerState<UserDetails> {
     if (nameController.text.isEmpty) {
       nameErrorText.value = "name cannot be empty";
     } else {
-      nameErrorText.value = null;
+      nameErrorText.value = '';
     }
   }
 
@@ -69,7 +69,7 @@ class _UserDetailsState extends ConsumerState<UserDetails> {
     if (usernameController.text.isEmpty) {
       nameErrorText.value = "username cannot be empty";
     } else {
-      usernameErrorText.value = null;
+      usernameErrorText.value = '';
     }
   }
 
@@ -77,7 +77,7 @@ class _UserDetailsState extends ConsumerState<UserDetails> {
     if (bioController.text.isEmpty) {
       bioErrorText.value = "bio cannot be empty";
     } else {
-      bioErrorText.value = null;
+      bioErrorText.value = '';
     }
   }
 
@@ -266,15 +266,15 @@ class _UserDetailsState extends ConsumerState<UserDetails> {
                     child: ListenableBuilder(
                       listenable: Listenable.merge(
                         [
-                          usernameController,
-                          nameController,
-                          bioController,
+                          usernameErrorText,
+                          nameErrorText,
+                          bioErrorText,
                         ],
                       ),
                       builder: (context, child) {
-                        bool isEnabled = usernameController.text.isNotEmpty &&
-                            nameController.text.isNotEmpty &&
-                            bioController.text.isNotEmpty;
+                        bool isEnabled = usernameErrorText.value!.isNotEmpty &&
+                            bioErrorText.value!.isNotEmpty &&
+                            nameErrorText.value!.isNotEmpty;
                         return ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor:
@@ -299,10 +299,10 @@ class _UserDetailsState extends ConsumerState<UserDetails> {
                                       profilePicUrl: profileImage!.path,
                                       coverPicUrl: coverImage!.path,
                                     );
-                                if (context.mounted) {
-                                  navigateAndReplace(
-                                      context, const XBottomNavBar());
-                                }
+
+                                // ignore: use_build_context_synchronously
+                                navigateAndReplace(
+                                    context, const XBottomNavBar());
                               } catch (e) {
                                 log(e.toString());
                               }

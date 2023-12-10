@@ -41,7 +41,6 @@ class _XBtmModalSheetState extends ConsumerState<XBtmModalSheet> {
             width: context.screenWidth * .7,
             child: OutlinedButton(
               onPressed: () async {
-                Navigator.of(context).pop();
                 await showDialog(
                   context: context,
                   builder: (context) {
@@ -50,13 +49,11 @@ class _XBtmModalSheetState extends ConsumerState<XBtmModalSheet> {
                       content: const Text("Are you sure you want to sign out?"),
                       actions: [
                         TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            ref.read(authControllerProvider.notifier).signOut();
+                          onPressed: () => {
+                            ref.read(authControllerProvider.notifier).signOut(),
                             ref
                                 .read(googleAuthProvider.notifier)
-                                .signOutWithGoogle();
-                            navigateAndReplace(context, Authenticate());
+                                .signOutWithGoogle()
                           },
                           child: const Text("Yes"),
                         ),

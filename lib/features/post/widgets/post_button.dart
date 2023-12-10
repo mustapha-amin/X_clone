@@ -9,14 +9,15 @@ import '../../../theme/theme.dart';
 import '../../../utils/utils.dart';
 
 class PostButton extends ConsumerWidget {
-  const PostButton({
-    super.key,
-    required this.postTextEditingController,
-    required this.images,
-  });
+  const PostButton(
+      {super.key,
+      required this.postTextEditingController,
+      required this.images,
+      required this.callback});
 
   final TextEditingController postTextEditingController;
   final ValueNotifier<List<File>> images;
+  final VoidCallback callback;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -47,7 +48,7 @@ class PostButton extends ConsumerWidget {
                           timeCreated: DateTime.now(),
                         ),
                       ),
-                  Navigator.pop(context),
+                      callback,
                 },
             _ => null
           },

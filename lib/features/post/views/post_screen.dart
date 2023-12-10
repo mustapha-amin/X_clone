@@ -73,6 +73,7 @@ class _PostScreenState extends ConsumerState<PostScreen> {
                 PostButton(
                   postTextEditingController: postTextEditingController,
                   images: ValueNotifier(pickedImages),
+                  callback: () => Navigator.pop(context),
                 ),
               ],
             ),

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:x_clone/common/x_loader.dart';
+import 'package:x_clone/features/home/widgets/post_card.dart';
+import 'package:x_clone/features/post/controllers/post_controller.dart';
 import 'package:x_clone/models/user_model.dart';
 import 'package:x_clone/theme/pallete.dart';
 import 'package:x_clone/utils/extensions.dart';
@@ -22,29 +25,27 @@ class UserProfileScreen extends ConsumerWidget {
                 expandedHeight: context.screenHeight * .2,
                 floating: true,
                 snap: true,
-                flexibleSpace: FlexibleSpaceBar(
-                  background: Stack(
-                    children: [
-                      Positioned.fill(
-                        child: user!.coverPicUrl!.isEmpty
-                            ? Container(
-                                color: AppColors.blueColor,
-                              )
-                            : Image.network(
-                                user!.coverPicUrl!,
-                                fit: BoxFit.fitWidth,
-                              ),
+                flexibleSpace: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: user!.coverPicUrl!.isEmpty
+                          ? Container(
+                              color: AppColors.blueColor,
+                            )
+                          : Image.network(
+                              user!.coverPicUrl!,
+                              fit: BoxFit.fitWidth,
+                            ),
+                    ),
+                    Positioned(
+                      bottom: -5,
+                      left: 5,
+                      child: CircleAvatar(
+                        backgroundImage: NetworkImage(user!.profilePicUrl!),
+                        radius: 35,
                       ),
-                      Positioned(
-                        bottom: -5,
-                        left: 5,
-                        child: CircleAvatar(
-                          backgroundImage: NetworkImage(user!.profilePicUrl!),
-                          radius: 35,
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
                 actions: [
                   IconButton.filledTonal(
@@ -69,7 +70,18 @@ class UserProfileScreen extends ConsumerWidget {
               ),
             ];
           },
-          body: Container(),
+          body: ref.watch(userPostsProvider(user!.uid!)).when(
+                data: (posts) => posts!.isEmpty
+                    ? const Center(child: Text("No posts yet"))
+                    : ListView.builder(
+                        itemCount: posts.length,
+                        itemBuilder: (context, index) {
+                          return PostCard(post: posts[index]);
+                        },
+                      ),
+                error: (_, __) => Text("Error loading posts"),
+                loading: () => XLoader(),
+              ),
         ),
       ),
     );

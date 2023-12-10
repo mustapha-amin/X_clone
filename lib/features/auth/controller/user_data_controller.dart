@@ -28,8 +28,7 @@ final currentUserProvider = StreamProvider((ref) {
   return notifier.getUserInfo(auth.firebaseAuth.currentUser!.uid);
 });
 
-final otherUserProvider =
-    StreamProvider.family<XUser?, String>((ref, uid) {
+final otherUserProvider = StreamProvider.family<XUser?, String>((ref, uid) {
   final user = ref.watch(userDataProvider.notifier);
   return user.getUserInfo(uid);
 });
@@ -90,9 +89,8 @@ class UserDataController extends StateNotifier<Status> {
       state = Status.success;
     } catch (e) {
       state = Status.failure;
-      if (context.mounted) {
-        showErrorDialog(context: context, message: "An error occured");
-      }
+
+      showErrorDialog(context: context, message: "An error occured");
     }
   }
 
