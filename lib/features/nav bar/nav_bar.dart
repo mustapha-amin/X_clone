@@ -48,6 +48,7 @@ class _XBottomNavBarState extends ConsumerState<XBottomNavBar> {
     bool isDark = ref.watch(themeNotifierProvider);
     return SafeArea(
       child: Scaffold(
+        
         drawer: const XDrawer(),
         body: GestureDetector(
           onTap: () => isExpanded ? toggleExpanded() : null,

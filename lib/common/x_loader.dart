@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:x_clone/constants/images_paths.dart';
+import 'package:x_clone/services/services.dart';
 import '/utils/utils.dart';
 import '/theme/theme.dart';
 
-class XLoader extends StatelessWidget {
+class XLoader extends ConsumerWidget {
   const XLoader({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    bool isDark = ref.watch(themeNotifierProvider);
     return Scaffold(
       body: Center(
         child: Stack(
@@ -22,8 +25,11 @@ class XLoader extends StatelessWidget {
             ),
             SvgPicture.asset(
               ImagesPaths.x_icon,
-              color: Colors.white,
               width: 30,
+              colorFilter: ColorFilter.mode(
+                isDark ? Colors.white : Colors.black,
+                BlendMode.srcIn,
+              ),
             ),
           ],
         ),

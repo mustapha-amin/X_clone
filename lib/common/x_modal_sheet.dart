@@ -1,13 +1,7 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:x_clone/core/core.dart';
-import 'package:x_clone/features/auth/auth.dart';
 import 'package:x_clone/features/auth/controller/auth_controller.dart';
-import 'package:x_clone/main.dart';
 import 'package:x_clone/utils/extensions.dart';
-import 'package:x_clone/utils/navigation.dart';
 import 'package:x_clone/utils/textstyle.dart';
 
 class XBtmModalSheet extends ConsumerStatefulWidget {
@@ -24,7 +18,7 @@ class _XBtmModalSheetState extends ConsumerState<XBtmModalSheet> {
       height: context.screenHeight * .2,
       width: context.screenWidth,
       decoration: const BoxDecoration(
-        color: Colors.black,
+        color:  Colors.black,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

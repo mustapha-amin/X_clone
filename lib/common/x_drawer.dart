@@ -14,13 +14,19 @@ import 'package:x_clone/utils/textstyle.dart';
 
 import 'x_avatar.dart';
 
-class XDrawer extends ConsumerWidget {
+class XDrawer extends ConsumerStatefulWidget {
   const XDrawer({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<XDrawer> createState() => _XDrawerState();
+}
+
+class _XDrawerState extends ConsumerState<XDrawer> {
+  @override
+  Widget build(BuildContext context) {
     final user = ref.watch(currentUserProvider);
     bool isDark = ref.watch(themeNotifierProvider);
+
     ValueNotifier<bool> isExpanded = ValueNotifier(false);
     return Container(
       color: isDark ? Colors.black : Colors.white,
@@ -204,10 +210,9 @@ class XDrawer extends ConsumerWidget {
                 children: [
                   IconButton(
                     onPressed: () {
-                      Navigator.pop(context);
                       ref
                           .read(themeNotifierProvider.notifier)
-                          .toggleTheme(!isDark);
+                          .toggleTheme(isDark ? false : true);
                     },
                     icon: Icon(isDark ? Icons.light_mode : Icons.dark_mode),
                     color: isDark ? Colors.white : Colors.black,

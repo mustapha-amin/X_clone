@@ -1,3 +1,4 @@
+import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:x_clone/core/core.dart';
@@ -25,7 +26,7 @@ class UserInfo extends ConsumerWidget {
           children: [
             Text(
               user!.name!,
-              style: kTextStyle(30, ref, fontWeight: FontWeight.bold),
+              style: kTextStyle(25, ref, fontWeight: FontWeight.bold),
             ),
             OutlinedButton(
               onPressed: () {
@@ -68,12 +69,30 @@ class UserInfo extends ConsumerWidget {
                       HorizontalSpacing(size: 5),
                     ],
                   ),
+            user!.website!.isEmpty
+                ? const SizedBox()
+                : Row(
+                    children: [
+                      const Icon(
+                        FeatherIcons.link,
+                        size: 15,
+                        color: Colors.grey,
+                      ),
+                      Text(
+                        user!.website!,
+                        style: kTextStyle(15, ref, color: Colors.blue),
+                      )
+                    ],
+                  )
+          ],
+        ),
+        Row(
+          children: [
             const Icon(
               Icons.calendar_month,
               size: 15,
               color: Colors.grey,
             ),
-            HorizontalSpacing(size: 5),
             Text(
               "Joined ${user!.joined!.formatJoinTime}",
               style: kTextStyle(
