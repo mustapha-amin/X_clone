@@ -8,6 +8,7 @@ import 'package:x_clone/models/post_model.dart';
 import 'package:x_clone/utils/extensions.dart';
 import 'package:x_clone/utils/spacing.dart';
 import 'package:x_clone/utils/textstyle.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class PostCard extends ConsumerStatefulWidget {
   final PostModel? post;
@@ -34,18 +35,32 @@ class _PostCardState extends ConsumerState<PostCard> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        children: [
-                          Text(
-                            user.name!,
-                            style: kTextStyle(16, fontWeight: FontWeight.bold),
+                      RichText(
+                        text: TextSpan(
+                          text: user.name!,
+                          style: kTextStyle(
+                            19,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
                           ),
-                          const SizedBox(width: 8),
-                          Text(
-                            '@${user.username!}',
-                            style: kTextStyle(14, color: Colors.grey),
-                          ),
-                        ],
+                          children: [
+                            TextSpan(
+                              text: " @${user.username}  ",
+                              style: kTextStyle(
+                                13,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            TextSpan(
+                              text: timeago.format(widget.post!.timeCreated!,
+                                  locale: 'en_short'),
+                              style: kTextStyle(
+                                13,
+                                color: Colors.grey,
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                       VerticalSpacing(size: 5),
                       Text(

@@ -43,6 +43,7 @@ dependencies:
   google_sign_in: ^6.1.6
   image_picker: ^1.0.4
   shared_preferences: ^2.2.2
+  timeago: ^3.6.0
   uuid: ^4.2.1
 
 dev_dependencies:
