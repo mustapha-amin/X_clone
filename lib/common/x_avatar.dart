@@ -9,7 +9,7 @@ class XAvatar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var user = ref.watch(xUserProvider);
+    var user = ref.watch(currentUserProvider);
     return InkWell(
       onTap: forDrawer!
           ? () => print(user.value)

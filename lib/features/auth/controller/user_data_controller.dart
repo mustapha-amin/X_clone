@@ -22,9 +22,16 @@ final userDataProvider =
   );
 });
 
-final xUserProvider = StreamProvider((ref) {
+final currentUserProvider = StreamProvider((ref) {
   final notifier = ref.watch(userDataProvider.notifier);
-  return notifier.getUserInfo();
+  final auth = ref.watch(authServiceProvider);
+  return notifier.getUserInfo(auth.firebaseAuth.currentUser!.uid);
+});
+
+final otherUserProvider =
+    StreamProvider.family<XUser?, String>((ref, uid) {
+  final user = ref.watch(userDataProvider.notifier);
+  return user.getUserInfo(uid);
 });
 
 final xUserDetailExistsProvider = FutureProvider((ref) async {
@@ -89,9 +96,8 @@ class UserDataController extends StateNotifier<Status> {
     }
   }
 
-  Stream<XUser?> getUserInfo() {
-    return userDataService!
-        .fetchUserData(authService!.firebaseAuth.currentUser!.uid);
+  Stream<XUser?> getUserInfo(String? uid) {
+    return userDataService!.fetchUserData(uid);
   }
 
   Future<bool?> userDetailsExist() async {

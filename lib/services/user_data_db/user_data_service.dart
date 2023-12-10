@@ -17,6 +17,10 @@ final userDataServiceProvider = Provider((ref) {
   );
 });
 
+final xUserStreamProvider = StreamProvider.family<UserDataService, String>((ref, uid) async* {
+  ref.read(userDataServiceProvider).fetchUserData(uid);
+});
+
 class UserDataService implements BaseUserDataService {
   FirebaseFirestore? firebaseFirestore;
   FirebaseStorage? firebaseStorage;
@@ -66,7 +70,7 @@ class UserDataService implements BaseUserDataService {
         .collection(FirebaseConstants.usersCollection)
         .doc(uid!)
         .snapshots()
-        .map((user) => XUser.fromJson(user.data() as Map<String, dynamic>));
+        .map((user) => XUser.fromJson(user.data()!));
   }
 
   Future<bool> userDetailsInDB(String? uid) async {

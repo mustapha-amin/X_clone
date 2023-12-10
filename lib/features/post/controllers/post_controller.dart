@@ -12,7 +12,8 @@ final postNotifierProvider = StateNotifierProvider<PostController, bool>((ref) {
 });
 
 final postsStreamProvider = StreamProvider((ref) {
-  return ref.read(postNotifierProvider.notifier).fetchFeedPosts();
+  final posts = ref.watch(postNotifierProvider.notifier);
+  return posts.fetchFeedPosts();
 });
 
 class PostController extends StateNotifier<bool> {
@@ -45,7 +46,15 @@ class PostController extends StateNotifier<bool> {
     return postService!.fetchFeedPosts();
   }
 
-  Future<List<PostModel>> fetchUserPosts(String? uid) async {
-    return postService!.fetchUserPosts(uid);
+  Future<List<PostModel>?> fetchUserPosts(
+      BuildContext? context, String? uid) async {
+    try {
+      return postService!.fetchUserPosts(uid);
+    } on UnableToFetchPostException catch (e) {
+      if (context!.mounted) {
+        showErrorDialog(context: context, message: e.toString());
+      }
+      return null;
+    }
   }
 }

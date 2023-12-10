@@ -5,6 +5,7 @@ import 'package:x_clone/common/x_avatar.dart';
 import 'package:x_clone/constants/images_paths.dart';
 import 'package:x_clone/core/core.dart';
 import 'package:x_clone/features/auth/controller/user_data_controller.dart';
+import 'package:x_clone/features/home/views/for_you.dart';
 import 'package:x_clone/utils/extensions.dart';
 import 'package:x_clone/utils/textstyle.dart';
 
@@ -59,7 +60,7 @@ class HomeScreen extends ConsumerWidget {
         },
         body: const TabBarView(
           children: [
-            Center(child: Text("Hello")),
+            ForYou(),
             Center(child: Text("Hi")),
           ],
         ),

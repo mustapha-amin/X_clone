@@ -16,7 +16,7 @@ class XDrawer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(xUserProvider);
+    final user = ref.watch(currentUserProvider);
     ValueNotifier<bool> isExpanded = ValueNotifier(false);
     return Container(
       color: Colors.black,

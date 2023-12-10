@@ -7,15 +7,32 @@ import 'package:x_clone/constants/firebase_constants.dart';
 import 'package:x_clone/core/core.dart';
 import 'package:x_clone/models/post_model.dart';
 
-class UnableToPostException implements Exception {}
+class UnableToPostException implements Exception {
+  @override
+  String toString() {
+    return "Unable to post";
+  }
+}
 
-class UnableToDeletePostException implements Exception {}
+class UnableToDeletePostException implements Exception {
+  @override
+  String toString() {
+    return "Unable to delete post";
+  }
+}
+
+class UnableToFetchPostException implements Exception {
+  @override
+  String toString() {
+    return "Unable to fetch posts";
+  }
+}
 
 final postServiceProvider = Provider((ref) {
   return PostService(
     firebaseFirestore: ref.watch(firestoreProvider),
     firebaseStorage: ref.watch(firebaseStorageProvider),
-  ) ;
+  );
 });
 
 class PostService {
@@ -29,17 +46,22 @@ class PostService {
       final storagePath =
           "${FirebaseConstants.uploadedMedia}/${post.uid}/${post.postID}";
       final ref = firebaseStorage!.ref().child(storagePath);
-      post.imagesUrl!.forEach((url) async {
-        int index = post.imagesUrl!.indexOf(url);
-        final task = await ref.putFile(File(url));
-        post.imagesUrl![index] = await task.ref.getDownloadURL();
-      });
+      List<String> imageUrls = [];
+      if (post.imagesUrl!.isNotEmpty) {
+        for (String url in post.imagesUrl!) {
+          int index = post.imagesUrl!.indexOf(url);
+          final task = await ref.putFile(File(url));
+          String downloadUrl = await task.ref.getDownloadURL();
+          imageUrls.add(downloadUrl);
+        }
+      }
+      PostModel updatedPost = post.copyWith(imagesUrl: imageUrls);
       await firebaseFirestore!
           .collection(FirebaseConstants.postsCollection)
-          .doc(post.uid)
+          .doc(updatedPost.uid)
           .collection("posts")
-          .doc(post.postID)
-          .set(post.toJson());
+          .doc(updatedPost.postID)
+          .set(updatedPost.toJson());
     } catch (e) {
       throw UnableToPostException();
     }
@@ -59,23 +81,23 @@ class PostService {
   }
 
   Stream<List<PostModel>> fetchFeedPosts() {
-    final posts = firebaseFirestore!
-        .collection(FirebaseConstants.postsCollection)
-        .snapshots()
-        .map((snap) =>
-            snap.docs.map((doc) => PostModel.fromJson(doc.data())).toList());
-    return posts;
+    return firebaseFirestore!.collectionGroup('posts').snapshots().map((snap) =>
+        snap.docs.map((doc) => PostModel.fromJson(doc.data())).toList());
   }
 
   Future<List<PostModel>> fetchUserPosts(String? uid) async {
-    final snaps = await firebaseFirestore!
-        .collection(FirebaseConstants.postsCollection)
-        .doc(uid)
-        .collection("posts")
-        .get();
+    try {
+      final snaps = await firebaseFirestore!
+          .collection(FirebaseConstants.postsCollection)
+          .doc(uid)
+          .collection("posts")
+          .get();
 
-    final posts =
-        snaps.docs.map((post) => PostModel.fromJson(post.data())).toList();
-    return posts;
+      final posts =
+          snaps.docs.map((post) => PostModel.fromJson(post.data())).toList();
+      return posts;
+    } catch (e) {
+      throw UnableToPostException();
+    }
   }
 }

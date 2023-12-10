@@ -28,8 +28,8 @@ class PostModel {
       postID: json["postID"],
       text: json["text"],
       imagesUrl: List.from(json["imagesUrl"] ?? []),
-      comments: List.from(json["comments"].map((comment) => CommentModel.fromJson(comment))),
-      likesIDs: List.from(json["likesID"] ?? []),
+      comments: (json["comments"] as List<dynamic>).map((e) => CommentModel.fromJson(e)).toList(),
+      likesIDs: List.from(json["likesIDs"] ?? []),
       repostCount: json["repostCount"],
       timeCreated: (json["timeCreated"] as Timestamp).toDate(),
     );
@@ -42,7 +42,7 @@ class PostModel {
       "text": text,
       "imagesUrl": imagesUrl,
       "comments": comments!.map((e) => e.toJson()),
-      "likesID": likesIDs,
+      "likesIDs": likesIDs,
       "repostCount": repostCount,
       "timeCreated": timeCreated,
     };

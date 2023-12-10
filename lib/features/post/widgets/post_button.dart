@@ -1,11 +1,10 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:x_clone/core/core.dart';
 import 'package:x_clone/features/post/controllers/post_controller.dart';
 import 'package:x_clone/models/post_model.dart';
-
+import 'package:uuid/uuid.dart';
 import '../../../theme/theme.dart';
 import '../../../utils/utils.dart';
 
@@ -30,26 +29,25 @@ class PostButton extends ConsumerWidget {
       ),
       builder: (context, child) {
         return GestureDetector(
-          onTap: switch (postTextEditingController.text.isNotEmpty || images.value.isNotEmpty) {
+          onTap: switch (postTextEditingController.text.isNotEmpty ||
+              images.value.isNotEmpty) {
             true => () async => {
                   await ref.read(postNotifierProvider.notifier).createPost(
                         context,
                         PostModel(
                           uid: ref.watch(userProvider)!.uid,
-                          postID:
-                              DateTime.now().microsecondsSinceEpoch.toString(),
+                          postID: const Uuid().v4(),
                           text: postTextEditingController.text,
-                          imagesUrl: [],
+                          imagesUrl: images.value.isEmpty
+                              ? []
+                              : images.value.map((e) => e.path).toList(),
                           comments: [],
                           likesIDs: [],
                           repostCount: 0,
                           timeCreated: DateTime.now(),
                         ),
                       ),
-                  Future.delayed(
-                    const Duration(milliseconds: 200),
-                    () => Navigator.pop(context),
-                  )
+                  Navigator.pop(context),
                 },
             _ => null
           },
