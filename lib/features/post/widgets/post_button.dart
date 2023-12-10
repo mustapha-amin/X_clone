@@ -66,7 +66,7 @@ class PostButton extends ConsumerWidget {
             child: Center(
               child: Text(
                 "Post",
-                style: kTextStyle(15, fontWeight: FontWeight.bold),
+                style: kTextStyle(15, ref, fontWeight: FontWeight.bold),
               ),
             ),
           ).padX(8),

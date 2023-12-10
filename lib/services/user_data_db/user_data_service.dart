@@ -17,7 +17,8 @@ final userDataServiceProvider = Provider((ref) {
   );
 });
 
-final xUserStreamProvider = StreamProvider.family<UserDataService, String>((ref, uid) async* {
+final xUserStreamProvider =
+    StreamProvider.family<UserDataService, String>((ref, uid) async* {
   ref.read(userDataServiceProvider).fetchUserData(uid);
 });
 
@@ -80,4 +81,11 @@ class UserDataService implements BaseUserDataService {
         .get();
     return data.exists;
   }
+
+  // Future<List<XUser>> searchUser(String query) async {
+  //   final data = await firebaseFirestore!
+  //       .collection(FirebaseConstants.usersCollection).where(
+  //         'name', 
+  //       );
+  // }
 }

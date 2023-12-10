@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:x_clone/constants/images_paths.dart';
 import 'package:x_clone/utils/textstyle.dart';
 
-class AuthButton extends StatelessWidget {
+class AuthButton extends ConsumerWidget {
   VoidCallback? onPressed;
   String? label;
   bool? isGoogle;
@@ -20,7 +21,7 @@ class AuthButton extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: SizedBox(
@@ -47,6 +48,7 @@ class AuthButton extends StatelessWidget {
                 label!,
                 style: kTextStyle(
                   16,
+                   ref,
                   color: fgColor ?? Colors.black,
                   fontWeight: FontWeight.bold,
                 ),

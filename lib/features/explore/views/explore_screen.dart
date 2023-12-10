@@ -26,6 +26,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
           leading: XAvatar(),
           titleSpacing: 0,
           title: SearchBar(
+            elevation: const MaterialStatePropertyAll(0),
             controller: searchController,
             constraints: BoxConstraints(
               minHeight: context.screenHeight * .065,
@@ -41,7 +42,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
             ),
             hintText: "Search X",
             hintStyle: MaterialStatePropertyAll(
-              kTextStyle(13, color: Colors.grey[500]),
+              kTextStyle(13, ref, color: Colors.grey[500]),
             ),
           ),
           actions: [

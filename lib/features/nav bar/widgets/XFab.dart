@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:x_clone/theme/pallete.dart';
 import 'package:x_clone/utils/spacing.dart';
 import 'package:x_clone/utils/textstyle.dart';
 
-class XFab extends StatelessWidget {
+class XFab extends ConsumerWidget {
   VoidCallback? onTap;
   IconData? iconData;
   String? label;
@@ -21,7 +22,7 @@ class XFab extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
@@ -31,6 +32,7 @@ class XFab extends StatelessWidget {
                 label!,
                 style: kTextStyle(
                   15,
+                   ref,
                   color: Colors.white,
                   fontWeight: FontWeight.bold
                 ),

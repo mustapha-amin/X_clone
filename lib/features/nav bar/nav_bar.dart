@@ -7,6 +7,7 @@ import 'package:x_clone/features/home/home.dart';
 import 'package:x_clone/features/messaging/views/message_screen.dart';
 import 'package:x_clone/features/nav%20bar/widgets/XFab.dart';
 import 'package:x_clone/features/post/views/post_screen.dart';
+import 'package:x_clone/services/services.dart';
 import 'package:x_clone/theme/pallete.dart';
 import 'package:x_clone/utils/spacing.dart';
 import '../../utils/navigation.dart';
@@ -44,14 +45,26 @@ class _XBottomNavBarState extends ConsumerState<XBottomNavBar> {
   Widget build(BuildContext context) {
     int index = ref.watch(navbarProvider);
     bool isExpanded = ref.watch(expandedProvider);
+    bool isDark = ref.watch(themeNotifierProvider);
     return SafeArea(
       child: Scaffold(
         drawer: const XDrawer(),
         body: GestureDetector(
           onTap: () => isExpanded ? toggleExpanded() : null,
-          child: IndexedStack(
-            index: index,
-            children: screens,
+          child: Stack(
+            children: [
+              IndexedStack(
+                index: index,
+                children: screens,
+              ),
+              isExpanded
+                  ? Container(
+                      color: Colors.black.withOpacity(0.8),
+                      width: double.infinity,
+                      height: double.infinity,
+                    )
+                  : const SizedBox(),
+            ],
           ),
         ),
         bottomNavigationBar: Theme(
@@ -59,7 +72,11 @@ class _XBottomNavBarState extends ConsumerState<XBottomNavBar> {
             splashColor: Colors.transparent,
           ),
           child: BottomNavigationBar(
-            backgroundColor: Colors.black,
+            backgroundColor: switch ((isDark, isExpanded)) {
+              (true, _) => Colors.black.withOpacity(0.8),
+              (false, false) => Colors.white,
+              _ => Colors.black.withOpacity(0.8),
+            },
             currentIndex: index,
             onTap: (index) {
               ref.read(navbarProvider.notifier).state = index;
@@ -74,14 +91,9 @@ class _XBottomNavBarState extends ConsumerState<XBottomNavBar> {
               BottomNavigationBarItem(
                 icon: Icon(
                   FeatherIcons.search,
-                  color: index == 1 ? Colors.white : Colors.grey[200],
                 ),
                 label: '',
               ),
-              // BottomNavigationBarItem(
-              //   icon: Icon(Icons.people),
-              //   label: '',
-              // ),
               BottomNavigationBarItem(
                 icon: Icon(
                   index == 2 ? Icons.notifications : Icons.notifications_none,
@@ -125,7 +137,7 @@ class _XBottomNavBarState extends ConsumerState<XBottomNavBar> {
                     VerticalSpacing(size: 10),
                     XFab(
                       isMain: true,
-                      bgColor: Colors.blue,
+                      bgColor: AppColors.blueColor,
                       fgColor: Colors.white,
                       label: "Post",
                       onTap: () => navigateTo(context, const PostScreen()),
@@ -135,7 +147,7 @@ class _XBottomNavBarState extends ConsumerState<XBottomNavBar> {
                 ),
               _ => XFab(
                   isMain: true,
-                  bgColor: Colors.blue,
+                  bgColor: AppColors.blueColor,
                   fgColor: Colors.white,
                   onTap: toggleExpanded,
                   iconData: Icons.add,
@@ -146,7 +158,7 @@ class _XBottomNavBarState extends ConsumerState<XBottomNavBar> {
               children: [
                 XFab(
                   isMain: true,
-                  bgColor: Colors.blue,
+                  bgColor: AppColors.blueColor,
                   fgColor: Colors.white,
                   onTap: () {},
                   iconData: Icons.local_post_office_outlined,
@@ -162,6 +174,7 @@ class _XBottomNavBarState extends ConsumerState<XBottomNavBar> {
                       child: Icon(
                         Icons.add,
                         size: 14,
+                        color: Colors.white,
                       ),
                     ),
                   ),

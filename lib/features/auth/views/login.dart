@@ -87,7 +87,7 @@ class _LogInState extends ConsumerState<LogIn> {
                           VerticalSpacing(size: 10),
                           Text(
                             "Log In",
-                            style: kTextStyle(35, fontWeight: FontWeight.bold)
+                            style: kTextStyle(35, ref, fontWeight: FontWeight.bold)
                                 .copyWith(
                               letterSpacing: 1,
                             ),
@@ -100,11 +100,11 @@ class _LogInState extends ConsumerState<LogIn> {
                               decoration: InputDecoration(
                                 label: Text(
                                   "email",
-                                  style: kTextStyle(15, color: Colors.grey),
+                                  style: kTextStyle(15,  ref, color: Colors.grey),
                                 ),
                                 errorText: error,
                                 labelStyle:
-                                    kTextStyle(15, color: AppColors.blueColor),
+                                    kTextStyle(15, ref, color: AppColors.blueColor),
                                 focusedBorder: const OutlineInputBorder(
                                   borderSide: BorderSide(
                                     color: AppColors.blueColor,
@@ -133,11 +133,11 @@ class _LogInState extends ConsumerState<LogIn> {
                               decoration: InputDecoration(
                                 label: Text(
                                   "password",
-                                  style: kTextStyle(15, color: Colors.grey),
+                                  style: kTextStyle(15, ref, color: Colors.grey),
                                 ),
                                 errorText: error,
                                 labelStyle:
-                                    kTextStyle(15, color: AppColors.blueColor),
+                                    kTextStyle(15, ref, color: AppColors.blueColor),
                                 focusedBorder: const OutlineInputBorder(
                                   borderSide: BorderSide(
                                     color: AppColors.blueColor,
@@ -193,7 +193,7 @@ class _LogInState extends ConsumerState<LogIn> {
                               child: Text(
                                 "Forgot password?",
                                 style:
-                                    kTextStyle(15, fontWeight: FontWeight.bold),
+                                    kTextStyle(15,  ref, fontWeight: FontWeight.bold),
                               ),
                             ),
                           ),
@@ -218,7 +218,7 @@ class _LogInState extends ConsumerState<LogIn> {
                               },
                               child: Text(
                                 "Next",
-                                style: kTextStyle(15,
+                                style: kTextStyle(15, ref,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.black),
                               ),

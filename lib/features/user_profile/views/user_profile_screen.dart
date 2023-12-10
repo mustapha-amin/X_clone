@@ -37,10 +37,16 @@ class UserProfileScreen extends ConsumerWidget {
                                 : Image.network(
                                     user.coverPicUrl!,
                                     fit: BoxFit.fitWidth,
+                                    errorBuilder: (context, _, __) {
+                                      return const Icon(
+                                        Icons.error,
+                                        size: 40,
+                                      );
+                                    },
                                   ),
                           ),
                           Positioned(
-                            bottom: -5,
+                            bottom: 0,
                             left: 5,
                             child: CircleAvatar(
                               backgroundImage:

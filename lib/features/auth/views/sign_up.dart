@@ -90,7 +90,7 @@ class _SignUpState extends ConsumerState<SignUp> {
                     Text(
                       "Create an account",
                       style:
-                          kTextStyle(35, fontWeight: FontWeight.bold).copyWith(
+                          kTextStyle(35, ref, fontWeight: FontWeight.bold).copyWith(
                         letterSpacing: 1,
                       ),
                     ),
@@ -105,11 +105,11 @@ class _SignUpState extends ConsumerState<SignUp> {
                             decoration: InputDecoration(
                               label: Text(
                                 "Email",
-                                style: kTextStyle(15, color: Colors.grey),
+                                style: kTextStyle(15, ref, color: Colors.grey),
                               ),
                               errorText: error,
                               labelStyle:
-                                  kTextStyle(15, color: AppColors.blueColor),
+                                  kTextStyle(15, ref, color: AppColors.blueColor),
                               focusedBorder: const OutlineInputBorder(
                                 borderSide: BorderSide(
                                   color: AppColors.blueColor,
@@ -145,10 +145,10 @@ class _SignUpState extends ConsumerState<SignUp> {
                               errorMaxLines: 4,
                               label: Text(
                                 "Password",
-                                style: kTextStyle(15, color: Colors.grey),
+                                style: kTextStyle(15,  ref, color: Colors.grey),
                               ),
                               labelStyle:
-                                  kTextStyle(15, color: AppColors.blueColor),
+                                  kTextStyle(15,  ref, color: AppColors.blueColor),
                               focusedBorder: const OutlineInputBorder(
                                 borderSide: BorderSide(
                                   color: AppColors.blueColor,

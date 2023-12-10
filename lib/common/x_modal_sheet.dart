@@ -70,7 +70,7 @@ class _XBtmModalSheetState extends ConsumerState<XBtmModalSheet> {
               },
               child: Text(
                 "Sign out",
-                style: kTextStyle(18, fontWeight: FontWeight.bold),
+                style: kTextStyle(18, ref, fontWeight: FontWeight.bold),
               ),
             ),
           )

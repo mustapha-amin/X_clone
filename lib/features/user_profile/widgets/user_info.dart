@@ -25,7 +25,7 @@ class UserInfo extends ConsumerWidget {
           children: [
             Text(
               user!.name!,
-              style: kTextStyle(30, fontWeight: FontWeight.bold),
+              style: kTextStyle(30, ref, fontWeight: FontWeight.bold),
             ),
             OutlinedButton(
               onPressed: () {
@@ -43,12 +43,12 @@ class UserInfo extends ConsumerWidget {
         ),
         Text(
           '@${user!.username!}',
-          style: kTextStyle(15, color: Colors.grey),
+          style: kTextStyle(15, ref, color: Colors.grey),
         ),
         VerticalSpacing(size: 5),
         Text(
           user!.bio!,
-          style: kTextStyle(16),
+          style: kTextStyle(16, ref),
         ),
         Row(
           children: [
@@ -63,7 +63,7 @@ class UserInfo extends ConsumerWidget {
                       ),
                       Text(
                         user!.location!,
-                        style: kTextStyle(15, color: Colors.grey),
+                        style: kTextStyle(15, ref, color: Colors.grey),
                       ),
                       HorizontalSpacing(size: 5),
                     ],
@@ -78,6 +78,7 @@ class UserInfo extends ConsumerWidget {
               "Joined ${user!.joined!.formatJoinTime}",
               style: kTextStyle(
                 15,
+                ref,
                 color: Colors.grey,
               ),
             ),
@@ -86,21 +87,19 @@ class UserInfo extends ConsumerWidget {
         RichText(
           text: TextSpan(
             text: "${user!.following!.length} ",
-            style: kTextStyle(15,
-                color: Colors.white, fontWeight: FontWeight.bold),
+            style: kTextStyle(15, ref, fontWeight: FontWeight.bold),
             children: [
               TextSpan(
                 text: "Following  ",
-                style: kTextStyle(12, color: Colors.grey),
+                style: kTextStyle(12, ref, color: Colors.grey),
               ),
               TextSpan(
                 text: "${user!.followers!.length} ",
-                style: kTextStyle(15,
-                    color: Colors.white, fontWeight: FontWeight.bold),
+                style: kTextStyle(15, ref, fontWeight: FontWeight.bold),
               ),
               TextSpan(
                 text: "Followers",
-                style: kTextStyle(12, color: Colors.grey),
+                style: kTextStyle(12, ref, color: Colors.grey),
               ),
             ],
           ),

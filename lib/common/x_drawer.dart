@@ -6,6 +6,7 @@ import 'package:x_clone/common/x_modal_sheet.dart';
 import 'package:x_clone/core/core.dart';
 import 'package:x_clone/features/auth/controller/user_data_controller.dart';
 import 'package:x_clone/features/user_profile/views/user_profile_screen.dart';
+import 'package:x_clone/services/services.dart';
 import 'package:x_clone/utils/extensions.dart';
 import 'package:x_clone/utils/navigation.dart';
 import 'package:x_clone/utils/spacing.dart';
@@ -19,9 +20,10 @@ class XDrawer extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(currentUserProvider);
+    bool isDark = ref.watch(themeNotifierProvider);
     ValueNotifier<bool> isExpanded = ValueNotifier(false);
     return Container(
-      color: Colors.black,
+      color: isDark ? Colors.black : Colors.white,
       width: context.screenWidth * .85,
       key: ref.watch(scaffoldKeyProvider),
       child: Column(
@@ -70,12 +72,12 @@ class XDrawer extends ConsumerWidget {
                           children: [
                             Text(
                               user!.name!,
-                              style:
-                                  kTextStyle(22, fontWeight: FontWeight.bold),
+                              style: kTextStyle(22, ref,
+                                  fontWeight: FontWeight.bold),
                             ),
                             Text(
                               '@${user.username!}',
-                              style: kTextStyle(14, color: Colors.grey),
+                              style: kTextStyle(14, ref, color: Colors.grey),
                             ),
                             VerticalSpacing(size: 16),
                             Row(
@@ -83,25 +85,23 @@ class XDrawer extends ConsumerWidget {
                                 RichText(
                                   text: TextSpan(
                                     text: "${user.following!.length} ",
-                                    style: kTextStyle(12,
-                                        color: Colors.white,
+                                    style: kTextStyle(12, ref,
                                         fontWeight: FontWeight.bold),
                                     children: [
                                       TextSpan(
                                         text: "Following  ",
-                                        style:
-                                            kTextStyle(12, color: Colors.grey),
+                                        style: kTextStyle(12, ref,
+                                            color: Colors.grey),
                                       ),
                                       TextSpan(
                                         text: "${user.followers!.length} ",
-                                        style: kTextStyle(12,
-                                            color: Colors.white,
+                                        style: kTextStyle(12, ref,
                                             fontWeight: FontWeight.bold),
                                       ),
                                       TextSpan(
                                         text: "Followers",
-                                        style:
-                                            kTextStyle(12, color: Colors.grey),
+                                        style: kTextStyle(12, ref,
+                                            color: Colors.grey),
                                       ),
                                     ],
                                   ),
@@ -161,7 +161,10 @@ class XDrawer extends ConsumerWidget {
                   onExpansionChanged: (_) {
                     isExpanded.value = !isExpanded.value;
                   },
-                  title: const Text("Proffesional tools"),
+                  title: Text(
+                    "Proffesional tools",
+                    style: kTextStyle(18, ref),
+                  ),
                   children: [
                     DrawerTile(
                       iconData: FeatherIcons.arrowUpRight,
@@ -172,7 +175,10 @@ class XDrawer extends ConsumerWidget {
                   ],
                 ),
                 ExpansionTile(
-                  title: Text("Settings and support"),
+                  title: Text(
+                    "Settings and support",
+                    style: kTextStyle(18, ref),
+                  ),
                   children: [
                     DrawerTile(
                       iconData: FeatherIcons.settings,
@@ -196,7 +202,16 @@ class XDrawer extends ConsumerWidget {
             child: Center(
               child: Row(
                 children: [
-                  const Icon(Icons.dark_mode).padX(10),
+                  IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      ref
+                          .read(themeNotifierProvider.notifier)
+                          .toggleTheme(!isDark);
+                    },
+                    icon: Icon(isDark ? Icons.light_mode : Icons.dark_mode),
+                    color: isDark ? Colors.white : Colors.black,
+                  )
                 ],
               ),
             ),

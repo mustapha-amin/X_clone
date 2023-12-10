@@ -81,6 +81,7 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                   "Save",
                   style: kTextStyle(
                     15,
+                    ref,
                     color: fieldsNotEmpty ? Colors.white : Colors.black,
                   ),
                 ),
@@ -131,35 +132,35 @@ class _EditProfileState extends ConsumerState<EditProfile> {
               controller: nameController,
               decoration: InputDecoration(
                 labelText: "Name",
-                labelStyle: kTextStyle(15, color: Colors.grey),
+                labelStyle: kTextStyle(15,  ref,color: Colors.grey),
               ),
             ),
             TextField(
               controller: usernameController,
               decoration: InputDecoration(
                 labelText: "Username",
-                labelStyle: kTextStyle(15, color: Colors.grey),
+                labelStyle: kTextStyle(15, ref, color: Colors.grey),
               ),
             ),
             TextField(
               controller: bioController,
               decoration: InputDecoration(
                 labelText: "Bio",
-                labelStyle: kTextStyle(15, color: Colors.grey),
+                labelStyle: kTextStyle(15, ref, color: Colors.grey),
               ),
             ),
             TextField(
               controller: locationController,
               decoration: InputDecoration(
                 labelText: "Location",
-                labelStyle: kTextStyle(15, color: Colors.grey),
+                labelStyle: kTextStyle(15, ref, color: Colors.grey),
               ),
             ),
             TextField(
               controller: websiteController,
               decoration: InputDecoration(
                 labelText: "Website",
-                labelStyle: kTextStyle(15, color: Colors.grey),
+                labelStyle: kTextStyle(15,  ref,color: Colors.grey),
               ),
             ),
           ],

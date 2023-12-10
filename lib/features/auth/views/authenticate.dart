@@ -56,7 +56,7 @@ class _AuthenticateState extends ConsumerState<Authenticate> {
                     VerticalSpacing(size: context.screenHeight * .15),
                     Text(
                       "See what's\nhappening in the\nworld right now.",
-                      style: kTextStyle(28, fontWeight: FontWeight.bold),
+                      style: kTextStyle(28, ref, fontWeight: FontWeight.bold),
                     ),
                     VerticalSpacing(size: context.screenHeight * .15),
                     AuthButton(
@@ -78,7 +78,7 @@ class _AuthenticateState extends ConsumerState<Authenticate> {
                     VerticalSpacing(size: context.screenWidth * .15),
                     RichText(
                       text: TextSpan(
-                        style: kTextStyle(13, color: Colors.grey[700]),
+                        style: kTextStyle(13, ref, color: Colors.grey[700]),
                         text: "Have an account already? ",
                         children: [
                           TextSpan(
@@ -88,7 +88,7 @@ class _AuthenticateState extends ConsumerState<Authenticate> {
                                     const LogIn(),
                                   ),
                             text: "Log in",
-                            style: kTextStyle(13, color: Colors.blue),
+                            style: kTextStyle(13, ref, color: Colors.blue),
                           )
                         ],
                       ),

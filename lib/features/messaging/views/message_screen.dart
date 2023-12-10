@@ -23,6 +23,7 @@ class _MessageScreenState extends ConsumerState<MessageScreen> {
           leadingWidth: context.screenWidth * .2,
           leading: XAvatar(),
           title: SearchBar(
+            elevation: const MaterialStatePropertyAll(0),
             controller: searchController,
             constraints: BoxConstraints(
               minHeight: context.screenHeight * .065,
@@ -38,7 +39,7 @@ class _MessageScreenState extends ConsumerState<MessageScreen> {
             ),
             hintText: "Search Direct Messages",
             hintStyle: MaterialStatePropertyAll(
-              kTextStyle(13, color: Colors.grey[500]),
+              kTextStyle(13, ref, color: Colors.grey[500]),
             ),
           ),
           actions: [

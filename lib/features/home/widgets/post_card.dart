@@ -54,7 +54,7 @@ class _PostCardState extends ConsumerState<PostCard> {
                           text: user.name!,
                           style: kTextStyle(
                             19,
-                            color: Colors.white,
+                            ref,
                             fontWeight: FontWeight.bold,
                           ),
                           children: [
@@ -62,6 +62,7 @@ class _PostCardState extends ConsumerState<PostCard> {
                               text: " @${user.username}  ",
                               style: kTextStyle(
                                 13,
+                                ref,
                                 color: Colors.grey,
                               ),
                             ),
@@ -70,6 +71,7 @@ class _PostCardState extends ConsumerState<PostCard> {
                                   locale: 'en_short'),
                               style: kTextStyle(
                                 13,
+                                ref,
                                 color: Colors.grey,
                               ),
                             )
@@ -79,11 +81,21 @@ class _PostCardState extends ConsumerState<PostCard> {
                       VerticalSpacing(size: 5),
                       Text(
                         widget.post!.text!,
-                        style: kTextStyle(16),
+                        style: kTextStyle(
+                          16,
+                          ref,
+                        ),
                       ),
-                      SizedBox(
+                      Container(
                         width: context.screenWidth,
                         height: context.screenHeight * .3,
+                        decoration: BoxDecoration(
+                          border: Border.symmetric(
+                            vertical:
+                                const BorderSide(color: Colors.grey, width: 0.3),
+                          ),
+                          borderRadius: BorderRadius.circular(5),
+                        ),
                         child: Stack(
                           alignment: Alignment.topRight,
                           children: [
@@ -117,7 +129,10 @@ class _PostCardState extends ConsumerState<PostCard> {
                               ),
                               child: Text(
                                 "${currentPage + 1} / ${widget.post!.imagesUrl!.length}",
-                                style: kTextStyle(12),
+                                style: kTextStyle(
+                                  12,
+                                  ref,
+                                ),
                               ),
                             )
                           ],

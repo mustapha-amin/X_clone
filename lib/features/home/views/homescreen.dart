@@ -6,6 +6,7 @@ import 'package:x_clone/constants/images_paths.dart';
 import 'package:x_clone/core/core.dart';
 import 'package:x_clone/features/auth/controller/user_data_controller.dart';
 import 'package:x_clone/features/home/views/for_you.dart';
+import 'package:x_clone/services/services.dart';
 import 'package:x_clone/utils/extensions.dart';
 import 'package:x_clone/utils/textstyle.dart';
 
@@ -20,6 +21,7 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    bool isDark = ref.watch(themeNotifierProvider);
     return DefaultTabController(
       length: 2,
       child: NestedScrollView(
@@ -30,8 +32,8 @@ class HomeScreen extends ConsumerWidget {
               leading: XAvatar(),
               title: SvgPicture.asset(
                 ImagesPaths.x_icon,
-                colorFilter: const ColorFilter.mode(
-                  Colors.white,
+                colorFilter: ColorFilter.mode(
+                  isDark ? Colors.white : Colors.black,
                   BlendMode.srcIn,
                 ),
                 width: 30,
@@ -44,13 +46,19 @@ class HomeScreen extends ConsumerWidget {
                   Tab(
                     child: Text(
                       "For you",
-                      style: kTextStyle(16),
+                      style: kTextStyle(
+                        16,
+                        ref,
+                      ),
                     ),
                   ),
                   Tab(
                     child: Text(
                       "Following",
-                      style: kTextStyle(16),
+                      style: kTextStyle(
+                        16,
+                        ref,
+                      ),
                     ),
                   ),
                 ],

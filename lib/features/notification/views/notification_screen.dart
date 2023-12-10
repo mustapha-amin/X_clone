@@ -27,7 +27,7 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
             "Notifications",
             style: kTextStyle(
               25,
-              color: Colors.white,
+               ref,
               fontWeight: FontWeight.bold,
             ),
           ),

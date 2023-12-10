@@ -101,13 +101,13 @@ class _PostScreenState extends ConsumerState<PostScreen> {
                                       decoration: InputDecoration(
                                         hintText: "What's happening?",
                                         hintStyle:
-                                            kTextStyle(20, color: Colors.grey),
+                                            kTextStyle(20,  ref,color: Colors.grey[600]),
                                         border: InputBorder.none,
                                         focusedBorder: InputBorder.none,
                                       ),
                                       style: kTextStyle(
                                         20,
-                                        color: Colors.white,
+                                         ref,
                                       ),
                                     ),
                                     switch (pickedImages.isNotEmpty) {
@@ -178,7 +178,7 @@ class _PostScreenState extends ConsumerState<PostScreen> {
                           HorizontalSpacing(size: 10),
                           Text(
                             "Everyone can reply",
-                            style: kTextStyle(13, color: AppColors.blueColor),
+                            style: kTextStyle(13,  ref,color: AppColors.blueColor),
                           ),
                         ],
                       ),
