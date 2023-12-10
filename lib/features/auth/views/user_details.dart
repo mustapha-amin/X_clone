@@ -274,7 +274,9 @@ class _UserDetailsState extends ConsumerState<UserDetails> {
                       builder: (context, child) {
                         bool isEnabled = usernameErrorText.value!.isNotEmpty &&
                             bioErrorText.value!.isNotEmpty &&
-                            nameErrorText.value!.isNotEmpty;
+                            nameErrorText.value!.isNotEmpty &&
+                            profileImage!.path.isNotEmpty &&
+                            coverImage!.path.isNotEmpty;
                         return ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor:
@@ -286,7 +288,9 @@ class _UserDetailsState extends ConsumerState<UserDetails> {
                           onPressed: () async {
                             if (usernameController.text.isNotEmpty &&
                                 nameController.text.isNotEmpty &&
-                                bioController.text.isNotEmpty) {
+                                bioController.text.isNotEmpty &&
+                                profileImage!.path.isNotEmpty &&
+                                coverImage!.path.isNotEmpty) {
                               try {
                                 await ref
                                     .read(userDataProvider.notifier)

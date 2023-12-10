@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:x_clone/constants/firebase_constants.dart';
 import 'package:x_clone/core/core.dart';
 import 'package:x_clone/models/user_model.dart';
 import 'package:x_clone/services/auth/auth_service.dart';
@@ -28,7 +29,7 @@ final currentUserProvider = StreamProvider((ref) {
   return notifier.getUserInfo(auth.firebaseAuth.currentUser!.uid);
 });
 
-final otherUserProvider = StreamProvider.family<XUser?, String>((ref, uid) {
+final userProviderWithID = StreamProvider.family<XUser?, String>((ref, uid) {
   final user = ref.watch(userDataProvider.notifier);
   return user.getUserInfo(uid);
 });
@@ -102,5 +103,23 @@ class UserDataController extends StateNotifier<Status> {
     bool exists = await userDataService!
         .userDetailsInDB(authService!.firebaseAuth.currentUser!.uid);
     return exists;
+  }
+
+  FutureVoid updateData(BuildContext context, List<String> fields,
+      List<String> updatedData, String uid, WidgetRef ref) async {
+    try {
+      fields.forEach((field) async {
+        String data = updatedData[fields.indexOf(field)];
+        await ref
+            .read(firestoreProvider)
+            .collection(FirebaseConstants.usersCollection)
+            .doc(uid)
+            .update({
+          field: data,
+        });
+      });
+    } catch (e) {
+      showErrorDialog(context: context, message: "An error occured");
+    }
   }
 }

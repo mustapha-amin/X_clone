@@ -28,8 +28,8 @@ class _ForYouState extends ConsumerState<ForYou> {
               );
             },
           ),
-          error: (_, __) => Center(child: Text("Error fetching postss")),
-          loading: () => XLoader(),
+          error: (_, __) => const Center(child: Text("Error fetching postss")),
+          loading: () => const XLoader(),
         );
   }
 }

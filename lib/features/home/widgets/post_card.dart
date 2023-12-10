@@ -26,7 +26,7 @@ class _PostCardState extends ConsumerState<PostCard> {
 
   @override
   Widget build(BuildContext context) {
-    return ref.watch(otherUserProvider(widget.post!.uid!)).when(
+    return ref.watch(userProviderWithID(widget.post!.uid!)).when(
           data: (user) {
             return Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -90,7 +90,12 @@ class _PostCardState extends ConsumerState<PostCard> {
                             CarouselSlider(
                               items: [
                                 ...widget.post!.imagesUrl!.map(
-                                  (e) => Image.network(e),
+                                  (e) => Image.network(
+                                    e,
+                                    errorBuilder: (context, _, __) {
+                                      return const Icon(Icons.error);
+                                    },
+                                  ),
                                 ),
                               ],
                               options: CarouselOptions(
