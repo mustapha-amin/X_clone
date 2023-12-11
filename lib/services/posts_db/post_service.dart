@@ -102,19 +102,27 @@ class PostService {
     }
   }
 
-  FutureVoid likePost(PostModel? post, String? uid,
-      {bool isLiked = false}) async {
-    final doc = await firebaseFirestore!
+  FutureVoid likePost(PostModel? post) async {
+    await firebaseFirestore!
         .collection(FirebaseConstants.postsCollection)
         .doc(post!.uid)
         .collection('posts')
         .doc(post.postID)
         .update({
-      'likes': isLiked
-          ? FieldValue.arrayRemove([uid])
-          : FieldValue.arrayUnion([uid]),
+      'likesIDs': post.likesIDs,
     });
   }
+
+  // Future<bool> postIsLiked(PostModel? post) async {
+  //   final doc = await firebaseFirestore!
+  //       .collection(FirebaseConstants.postsCollection)
+  //       .doc(post!.uid)
+  //       .collection('posts')
+  //       .doc(post.postID)
+  //       .get();
+
+  //   return PostModel.fromJson(doc.data()!).likesIDs!.contains(uid);
+  // }
 
   FutureVoid commentOnPost(PostModel? post, CommentModel comment) async {
     final doc = await firebaseFirestore!
@@ -126,7 +134,4 @@ class PostService {
       'comments': FieldValue.arrayUnion([comment.toJson()])
     });
   }
-
-  
-  
 }

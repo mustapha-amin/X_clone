@@ -16,3 +16,6 @@ final scaffoldKeyProvider = Provider((ref) {
 });
 final firestoreProvider = Provider((ref) => FirebaseFirestore.instance);
 final firebaseStorageProvider = Provider((ref) => FirebaseStorage.instance);
+final uidProvider =  Provider((ref) {
+  return FirebaseAuth.instance.currentUser!.uid;
+});

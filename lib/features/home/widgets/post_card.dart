@@ -1,16 +1,19 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:feather_icons/feather_icons.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:x_clone/common/x_loader.dart';
+import 'package:x_clone/core/core.dart';
 import 'package:x_clone/features/auth/controller/user_data_controller.dart';
+import 'package:x_clone/features/home/controller/controllers.dart';
 import 'package:x_clone/features/home/widgets/post_icon_buttons.dart';
+import 'package:x_clone/features/post/controllers/post_controller.dart';
 import 'package:x_clone/features/user_profile/views/user_profile_screen.dart';
 import 'package:x_clone/models/post_model.dart';
-import 'package:x_clone/utils/extensions.dart';
-import 'package:x_clone/utils/spacing.dart';
-import 'package:x_clone/utils/textstyle.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:x_clone/models/user_model.dart';
+import 'package:x_clone/services/posts_db/post_service.dart';
 import 'package:x_clone/utils/utils.dart';
 
 class PostCard extends ConsumerStatefulWidget {
@@ -23,6 +26,10 @@ class PostCard extends ConsumerStatefulWidget {
 
 class _PostCardState extends ConsumerState<PostCard> {
   int currentPage = 0;
+
+  bool isLiked(String uid) {
+    return widget.post!.likesIDs!.contains(uid);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -90,9 +97,11 @@ class _PostCardState extends ConsumerState<PostCard> {
                         width: context.screenWidth,
                         height: context.screenHeight * .3,
                         decoration: BoxDecoration(
-                          border: Border.symmetric(
-                            vertical:
-                                const BorderSide(color: Colors.grey, width: 0.3),
+                          border: const Border.symmetric(
+                            vertical: BorderSide(
+                              color: Colors.grey,
+                              width: 0.3,
+                            ),
                           ),
                           borderRadius: BorderRadius.circular(5),
                         ),
@@ -151,8 +160,24 @@ class _PostCardState extends ConsumerState<PostCard> {
                             count: widget.post!.repostCount,
                           ),
                           PostIconButton(
-                            iconData: Icons.favorite_border,
+                            iconData: isLiked(ref.watch(uidProvider))
+                                ? Icons.favorite
+                                : Icons.favorite_border_outlined,
                             count: widget.post!.likesIDs!.length,
+                            callback: () async {
+                              isLiked(ref.watch(uidProvider))
+                                  ? widget.post!.likesIDs!
+                                      .remove(ref.watch(uidProvider))
+                                  : widget.post!.likesIDs!
+                                      .add(ref.watch(uidProvider));
+                              await ref
+                                  .read(postServiceProvider)
+                                  .likePost(widget.post);
+                              setState(() {});
+                            },
+                            color: isLiked(ref.watch(uidProvider))
+                                ? Colors.red
+                                : Colors.grey,
                           ),
                           PostIconButton(
                             iconData: Icons.share,
