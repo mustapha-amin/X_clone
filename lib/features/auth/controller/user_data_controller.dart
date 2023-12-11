@@ -62,8 +62,6 @@ class UserDataController extends StateNotifier<Status> {
       username: username!,
       email: ref.watch(userProvider)!.email!,
       bio: bio!,
-      tweetCount: 0,
-      likesCount: 0,
       location: "",
       joined: DateTime.now(),
       followers: [],

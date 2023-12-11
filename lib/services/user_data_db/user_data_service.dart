@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:x_clone/core/core.dart';
@@ -82,10 +83,25 @@ class UserDataService implements BaseUserDataService {
     return data.exists;
   }
 
-  // Future<List<XUser>> searchUser(String query) async {
-  //   final data = await firebaseFirestore!
-  //       .collection(FirebaseConstants.usersCollection).where(
-  //         'name', 
-  //       );
-  // }
+  FutureVoid followUser(String uid, {bool isFollowing = false}) async {
+    await firebaseFirestore!
+        .collection(FirebaseConstants.usersCollection)
+        .doc(uid)
+        .update({
+      'followers': isFollowing
+          ? FieldValue.arrayRemove([uid])
+          : FieldValue.arrayUnion([uid]),
+    });
+  }
+
+  Future<bool> isFollowing(String? uid) async {
+    final doc = await firebaseFirestore!
+        .collection(FirebaseConstants.usersCollection)
+        .doc(uid)
+        .get();
+    List<String> followers = doc.data()!['followers'];
+
+    return followers.contains(FirebaseAuth.instance.currentUser!.uid);
+  }
+
 }

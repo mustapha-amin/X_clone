@@ -6,8 +6,6 @@ class XUser {
   String? username;
   String? email;
   String? bio;
-  int? tweetCount;
-  int? likesCount;
   String? location;
   DateTime? joined;
   List<String>? followers;
@@ -22,8 +20,6 @@ class XUser {
     this.username,
     this.email,
     this.bio,
-    this.tweetCount,
-    this.likesCount,
     this.location,
     this.joined,
     this.followers,
@@ -40,8 +36,6 @@ class XUser {
       username: json['username'],
       email: json['email'],
       bio: json['bio'],
-      tweetCount: json['tweetCount'],
-      likesCount: json['likesCount'],
       location: json['location'],
       joined: (json['joined'] as Timestamp).toDate(),
       followers: List.from( json['followers'] ?? []),
@@ -59,8 +53,6 @@ class XUser {
       'username': username,
       'email': email,
       'bio': bio,
-      'tweetCount': tweetCount,
-      'likesCount': likesCount,
       'location': location,
       'joined': joined,
       'followers': followers,
@@ -77,8 +69,6 @@ class XUser {
     String? username,
     String? email,
     String? bio,
-    int? tweetCount,
-    int? likesCount,
     String? location,
     DateTime? joined,
     List<String>? followers,
@@ -93,8 +83,6 @@ class XUser {
       username: username ?? this.username,
       email: email ?? this.email,
       bio: bio ?? this.bio,
-      tweetCount: tweetCount ?? this.tweetCount,
-      likesCount: likesCount ?? this.likesCount,
       location: location ?? this.location,
       joined: joined ?? this.joined,
       followers: followers ?? this.followers,

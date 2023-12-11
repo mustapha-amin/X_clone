@@ -5,6 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:x_clone/constants/firebase_constants.dart';
 import 'package:x_clone/core/core.dart';
+import 'package:x_clone/models/comment_model.dart';
 import 'package:x_clone/models/post_model.dart';
 
 class UnableToPostException implements Exception {
@@ -100,4 +101,32 @@ class PostService {
       throw UnableToPostException();
     }
   }
+
+  FutureVoid likePost(PostModel? post, String? uid,
+      {bool isLiked = false}) async {
+    final doc = await firebaseFirestore!
+        .collection(FirebaseConstants.postsCollection)
+        .doc(post!.uid)
+        .collection('posts')
+        .doc(post.postID)
+        .update({
+      'likes': isLiked
+          ? FieldValue.arrayRemove([uid])
+          : FieldValue.arrayUnion([uid]),
+    });
+  }
+
+  FutureVoid commentOnPost(PostModel? post, CommentModel comment) async {
+    final doc = await firebaseFirestore!
+        .collection(FirebaseConstants.postsCollection)
+        .doc(post!.uid)
+        .collection('posts')
+        .doc(post.postID)
+        .update({
+      'comments': FieldValue.arrayUnion([comment.toJson()])
+    });
+  }
+
+  
+  
 }
