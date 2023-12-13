@@ -30,21 +30,19 @@ class PostController extends StateNotifier<bool> {
     state = true;
     try {
       await postService!.createPost(post);
+      state = false;
+      Navigator.pop(context);
     } catch (e) {
-      if (context.mounted) {
-        showErrorDialog(context: context, message: e.toString());
-      }
+      state = false;
+      showErrorDialog(context: context, message: e.toString());
     }
-    state = false;
   }
 
   FutureVoid deleteTweet(BuildContext context, PostModel post) async {
     try {
       await postService!.deletePost(post);
     } catch (e) {
-      if (context.mounted) {
-        showErrorDialog(context: context, message: e.toString());
-      }
+      showErrorDialog(context: context, message: e.toString());
     }
   }
 

@@ -19,8 +19,8 @@ final userDataServiceProvider = Provider((ref) {
 });
 
 final xUserStreamProvider =
-    StreamProvider.family<UserDataService, String>((ref, uid) async* {
-  ref.read(userDataServiceProvider).fetchUserData(uid);
+    StreamProvider.family<XUser?, String>((ref, uid)  {
+  return ref.read(userDataServiceProvider).fetchUserData(uid);
 });
 
 class UserDataService implements BaseUserDataService {

@@ -1,16 +1,23 @@
 import 'dart:io';
 
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:x_clone/features/home/widgets/post_card.dart';
+import 'package:uuid/uuid.dart';
+import 'package:x_clone/features/user_profile/views/user_profile_screen.dart';
+import 'package:x_clone/models/comment_model.dart';
 import 'package:x_clone/models/post_model.dart';
 import 'package:x_clone/models/user_model.dart';
+import 'package:x_clone/services/posts_db/post_service.dart';
+import 'package:x_clone/services/user_data_db/user_data_service.dart';
 import 'package:x_clone/theme/theme.dart';
 import 'package:x_clone/utils/utils.dart';
 
 import '../../../../core/core.dart';
+import '../../widgets/comment_card.dart';
+import '../../widgets/post_icon_buttons.dart';
 
 class PostDetailsScreen extends ConsumerStatefulWidget {
   PostModel? post;
@@ -61,6 +68,7 @@ class _PostDetailsScreenState extends ConsumerState<PostDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
         title: Text(
           "Post",
           style: kTextStyle(25, ref, fontWeight: FontWeight.bold),
@@ -71,11 +79,104 @@ class _PostDetailsScreenState extends ConsumerState<PostDetailsScreen> {
           Expanded(
             child: SingleChildScrollView(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  PostCard(
-                    post: widget.post,
-                    isDetailScreen: true,
-                  )
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        backgroundImage:
+                            NetworkImage(widget.xUser!.profilePicUrl!),
+                      ).padX(8),
+                      Text(
+                        widget.xUser!.name!,
+                        style: kTextStyle(23, ref, fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                  Text(
+                    widget.post!.text!,
+                    style: kTextStyle(20, ref),
+                  ).padAll(8),
+                  widget.post!.imagesUrl!.isEmpty
+                      ? const SizedBox()
+                      : CarouselSlider(
+                          items: widget.post!.imagesUrl!
+                              .map((e) => Image.network(
+                                    e,
+                                    fit: BoxFit.cover,
+                                  ))
+                              .toList(),
+                          options: CarouselOptions(
+                            initialPage: currentPage,
+                            enableInfiniteScroll: false,
+                            height: context.screenHeight * .4,
+                            onPageChanged: (newPage, _) {
+                              setState(() {
+                                currentPage = newPage;
+                              });
+                            },
+                          ),
+                        ),
+                  ref.watch(fetchPostByID(widget.post!)).when(
+                        data: (post) => Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                PostIconButton(
+                                  iconData: FeatherIcons.messageCircle,
+                                  count: post.comments!.length,
+                                ),
+                                PostIconButton(
+                                  iconData: Icons.repeat,
+                                  count: post.repostCount,
+                                ),
+                                PostIconButton(
+                                  iconData: isLiked(ref.watch(uidProvider))
+                                      ? Icons.favorite
+                                      : Icons.favorite_border_outlined,
+                                  count: widget.post!.likesIDs!.length,
+                                  callback: () async {
+                                    isLiked(ref.watch(uidProvider))
+                                        ? widget.post!.likesIDs!
+                                            .remove(ref.watch(uidProvider))
+                                        : widget.post!.likesIDs!
+                                            .add(ref.watch(uidProvider));
+                                    await ref
+                                        .read(postServiceProvider)
+                                        .likePost(widget.post);
+                                    setState(() {});
+                                  },
+                                  color: isLiked(ref.watch(uidProvider))
+                                      ? Colors.red
+                                      : Colors.grey,
+                                ),
+                                PostIconButton(
+                                  iconData: Icons.share,
+                                ),
+                              ],
+                            ),
+                            ...post.comments!.map((comment) {
+                              return ref
+                                  .watch(xUserStreamProvider(comment.uid!))
+                                  .when(
+                                    data: (user) => CommentCard(
+                                      comment: comment,
+                                      user: user!,
+                                    ).padY(8).padX(10),
+                                    error: (_, __) =>
+                                        const Text("Error fetching comments"),
+                                    loading: () =>
+                                        const CircularProgressIndicator(),
+                                  );
+                            })
+                          ],
+                        ),
+                        error: (_, __) =>
+                            Center(child: Text("Error loading comments")),
+                        loading: () =>
+                            Center(child: CircularProgressIndicator()),
+                      ),
                 ],
               ),
             ).padX(4),
@@ -194,16 +295,42 @@ class _PostDetailsScreenState extends ConsumerState<PostDetailsScreen> {
                         ),
                       ],
                     ),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.blueColor,
-                      ),
-                      onPressed: () {},
-                      child: Text(
-                        "Reply",
-                        style: kTextStyle(15, ref, color: Colors.white),
-                      ),
-                    ).padX(5)
+                    ValueListenableBuilder(
+                      valueListenable: commentController,
+                      builder: (context, value, _) {
+                        return ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.blueColor,
+                            disabledBackgroundColor: Colors.grey,
+                          ),
+                          onPressed: value.text.isEmpty
+                              ? null
+                              : () async {
+                                  ref.read(postServiceProvider).commentOnPost(
+                                        CommentModel(
+                                          uid: ref.watch(uidProvider),
+                                          commentID: const Uuid().v4(),
+                                          text: commentController.text,
+                                          imagesUrls: pickedImages
+                                              .map((e) => e.path)
+                                              .toList(),
+                                        ),
+                                        widget.post,
+                                      );
+                                  commentController.clear();
+                                  setState(() {
+                                    pickedImages.clear();
+                                  });
+                                  ref.refresh(
+                                      fetchPostByID(widget.post!).future);
+                                },
+                          child: Text(
+                            "Reply",
+                            style: kTextStyle(15, ref, color: Colors.white),
+                          ),
+                        ).padX(5);
+                      },
+                    ),
                   ],
                 ),
               ],

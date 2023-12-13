@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,15 +10,14 @@ import '../../../theme/theme.dart';
 import '../../../utils/utils.dart';
 
 class PostButton extends ConsumerWidget {
-  const PostButton(
-      {super.key,
-      required this.postTextEditingController,
-      required this.images,
-      required this.callback});
+  const PostButton({
+    super.key,
+    required this.postTextEditingController,
+    required this.images,
+  });
 
   final TextEditingController postTextEditingController;
   final ValueNotifier<List<File>> images;
-  final VoidCallback callback;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -48,7 +48,7 @@ class PostButton extends ConsumerWidget {
                           timeCreated: DateTime.now(),
                         ),
                       ),
-                      callback,
+                  
                 },
             _ => null
           },

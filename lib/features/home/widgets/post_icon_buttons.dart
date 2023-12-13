@@ -7,7 +7,8 @@ class PostIconButton extends ConsumerWidget {
   int? count;
   VoidCallback? callback;
   Color? color;
-  PostIconButton({super.key, this.iconData, this.count, this.color, this.callback});
+  PostIconButton(
+      {super.key, this.iconData, this.count, this.color, this.callback});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -15,7 +16,7 @@ class PostIconButton extends ConsumerWidget {
       children: [
         IconButton(
           icon: Icon(iconData),
-          iconSize: 20,
+          iconSize: 18,
           color: color,
           onPressed: callback,
         ),

@@ -58,6 +58,12 @@ class _PostScreenState extends ConsumerState<PostScreen> {
   }
 
   @override
+  void dispose() {
+    postTextEditingController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     bool isLoading = ref.watch(postNotifierProvider);
     return isLoading
@@ -73,7 +79,6 @@ class _PostScreenState extends ConsumerState<PostScreen> {
                 PostButton(
                   postTextEditingController: postTextEditingController,
                   images: ValueNotifier(pickedImages),
-                  callback: () => Navigator.pop(context),
                 ),
               ],
             ),
@@ -95,19 +100,21 @@ class _PostScreenState extends ConsumerState<PostScreen> {
                                 child: Column(
                                   children: [
                                     TextField(
+                                      textCapitalization:
+                                          TextCapitalization.sentences,
                                       focusNode: postFieldFocus,
                                       controller: postTextEditingController,
                                       maxLines: null,
                                       decoration: InputDecoration(
                                         hintText: "What's happening?",
-                                        hintStyle:
-                                            kTextStyle(20,  ref,color: Colors.grey[600]),
+                                        hintStyle: kTextStyle(20, ref,
+                                            color: Colors.grey[600]),
                                         border: InputBorder.none,
                                         focusedBorder: InputBorder.none,
                                       ),
                                       style: kTextStyle(
                                         20,
-                                         ref,
+                                        ref,
                                       ),
                                     ),
                                     switch (pickedImages.isNotEmpty) {
@@ -178,7 +185,8 @@ class _PostScreenState extends ConsumerState<PostScreen> {
                           HorizontalSpacing(size: 10),
                           Text(
                             "Everyone can reply",
-                            style: kTextStyle(13,  ref,color: AppColors.blueColor),
+                            style:
+                                kTextStyle(13, ref, color: AppColors.blueColor),
                           ),
                         ],
                       ),

@@ -4,15 +4,19 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:x_clone/common/x_avatar.dart';
 import 'package:x_clone/constants/images_paths.dart';
 import 'package:x_clone/core/core.dart';
-import 'package:x_clone/features/auth/controller/user_data_controller.dart';
 import 'package:x_clone/features/home/views/for%20you/for_you.dart';
-import 'package:x_clone/services/services.dart';
 import 'package:x_clone/utils/extensions.dart';
 import 'package:x_clone/utils/textstyle.dart';
 
-class HomeScreen extends ConsumerWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
+  @override
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  ScrollController scrollController = ScrollController();
   void openDrawer(WidgetRef ref) {
     ref.watch(scaffoldKeyProvider).currentState!.isDrawerOpen
         ? ref.read(scaffoldKeyProvider).currentState!.closeEndDrawer()
@@ -20,11 +24,12 @@ class HomeScreen extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     bool isDark = ref.watch(themeNotifierProvider);
     return DefaultTabController(
       length: 2,
       child: NestedScrollView(
+        controller: scrollController,
         headerSliverBuilder: (context, value) {
           return [
             SliverAppBar(
@@ -72,7 +77,10 @@ class HomeScreen extends ConsumerWidget {
             Center(child: Text("Hi")),
           ],
         ),
+        
       ),
+      
     );
+    
   }
 }

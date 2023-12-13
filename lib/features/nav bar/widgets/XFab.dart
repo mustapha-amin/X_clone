@@ -30,16 +30,13 @@ class XFab extends ConsumerWidget {
             ? const SizedBox()
             : Text(
                 label!,
-                style: kTextStyle(
-                  15,
-                   ref,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold
-                ),
+                style: kTextStyle(15, ref,
+                    color: Colors.white, fontWeight: FontWeight.bold),
               ),
         HorizontalSpacing(size: 15),
         isMain!
             ? FloatingActionButton(
+                heroTag: null,
                 backgroundColor: bgColor,
                 onPressed: onTap,
                 shape: const CircleBorder(),
@@ -49,6 +46,7 @@ class XFab extends ConsumerWidget {
                 ),
               )
             : FloatingActionButton.small(
+                heroTag: null,
                 backgroundColor: bgColor,
                 onPressed: onTap,
                 shape: const CircleBorder(),

@@ -15,9 +15,7 @@ import 'package:x_clone/utils/utils.dart';
 
 class PostCard extends ConsumerStatefulWidget {
   PostModel? post;
-  bool? isDetailScreen;
-  PostCard({this.post, this.isDetailScreen = false, Key? key})
-      : super(key: key);
+  PostCard({this.post, Key? key}) : super(key: key);
 
   @override
   ConsumerState<PostCard> createState() => _PostCardState();
@@ -35,14 +33,12 @@ class _PostCardState extends ConsumerState<PostCard> {
     return ref.watch(userProviderWithID(widget.post!.uid!)).when(
           data: (user) {
             return InkWell(
-              onTap: widget.isDetailScreen!
-                  ? null
-                  : () => navigateTo(
-                      context,
-                      PostDetailsScreen(
-                        post: widget.post,
-                        xUser: user,
-                      )),
+              onTap: () => navigateTo(
+                  context,
+                  PostDetailsScreen(
+                    post: widget.post,
+                    xUser: user,
+                  )),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -68,7 +64,7 @@ class _PostCardState extends ConsumerState<PostCard> {
                           text: TextSpan(
                             text: user.name!,
                             style: kTextStyle(
-                              widget.isDetailScreen! ? 22 : 19,
+                              19,
                               ref,
                               fontWeight: FontWeight.bold,
                             ),
@@ -76,7 +72,7 @@ class _PostCardState extends ConsumerState<PostCard> {
                               TextSpan(
                                 text: " @${user.username}  ",
                                 style: kTextStyle(
-                                  widget.isDetailScreen! ? 14 : 13,
+                                  13,
                                   ref,
                                   color: Colors.grey,
                                 ),
@@ -97,68 +93,66 @@ class _PostCardState extends ConsumerState<PostCard> {
                         Text(
                           widget.post!.text!,
                           style: kTextStyle(
-                            widget.isDetailScreen! ? 18 : 16,
+                            16,
                             ref,
                           ),
                         ),
-                        Container(
-                          width: context.screenWidth,
-                          height: widget.isDetailScreen!
-                              ? context.screenHeight * .45
-                              : context.screenHeight * .3,
-                          decoration: BoxDecoration(
-                            border: const Border.symmetric(
-                              vertical: BorderSide(
-                                color: Colors.grey,
-                                width: 0.3,
-                              ),
-                            ),
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: Stack(
-                            alignment: Alignment.topRight,
-                            children: [
-                              CarouselSlider(
-                                items: [
-                                  ...widget.post!.imagesUrl!.map(
-                                    (e) => Image.network(
-                                      e,
-                                      errorBuilder: (context, _, __) {
-                                        return const Icon(Icons.error);
-                                      },
+                        widget.post!.imagesUrl!.isEmpty
+                            ? const SizedBox()
+                            : Container(
+                                width: context.screenWidth,
+                                height: context.screenHeight * .3,
+                                decoration: BoxDecoration(
+                                  border: const Border.symmetric(
+                                    vertical: BorderSide(
+                                      color: Colors.grey,
+                                      width: 0.3,
                                     ),
                                   ),
-                                ],
-                                options: CarouselOptions(
-                                  initialPage: currentPage,
-                                  enableInfiniteScroll: false,
-                                  height: widget.isDetailScreen!
-                                      ? context.screenHeight * .45
-                                      : context.screenHeight * .3,
-                                  onPageChanged: (newPage, _) {
-                                    setState(() {
-                                      currentPage = newPage;
-                                    });
-                                  },
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: Stack(
+                                  alignment: Alignment.topRight,
+                                  children: [
+                                    CarouselSlider(
+                                      items: [
+                                        ...widget.post!.imagesUrl!.map(
+                                          (e) => Image.network(
+                                            e,
+                                            errorBuilder: (context, _, __) {
+                                              return const Icon(Icons.error);
+                                            },
+                                          ).padX(5),
+                                        ),
+                                      ],
+                                      options: CarouselOptions(
+                                        initialPage: currentPage,
+                                        enableInfiniteScroll: false,
+                                        height: context.screenHeight * .3,
+                                        onPageChanged: (newPage, _) {
+                                          setState(() {
+                                            currentPage = newPage;
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                    Container(
+                                      padding: const EdgeInsets.all(6),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.grey.withOpacity(0.6),
+                                      ),
+                                      child: Text(
+                                        "${currentPage + 1} / ${widget.post!.imagesUrl!.length}",
+                                        style: kTextStyle(
+                                          12,
+                                          ref,
+                                        ),
+                                      ),
+                                    )
+                                  ],
                                 ),
                               ),
-                              Container(
-                                padding: const EdgeInsets.all(6),
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.grey.withOpacity(0.6),
-                                ),
-                                child: Text(
-                                  "${currentPage + 1} / ${widget.post!.imagesUrl!.length}",
-                                  style: kTextStyle(
-                                    12,
-                                    ref,
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
                         VerticalSpacing(size: 10),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,

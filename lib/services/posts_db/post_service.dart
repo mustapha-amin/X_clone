@@ -36,6 +36,10 @@ final postServiceProvider = Provider((ref) {
   );
 });
 
+final fetchPostByID = FutureProvider.family<PostModel, PostModel>((ref, post) {
+  return ref.read(postServiceProvider).fetchPostByID(post.postID!, post.uid!);
+});
+
 class PostService {
   FirebaseFirestore? firebaseFirestore;
   FirebaseStorage? firebaseStorage;
@@ -45,12 +49,11 @@ class PostService {
   FutureVoid createPost(PostModel post) async {
     try {
       final storagePath =
-          "${FirebaseConstants.uploadedMedia}/${post.uid}/${post.postID}";
-      final ref = firebaseStorage!.ref().child(storagePath);
+          "${FirebaseConstants.uploadedMedia}/${post.uid}/${post.postID}/";
       List<String> imageUrls = [];
       if (post.imagesUrl!.isNotEmpty) {
         for (String url in post.imagesUrl!) {
-          int index = post.imagesUrl!.indexOf(url);
+          final ref = firebaseStorage!.ref().child('$storagePath/$url');
           final task = await ref.putFile(File(url));
           String downloadUrl = await task.ref.getDownloadURL();
           imageUrls.add(downloadUrl);
@@ -76,6 +79,9 @@ class PostService {
           .collection("posts")
           .doc(post.postID);
       await postDoc.delete();
+      final storagePath =
+          "${FirebaseConstants.uploadedMedia}/${post.uid}/${post.postID}/";
+      await firebaseStorage!.ref(storagePath).delete();
     } catch (e) {
       throw UnableToDeletePostException();
     }
@@ -113,14 +119,37 @@ class PostService {
     });
   }
 
-  FutureVoid commentOnPost(PostModel? post) async {
+  FutureVoid commentOnPost(CommentModel? comment, PostModel? post) async {
+    final storagePath =
+        "${FirebaseConstants.uploadedMedia}/${post!.uid}/${post.postID}/comments/${comment!.uid}/";
+    List<String> imageUrls = [];
+    if (comment.imagesUrls!.isNotEmpty) {
+      for (String url in comment.imagesUrls!) {
+        final ref = firebaseStorage!.ref().child('$storagePath/$url');
+        final task = await ref.putFile(File(url));
+        String downloadUrl = await task.ref.getDownloadURL();
+        imageUrls.add(downloadUrl);
+      }
+    }
+    CommentModel newComment = comment.copyWith(imagesUrls: imageUrls);
+    List<CommentModel> comments = [...post.comments!, newComment];
+    PostModel newPost = post.copyWith(comments: comments);
     await firebaseFirestore!
         .collection(FirebaseConstants.postsCollection)
-        .doc(post!.uid)
+        .doc(newPost.uid)
         .collection('posts')
-        .doc(post.postID)
-        .update({
-      'comments': post.comments!.map((comment) => comment.toJson())
-    });
+        .doc(newPost.postID)
+        .update(
+            {'comments': newPost.comments!.map((comment) => comment.toJson())});
+  }
+
+  Future<PostModel> fetchPostByID(String pid, String uid) async {
+    final doc = await firebaseFirestore!
+        .collection(FirebaseConstants.postsCollection)
+        .doc(uid)
+        .collection("posts")
+        .doc(pid)
+        .get();
+    return PostModel.fromJson(doc.data()!);
   }
 }
