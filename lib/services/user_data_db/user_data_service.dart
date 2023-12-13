@@ -18,8 +18,7 @@ final userDataServiceProvider = Provider((ref) {
   );
 });
 
-final xUserStreamProvider =
-    StreamProvider.family<XUser?, String>((ref, uid)  {
+final xUserStreamProvider = StreamProvider.family<XUser?, String>((ref, uid) {
   return ref.read(userDataServiceProvider).fetchUserData(uid);
 });
 
@@ -104,4 +103,12 @@ class UserDataService implements BaseUserDataService {
     return followers.contains(FirebaseAuth.instance.currentUser!.uid);
   }
 
+  Stream<List<XUser>> searchUser(String? name) {
+    final snaps = firebaseFirestore!
+        .collection(FirebaseConstants.usersCollection)
+        .where('name', isEqualTo: name)
+        .snapshots()
+        .map((snap) => snap.docs.map((e) => XUser.fromJson(e.data())).toList());
+    return snaps;
+  }
 }
