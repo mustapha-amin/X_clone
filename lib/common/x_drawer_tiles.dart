@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:x_clone/services/services.dart';
 import 'package:x_clone/utils/textstyle.dart';
 import '../constants/images_paths.dart';
+import '../core/core.dart';
 
 class DrawerTile extends ConsumerWidget {
   String? title;

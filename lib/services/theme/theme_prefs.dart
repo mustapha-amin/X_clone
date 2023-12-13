@@ -1,27 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../core/typedefs.dart';
+import '../../core/core.dart';
 
 final themeSettingsProvider = Provider((ref) {
   return ThemeSettings();
 });
 
-final themeNotifierProvider = StateNotifierProvider<ThemeNotifier, bool>((ref) {
-  return ThemeNotifier(
-    themeSettings: ref.watch(themeSettingsProvider),
-  );
-});
-
-class ThemeNotifier extends StateNotifier<bool> {
-  ThemeSettings? themeSettings;
-
-  ThemeNotifier({this.themeSettings}) : super(themeSettings!.isDark());
-
-  FutureVoid toggleTheme(bool newValue) async {
-    await themeSettings!.toggleTheme(newValue);
-    state = newValue;
-  }
-}
 
 class ThemeSettings {
   static late SharedPreferences sharedPreferences;

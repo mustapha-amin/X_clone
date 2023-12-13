@@ -7,11 +7,10 @@ import 'package:x_clone/features/home/home.dart';
 import 'package:x_clone/features/messaging/views/message_screen.dart';
 import 'package:x_clone/features/nav%20bar/widgets/XFab.dart';
 import 'package:x_clone/features/post/views/post_screen.dart';
-import 'package:x_clone/services/services.dart';
 import 'package:x_clone/theme/pallete.dart';
 import 'package:x_clone/utils/spacing.dart';
+import '../../core/core.dart';
 import '../../utils/navigation.dart';
-import '../auth/controller/auth_controller.dart';
 import '../notification/views/notification_screen.dart';
 
 final navbarProvider = StateProvider<int>((ref) {
@@ -48,7 +47,6 @@ class _XBottomNavBarState extends ConsumerState<XBottomNavBar> {
     bool isDark = ref.watch(themeNotifierProvider);
     return SafeArea(
       child: Scaffold(
-        
         drawer: const XDrawer(),
         body: GestureDetector(
           onTap: () => isExpanded ? toggleExpanded() : null,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:x_clone/services/services.dart';
+import '../core/core.dart';
 
 TextStyle kTextStyle(
   double size,

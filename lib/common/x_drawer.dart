@@ -6,7 +6,6 @@ import 'package:x_clone/common/x_modal_sheet.dart';
 import 'package:x_clone/core/core.dart';
 import 'package:x_clone/features/auth/controller/user_data_controller.dart';
 import 'package:x_clone/features/user_profile/views/user_profile_screen.dart';
-import 'package:x_clone/services/services.dart';
 import 'package:x_clone/utils/extensions.dart';
 import 'package:x_clone/utils/navigation.dart';
 import 'package:x_clone/utils/spacing.dart';
@@ -28,8 +27,9 @@ class _XDrawerState extends ConsumerState<XDrawer> {
     bool isDark = ref.watch(themeNotifierProvider);
 
     ValueNotifier<bool> isExpanded = ValueNotifier(false);
-    return Container(
-      color: isDark ? Colors.black : Colors.white,
+    return Drawer(
+      backgroundColor: isDark ? Colors.black : Colors.white,
+      surfaceTintColor: Colors.transparent,
       width: context.screenWidth * .85,
       key: ref.watch(scaffoldKeyProvider),
       child: Column(
