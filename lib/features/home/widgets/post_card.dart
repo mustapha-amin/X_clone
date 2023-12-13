@@ -35,12 +35,14 @@ class _PostCardState extends ConsumerState<PostCard> {
     return ref.watch(userProviderWithID(widget.post!.uid!)).when(
           data: (user) {
             return InkWell(
-              onTap: () => navigateTo(
-                  context,
-                  PostDetailsScreen(
-                    post: widget.post,
-                    xUser: user,
-                  )),
+              onTap: widget.isDetailScreen!
+                  ? null
+                  : () => navigateTo(
+                      context,
+                      PostDetailsScreen(
+                        post: widget.post,
+                        xUser: user,
+                      )),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
