@@ -52,7 +52,7 @@ class _PostScreenState extends ConsumerState<PostScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Future.delayed(Duration(microseconds: 200),
+      Future.delayed(const Duration(microseconds: 200),
           () => FocusScope.of(context).requestFocus(postFieldFocus));
     });
   }
