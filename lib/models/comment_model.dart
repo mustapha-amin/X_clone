@@ -11,7 +11,7 @@ class CommentModel {
       uid: json["uid"],
       commentID: json["commentID"],
       text: json["text"],
-      imagesUrls: json["imagesUrls"],
+      imagesUrls: List<String>.from(json["imagesUrls"] ?? []),
     );
   }
 
@@ -20,7 +20,21 @@ class CommentModel {
       "uid": uid,
       "commentID": commentID,
       "text": text,
-      "imagesUrls" : imagesUrls,
+      "imagesUrls": imagesUrls,
     };
+  }
+
+  CommentModel copyWith({
+    String? uid,
+    String? commentID,
+    String? text,
+    List<String>? imagesUrls,
+  }) {
+    return CommentModel(
+      uid: uid ?? this.uid,
+      commentID: commentID ?? this.commentID,
+      text: text ?? this.text,
+      imagesUrls: imagesUrls ?? this.imagesUrls,
+    );
   }
 }
