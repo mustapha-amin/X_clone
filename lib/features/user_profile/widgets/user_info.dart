@@ -2,7 +2,9 @@ import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:x_clone/core/core.dart';
+import 'package:x_clone/features/auth/controller/user_data_controller.dart';
 import 'package:x_clone/features/user_profile/views/edit_profile.dart';
+import 'package:x_clone/services/user_data_db/user_data_service.dart';
 
 import '../../../models/user_model.dart';
 import '../../../utils/utils.dart';
@@ -36,9 +38,29 @@ class UserInfo extends ConsumerWidget {
                         EditProfile(
                           user: user,
                         ))
-                    : null;
+                    : {
+                        if (user!.followers!.contains(uid))
+                          {
+                            ref
+                                .read(userDataServiceProvider)
+                                .unfollowUser(user!, uid)
+                          }
+                        else
+                          {
+                            ref
+                                .read(userDataServiceProvider)
+                                .followUser(user!, uid)
+                          }
+                      };
               },
-              child: Text(user!.uid == uid ? "Edit profile" : "Follow"),
+              child: Text(
+                user!.uid == uid
+                    ? "Edit profile"
+                    : user!.followers!.contains(uid)
+                        ? "unfollow"
+                        : "Follow",
+                style: kTextStyle(15, ref),
+              ),
             )
           ],
         ),

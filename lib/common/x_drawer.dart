@@ -116,7 +116,7 @@ class _XDrawerState extends ConsumerState<XDrawer> {
                             )
                           ],
                         ),
-                        error: (_, __) => const Text("An error occured"),
+                        error: (e, __) => Text("An error occured $e"),
                         loading: () => const Text("Fetching details"),
                       ),
                       VerticalSpacing(size: 15),

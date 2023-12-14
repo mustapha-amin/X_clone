@@ -82,14 +82,35 @@ class UserDataService implements BaseUserDataService {
     return data.exists;
   }
 
-  FutureVoid followUser(String uid, {bool isFollowing = false}) async {
+  FutureVoid followUser(XUser user, String? uid) async {
+    await firebaseFirestore!
+        .collection(FirebaseConstants.usersCollection)
+        .doc(user.uid!)
+        .update({
+      'followers': FieldValue.arrayUnion([uid]),
+    });
+
     await firebaseFirestore!
         .collection(FirebaseConstants.usersCollection)
         .doc(uid)
         .update({
-      'followers': isFollowing
-          ? FieldValue.arrayRemove([uid])
-          : FieldValue.arrayUnion([uid]),
+      'following': FieldValue.arrayUnion([user.uid]),
+    });
+  }
+
+  FutureVoid unfollowUser(XUser user, String uid) async {
+    await firebaseFirestore!
+        .collection(FirebaseConstants.usersCollection)
+        .doc(user.uid!)
+        .update({
+      'followers': FieldValue.arrayRemove([uid]),
+    });
+
+    await firebaseFirestore!
+        .collection(FirebaseConstants.usersCollection)
+        .doc(uid)
+        .update({
+      'following': FieldValue.arrayRemove([user.uid]),
     });
   }
 
