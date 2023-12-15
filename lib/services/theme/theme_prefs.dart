@@ -3,23 +3,22 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/core.dart';
 
 final themeSettingsProvider = Provider((ref) {
-  return ThemeSettings();
+  return ThemeSettings(
+    sharedPreferences: ref.watch(sharedPrefsProvider)
+  );
 });
 
-
 class ThemeSettings {
-  static late SharedPreferences sharedPreferences;
+  SharedPreferences? sharedPreferences;
 
-  static FutureVoid initThemPrefs() async {
-    sharedPreferences = await SharedPreferences.getInstance();
-  }
+  ThemeSettings({this.sharedPreferences});
 
   FutureVoid toggleTheme(bool newValue) async {
-    await sharedPreferences.setBool('isDark', newValue);
+    await sharedPreferences!.setBool('isDark', newValue);
   }
 
   bool isDark() {
-    bool isDark = sharedPreferences.getBool('isDark') ?? true;
+    bool isDark = sharedPreferences!.getBool('isDark') ?? true;
     return isDark;
   }
 }

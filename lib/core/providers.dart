@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../services/services.dart';
 import 'core.dart';
 
@@ -20,6 +21,10 @@ final firestoreProvider = Provider((ref) => FirebaseFirestore.instance);
 final firebaseStorageProvider = Provider((ref) => FirebaseStorage.instance);
 final uidProvider =  Provider((ref) {
   return FirebaseAuth.instance.currentUser!.uid;
+});
+
+final sharedPrefsProvider = Provider<SharedPreferences>((ref) {
+  throw UnimplementedError();
 });
 
 final themeNotifierProvider = StateNotifierProvider<ThemeNotifier, bool>((ref) {
