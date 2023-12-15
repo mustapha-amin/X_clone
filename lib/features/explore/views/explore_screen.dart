@@ -18,6 +18,13 @@ class ExploreScreen extends ConsumerStatefulWidget {
 
 class _ExploreScreenState extends ConsumerState<ExploreScreen> {
   TextEditingController searchController = TextEditingController();
+  List<String> recentSearch = [];
+
+  @override
+  void initState() {
+    super.initState();
+    
+  }
 
   @override
   void dispose() {

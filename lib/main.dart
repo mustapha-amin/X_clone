@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:x_clone/common/x_loader.dart';
 import 'package:x_clone/features/auth/auth.dart';
 import 'package:x_clone/features/auth/controller/user_data_controller.dart';
@@ -16,10 +17,13 @@ Future main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  await ThemeSettings.initThemPrefs();
+  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
   runApp(
-    const ProviderScope(
-      child: MyApp(),
+     ProviderScope(
+      overrides: [
+        sharedPrefsProvider.overrideWithValue(sharedPreferences),
+      ],
+      child: const MyApp(),
     ),
   );
 }
@@ -31,6 +35,7 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     AsyncValue<User?> authChanges = ref.watch(authChangesProvider);
     var theme = ref.watch(themeNotifierProvider);
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: theme == true ? AppTheme.darkTheme() : AppTheme.lightTheme(),
