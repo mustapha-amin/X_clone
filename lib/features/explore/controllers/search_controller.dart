@@ -10,7 +10,7 @@ final searchUsersProvider =
   return ref.read(userDataServiceProvider).searchUser(name);
 });
 
-final recentSearchesProvider = StateNotifierProvider((ref) {
+final recentSearchesProvider = StateNotifierProvider<RecentSearchesNotifier, List<String>>((ref) {
   return RecentSearchesNotifier(savedSearches: ref.watch(savedSearchesProvider));
 });
 

@@ -18,8 +18,10 @@ class SavedSearches {
 
   FutureVoid addToRecentSearches(String query) async {
     List<String> recentSearches = getRecentSearches();
-    recentSearches.add(query);
-    await sharedprefs!.setStringList(_recentSearchesKey, recentSearches);
+    if (!recentSearches.contains(query)) {
+      recentSearches.add(query);
+      await sharedprefs!.setStringList(_recentSearchesKey, recentSearches);
+    }
   }
 
   FutureVoid clearRecentSearches() async {

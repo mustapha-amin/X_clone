@@ -10,12 +10,8 @@ class XAvatar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var user = ref.watch(currentUserProvider);
-    return InkWell(
-      onTap: forDrawer!
-          ? () => print(user.value)
-          : () => {
-                Scaffold.of(context).openDrawer(),
-              },
+    return GestureDetector(
+      onTap: () => Scaffold.of(context).openDrawer(),
       child: CircleAvatar(
         radius: forDrawer! ? 23 : 20,
         backgroundImage: user.when(

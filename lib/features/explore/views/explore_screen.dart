@@ -18,97 +18,168 @@ class ExploreScreen extends ConsumerStatefulWidget {
 
 class _ExploreScreenState extends ConsumerState<ExploreScreen> {
   TextEditingController searchController = TextEditingController();
-  List<String> recentSearch = [];
+  FocusNode searchFocus = FocusNode();
 
   @override
   void initState() {
     super.initState();
-    
+    searchFocus.addListener(() {
+      if (searchFocus.hasFocus || !searchFocus.hasFocus) {
+        setState(() {});
+      }
+    });
   }
 
   @override
   void dispose() {
     searchController.dispose();
+    searchFocus.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    List<String> recentSearches = ref.watch(recentSearchesProvider);
     return Scaffold(
-      appBar: AppBar(
-        leadingWidth: context.screenWidth * .2,
-        leading: XAvatar(),
-        titleSpacing: 0,
-        title: SearchBar(
-          elevation: const MaterialStatePropertyAll(0),
-          controller: searchController,
-          constraints: BoxConstraints(
-            minHeight: context.screenHeight * .065,
-            minWidth: context.screenWidth * .8,
-          ),
-          shape: MaterialStatePropertyAll(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-              side: BorderSide(
-                color: Colors.grey[900]!,
+        appBar: AppBar(
+          leadingWidth: context.screenWidth * .2,
+          leading: XAvatar(),
+          titleSpacing: 0,
+          title: SearchBar(
+            focusNode: searchFocus,
+            elevation: const MaterialStatePropertyAll(0),
+            controller: searchController,
+            constraints: BoxConstraints(
+              minHeight: context.screenHeight * .065,
+              minWidth: context.screenWidth * .8,
+            ),
+            shape: MaterialStatePropertyAll(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+                side: BorderSide(
+                  color: Colors.grey[900]!,
+                ),
               ),
             ),
-          ),
-          hintText: "Search X",
-          hintStyle: MaterialStatePropertyAll(
-            kTextStyle(13, ref, color: Colors.grey[500]),
-          ),
-          onChanged: (value) {
-            ref.read(searchUsersProvider(searchController.text.toLowerCase()));
-            setState(() {});
-          },
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              FeatherIcons.settings,
-              size: 20,
+            hintText: "Search X",
+            hintStyle: MaterialStatePropertyAll(
+              kTextStyle(13, ref, color: Colors.grey[500]),
             ),
-          )
-        ],
-      ),
-      body: ref
-          .watch(searchUsersProvider(searchController.text.toLowerCase()))
-          .when(
-            data: (users) => ListView.builder(
-              itemCount: users.length,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    navigateTo(
-                      context,
-                      UserProfileScreen(
-                        user: users[index],
+            onTap: () {
+              setState(() {});
+            },
+            onChanged: (value) {
+              ref.read(searchUsersProvider(
+                  searchController.text.trim().toLowerCase()));
+              setState(() {});
+            },
+          ),
+          actions: [
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(
+                FeatherIcons.settings,
+                size: 20,
+              ),
+            )
+          ],
+        ),
+        body: switch (searchController.text.isEmpty) {
+          true => switch (searchFocus.hasFocus) {
+              true => SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Recent",
+                            style: kTextStyle(20, ref,
+                                color: Colors.grey[600],
+                                fontWeight: FontWeight.bold),
+                          ),
+                          InkWell(
+                            onTap: () {
+                              ref
+                                  .read(recentSearchesProvider.notifier)
+                                  .clearSearches();
+                            },
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.grey,
+                              ),
+                              child: Icon(
+                                Icons.clear,
+                                color: Colors.grey[800],
+                                size: 20,
+                              ),
+                            ),
+                          )
+                        ],
+                      ).padX(10),
+                      VerticalSpacing(size: 20),
+                      ...recentSearches.map(
+                        (search) => Row(
+                          children: [
+                            const Icon(
+                              Icons.history,
+                              size: 13,
+                              color: Colors.grey,
+                            ),
+                            HorizontalSpacing(size: 5),
+                            Text(
+                              search,
+                              style: kTextStyle(15, ref, color: Colors.grey),
+                            ),
+                          ],
+                        ).padX(10),
+                      )
+                    ],
+                  ),
+                ),
+              _ => const SizedBox(),
+            },
+          _ => ref
+              .watch(searchUsersProvider(
+                  searchController.text.trim().toLowerCase()))
+              .when(
+                data: (users) => ListView.builder(
+                  itemCount: users.length,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {
+                        ref
+                            .read(recentSearchesProvider.notifier)
+                            .saveSearch(searchController.text);
+                        navigateTo(
+                          context,
+                          UserProfileScreen(
+                            user: users[index],
+                          ),
+                        );
+                      },
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          backgroundImage: NetworkImage(
+                            users[index].profilePicUrl!,
+                          ),
+                        ),
+                        title: Text(
+                          users[index].name!,
+                          style: kTextStyle(18, ref),
+                        ),
+                        subtitle: Text(
+                          '@${users[index].username!}',
+                          style: kTextStyle(13, ref, color: Colors.grey),
+                        ),
                       ),
                     );
                   },
-                  child: ListTile(
-                    leading: CircleAvatar(
-                      backgroundImage: NetworkImage(
-                        users[index].profilePicUrl!,
-                      ),
-                    ),
-                    title: Text(
-                      users[index].name!,
-                      style: kTextStyle(18, ref),
-                    ),
-                    subtitle: Text(
-                      '@${users[index].username!}',
-                      style: kTextStyle(13, ref, color: Colors.grey),
-                    ),
-                  ),
-                );
-              },
-            ),
-            error: (_, __) => Text("An error occured"),
-            loading: () => const XLoader(),
-          ),
-    );
+                ),
+                error: (_, __) => Text("An error occured"),
+                loading: () => const XLoader(),
+              ),
+        });
   }
 }

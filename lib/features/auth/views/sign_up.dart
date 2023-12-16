@@ -202,8 +202,6 @@ class _SignUpState extends ConsumerState<SignUp> {
                                 isValidPassword(passwordController.text)) {
                               try {
                                 signUp();
-                                navigateAndReplace(
-                                    context, const UserDetails());
                               } catch (e) {
                                 log(e.toString());
                               }

@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:x_clone/features/auth/auth.dart';
 import 'package:x_clone/services/auth/google_auth.dart';
 import '/../services/services.dart';
 import '/../utils/utils.dart';
@@ -53,7 +54,7 @@ class AuthController extends StateNotifier<bool> {
     state = false;
     res.fold(
       (l) => showErrorDialog(context: context, message: l.message),
-      (r) => print(r.user!.displayName),
+      (r) => navigateAndReplace(context, const UserDetails()),
     );
   }
 

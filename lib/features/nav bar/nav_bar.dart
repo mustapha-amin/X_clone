@@ -71,6 +71,8 @@ class _XBottomNavBarState extends ConsumerState<XBottomNavBar> {
             splashColor: Colors.transparent,
           ),
           child: BottomNavigationBar(
+            selectedItemColor: isDark ? Colors.white : Colors.black,
+            unselectedItemColor: isDark ? Colors.white : Colors.black,
             backgroundColor: switch ((isDark, isExpanded)) {
               (true, _) => Colors.black.withOpacity(0.8),
               (false, false) => Colors.white,
@@ -112,77 +114,76 @@ class _XBottomNavBarState extends ConsumerState<XBottomNavBar> {
           ),
         ),
         floatingActionButton: switch (index) {
-                0 => switch (isExpanded) {
-                    true => Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          XFab(
-                            label: "Go Live",
-                            onTap: () {},
-                            iconData: FeatherIcons.video,
-                          ),
-                          VerticalSpacing(size: 10),
-                          XFab(
-                            label: "Spaces",
-                            onTap: () {},
-                            iconData: FeatherIcons.mic,
-                          ),
-                          VerticalSpacing(size: 10),
-                          XFab(
-                            label: "Photos",
-                            onTap: () {},
-                            iconData: Icons.photo,
-                          ),
-                          VerticalSpacing(size: 10),
-                          XFab(
-                            isMain: true,
-                            bgColor: AppColors.blueColor,
-                            fgColor: Colors.white,
-                            label: "Post",
-                            onTap: () =>
-                                navigateTo(context, const PostScreen()),
-                            iconData: FeatherIcons.feather,
-                          ),
-                        ],
+          0 => switch (isExpanded) {
+              true => Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    XFab(
+                      label: "Go Live",
+                      onTap: () {},
+                      iconData: FeatherIcons.video,
+                    ),
+                    VerticalSpacing(size: 10),
+                    XFab(
+                      label: "Spaces",
+                      onTap: () {},
+                      iconData: FeatherIcons.mic,
+                    ),
+                    VerticalSpacing(size: 10),
+                    XFab(
+                      label: "Photos",
+                      onTap: () {},
+                      iconData: Icons.photo,
+                    ),
+                    VerticalSpacing(size: 10),
+                    XFab(
+                      isMain: true,
+                      bgColor: AppColors.blueColor,
+                      fgColor: Colors.white,
+                      label: "Post",
+                      onTap: () => navigateTo(context, const PostScreen()),
+                      iconData: FeatherIcons.feather,
+                    ),
+                  ],
+                ),
+              _ => XFab(
+                  isMain: true,
+                  bgColor: AppColors.blueColor,
+                  fgColor: Colors.white,
+                  onTap: toggleExpanded,
+                  iconData: Icons.add,
+                ),
+            },
+          3 => Stack(
+              alignment: Alignment.center,
+              children: [
+                XFab(
+                  isMain: true,
+                  bgColor: AppColors.blueColor,
+                  fgColor: Colors.white,
+                  onTap: () {},
+                  iconData: Icons.local_post_office_outlined,
+                ),
+                Positioned(
+                  right: 10,
+                  bottom: 15,
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      color: AppColors.blueColor,
+                    ),
+                    child: const Center(
+                      child: Icon(
+                        Icons.add,
+                        size: 14,
+                        color: Colors.white,
                       ),
-                    _ => XFab(
-                        isMain: true,
-                        bgColor: AppColors.blueColor,
-                        fgColor: Colors.white,
-                        onTap: toggleExpanded,
-                        iconData: Icons.add,
-                      ),
-                  },
-                3 => Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      XFab(
-                        isMain: true,
-                        bgColor: AppColors.blueColor,
-                        fgColor: Colors.white,
-                        onTap: () {},
-                        iconData: Icons.local_post_office_outlined,
-                      ),
-                      Positioned(
-                        right: 10,
-                        bottom: 15,
-                        child: Container(
-                          decoration: const BoxDecoration(
-                            color: AppColors.blueColor,
-                          ),
-                          child: const Center(
-                            child: Icon(
-                              Icons.add,
-                              size: 14,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
+                    ),
                   ),
-                _ => const SizedBox(),
-              },
+                )
+              ],
+            ),
+          _ => const SizedBox(),
+        },
       ),
     );
   }
