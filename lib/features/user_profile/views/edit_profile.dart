@@ -48,23 +48,23 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                 onPressed: () async {
                   if (widget.user!.name != nameController.text) {
                     updatedFields.add("name");
-                    newData.add(nameController.text);
+                    newData.add(nameController.text.trim());
                   }
                   if (widget.user!.username != usernameController.text) {
                     updatedFields.add("username");
-                    newData.add(usernameController.text);
+                    newData.add(usernameController.text.trim());
                   }
                   if (widget.user!.bio != bioController.text) {
                     updatedFields.add("bio");
-                    newData.add(bioController.text);
+                    newData.add(bioController.text.trim());
                   }
                   if (widget.user!.website != websiteController.text) {
                     updatedFields.add("website");
-                    newData.add(websiteController.text);
+                    newData.add(websiteController.text.trim());
                   }
                   if (widget.user!.location != locationController.text) {
                     updatedFields.add("location");
-                    newData.add(locationController.text);
+                    newData.add(locationController.text.trim());
                   }
                   if (updatedFields.isNotEmpty) {
                     await userData.updateData(

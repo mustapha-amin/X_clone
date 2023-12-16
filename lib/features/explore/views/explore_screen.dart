@@ -69,8 +69,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
               setState(() {});
             },
             onChanged: (value) {
-              ref.read(searchUsersProvider(
-                  searchController.text.trim().toLowerCase()));
+              ref.read(searchUsersProvider(searchController.text.trim()));
               setState(() {});
             },
           ),
@@ -100,9 +99,32 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                           ),
                           InkWell(
                             onTap: () {
-                              ref
-                                  .read(recentSearchesProvider.notifier)
-                                  .clearSearches();
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: const Text("Clear all recent searches"),
+                                    content: const Text(
+                                        "This cannot be undone and you'll remove all your recent searches"),
+                                    actions: [
+                                      TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: const Text("Cancel")),
+                                      TextButton(
+                                          onPressed: () {
+                                            ref
+                                                .read(recentSearchesProvider
+                                                    .notifier)
+                                                .clearSearches();
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: const Text("Clear")),
+                                    ],
+                                  );
+                                },
+                              );
                             },
                             child: Container(
                               decoration: const BoxDecoration(
@@ -120,66 +142,70 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                       ).padX(10),
                       VerticalSpacing(size: 20),
                       ...recentSearches.map(
-                        (search) => Row(
-                          children: [
-                            const Icon(
-                              Icons.history,
-                              size: 13,
-                              color: Colors.grey,
-                            ),
-                            HorizontalSpacing(size: 5),
-                            Text(
-                              search,
-                              style: kTextStyle(15, ref, color: Colors.grey),
-                            ),
-                          ],
-                        ).padX(10),
+                        (search) => ListTile(
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 2,
+                          ),
+                          onTap: () {
+                            setState(() {
+                              searchController.text = search;
+                            });
+                          },
+                          leading: const Icon(
+                            Icons.history,
+                            size: 15,
+                            color: Colors.grey,
+                          ),
+                          title: Text(
+                            search,
+                            style: kTextStyle(18, ref, color: Colors.grey),
+                          ),
+                        ),
                       )
                     ],
                   ),
                 ),
               _ => const SizedBox(),
             },
-          _ => ref
-              .watch(searchUsersProvider(
-                  searchController.text.trim().toLowerCase()))
-              .when(
-                data: (users) => ListView.builder(
-                  itemCount: users.length,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () {
-                        ref
-                            .read(recentSearchesProvider.notifier)
-                            .saveSearch(searchController.text);
-                        navigateTo(
-                          context,
-                          UserProfileScreen(
-                            user: users[index],
+          _ =>
+            ref.watch(searchUsersProvider(searchController.text.trim())).when(
+                  data: (users) => ListView.builder(
+                    itemCount: users.length,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () {
+                          ref
+                              .read(recentSearchesProvider.notifier)
+                              .saveSearch(searchController.text);
+                          navigateTo(
+                            context,
+                            UserProfileScreen(
+                              user: users[index],
+                            ),
+                          );
+                        },
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            backgroundImage: NetworkImage(
+                              users[index].profilePicUrl!,
+                            ),
                           ),
-                        );
-                      },
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundImage: NetworkImage(
-                            users[index].profilePicUrl!,
+                          title: Text(
+                            users[index].name!,
+                            style: kTextStyle(18, ref),
+                          ),
+                          subtitle: Text(
+                            '@${users[index].username!}',
+                            style: kTextStyle(13, ref, color: Colors.grey),
                           ),
                         ),
-                        title: Text(
-                          users[index].name!,
-                          style: kTextStyle(18, ref),
-                        ),
-                        subtitle: Text(
-                          '@${users[index].username!}',
-                          style: kTextStyle(13, ref, color: Colors.grey),
-                        ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
+                  error: (_, __) => const Text("An error occured"),
+                  loading: () => const XLoader(),
                 ),
-                error: (_, __) => Text("An error occured"),
-                loading: () => const XLoader(),
-              ),
         });
   }
 }

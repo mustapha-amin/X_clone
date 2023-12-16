@@ -88,7 +88,7 @@ class _UserDetailsState extends ConsumerState<UserDetails> {
         vertical: 5,
       ),
       hintText: hint,
-      hintStyle: kTextStyle(15,  ref, color: Colors.grey),
+      hintStyle: kTextStyle(15, ref, color: Colors.grey),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
       ),
@@ -109,7 +109,7 @@ class _UserDetailsState extends ConsumerState<UserDetails> {
                     "Profile setup",
                     style: kTextStyle(
                       25,
-                       ref,
+                      ref,
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                     ),
@@ -298,9 +298,9 @@ class _UserDetailsState extends ConsumerState<UserDetails> {
                                     .saveUserData(
                                       context,
                                       ref: ref,
-                                      name: nameController.text,
-                                      username: usernameController.text,
-                                      bio: bioController.text,
+                                      name: nameController.text.trim(),
+                                      username: usernameController.text.trim(),
+                                      bio: bioController.text.trim(),
                                       profilePicUrl: profileImage!.path,
                                       coverPicUrl: coverImage!.path,
                                     );
@@ -320,8 +320,10 @@ class _UserDetailsState extends ConsumerState<UserDetails> {
                           },
                           child: Text(
                             "Next",
-                            
-                            style: kTextStyle(17,  ref,),
+                            style: kTextStyle(
+                              17,
+                              ref,
+                            ),
                           ),
                         );
                       },

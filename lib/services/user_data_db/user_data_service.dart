@@ -127,9 +127,11 @@ class UserDataService implements BaseUserDataService {
   Stream<List<XUser>> searchUser(String? name) {
     final snaps = firebaseFirestore!
         .collection(FirebaseConstants.usersCollection)
-        .where('name', isEqualTo: name)
+        .where('name', isGreaterThanOrEqualTo: name)
+        .where('name', isLessThanOrEqualTo: '$name\uf8ff')
         .snapshots()
         .map((snap) => snap.docs.map((e) => XUser.fromJson(e.data())).toList());
+
     return snaps;
   }
 }

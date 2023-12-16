@@ -6,7 +6,7 @@ import 'package:x_clone/services/user_data_db/user_data_service.dart';
 import '../../../core/typedefs.dart';
 
 final searchUsersProvider =
-    StreamProvider.family<List<XUser>, String>((ref, name) {
+    StreamProvider.autoDispose.family<List<XUser>, String>((ref, name) {
   return ref.read(userDataServiceProvider).searchUser(name);
 });
 
