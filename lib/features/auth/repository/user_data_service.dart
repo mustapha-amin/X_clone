@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:x_clone/core/core.dart';
-import '../../constants/firebase_constants.dart';
+import '../../../constants/firebase_constants.dart';
 import 'base_user_data_service.dart';
 import 'package:x_clone/models/user_model.dart';
 

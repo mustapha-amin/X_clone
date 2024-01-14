@@ -3,17 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:x_clone/constants/firebase_constants.dart';
 import 'package:x_clone/core/core.dart';
 import 'package:x_clone/models/user_model.dart';
-import 'package:x_clone/services/auth/auth_service.dart';
 import 'package:x_clone/utils/dialog.dart';
-
-import '../../../services/user_data_db/user_data_service.dart';
-
-enum Status {
-  initial,
-  loading,
-  failure,
-  success,
-}
+import '../../../utils/enums.dart';
+import '../repository/auth_service.dart';
+import '../repository/user_data_service.dart';
 
 final userDataProvider =
     StateNotifierProvider<UserDataController, Status>((ref) {

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:x_clone/common/x_loader.dart';
 import 'package:x_clone/features/home/widgets/post_card.dart';
 import 'package:x_clone/features/post/controllers/post_controller.dart';
+import 'package:x_clone/utils/extensions.dart';
 
 class ForYou extends ConsumerStatefulWidget {
   const ForYou({super.key});
@@ -18,15 +19,12 @@ class _ForYouState extends ConsumerState<ForYou> {
           data: (posts) => ListView.builder(
             itemCount: posts.length,
             itemBuilder: (context, index) {
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: PostCard(
-                  post: posts[index],
-                ),
-              );
+              return PostCard(
+                post: posts[index],
+              ).padAll(8);
             },
           ),
-          error: (_, __) => const Center(child: Text("Error fetching postss")),
+          error: (_, __) => const Center(child: Text("Error fetching posts")),
           loading: () => const XLoader(),
         );
   }

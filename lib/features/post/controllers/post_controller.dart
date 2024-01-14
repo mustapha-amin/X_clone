@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:x_clone/core/core.dart';
 import 'package:x_clone/models/post_model.dart';
-import 'package:x_clone/services/posts_db/post_service.dart';
+import 'package:x_clone/features/post/repository/post_service.dart';
+import 'package:x_clone/utils/enums.dart';
 import 'package:x_clone/utils/utils.dart';
 
-final postNotifierProvider = StateNotifierProvider<PostController, bool>((ref) {
+final postNotifierProvider =
+    StateNotifierProvider<PostController, Status>((ref) {
   return PostController(
     postService: ref.watch(postServiceProvider),
   );
@@ -22,18 +24,17 @@ final userPostsProvider =
   return await posts.fetchUserPosts(uid);
 });
 
-class PostController extends StateNotifier<bool> {
+class PostController extends StateNotifier<Status> {
   PostService? postService;
-  PostController({this.postService}) : super(false);
+  PostController({this.postService}) : super(Status.initial);
 
   FutureVoid createPost(BuildContext context, PostModel post) async {
-    state = true;
     try {
+      state = Status.loading;
       await postService!.createPost(post);
-      state = false;
-      Navigator.pop(context);
+      state = Status.success;
     } catch (e) {
-      state = false;
+      state = Status.failure;
       showErrorDialog(context: context, message: e.toString());
     }
   }
@@ -50,10 +51,14 @@ class PostController extends StateNotifier<bool> {
     return postService!.fetchFeedPosts();
   }
 
+  Stream<List<PostModel>> fetchFollowingPosts() {
+    return postService!.fetchFeedPosts();
+  }
+
   Future<List<PostModel>?> fetchUserPosts(String? uid) async {
     try {
       return postService!.fetchUserPosts(uid);
-    } on UnableToFetchPostException catch (e) {
+    } on UnableToFetchPostException {
       return null;
     }
   }

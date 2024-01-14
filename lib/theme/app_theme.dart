@@ -15,7 +15,7 @@ class AppTheme {
         seedColor: AppColors.blueColor,
         brightness: Brightness.dark,
       ),
-      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         backgroundColor: Colors.black,
         selectedIconTheme: IconThemeData(color: Colors.white),
         unselectedIconTheme: IconThemeData(color: Colors.white),

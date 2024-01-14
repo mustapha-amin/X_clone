@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:x_clone/features/auth/controller/user_data_controller.dart';
 import 'package:x_clone/models/user_model.dart';
-import 'package:x_clone/utils/extensions.dart';
 import 'package:x_clone/utils/utils.dart';
 
 class EditProfile extends ConsumerStatefulWidget {
@@ -37,7 +36,7 @@ class _EditProfileState extends ConsumerState<EditProfile> {
     final userData = ref.watch(userDataProvider.notifier);
     return Scaffold(
       appBar: AppBar(
-        title: Text("Edit profile"),
+        title: const Text("Edit profile"),
         actions: [
           ListenableBuilder(
             listenable: Listenable.merge([nameController, usernameController]),

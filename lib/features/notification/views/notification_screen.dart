@@ -1,10 +1,14 @@
-import 'package:feather_icons/feather_icons.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:x_clone/common/x_avatar.dart';
+import 'package:x_clone/common/x_loader.dart';
 import 'package:x_clone/core/core.dart';
+import 'package:x_clone/features/notification/controller/notification_controller.dart';
+import 'package:x_clone/features/notification/widgets/notification_tile.dart';
+import 'package:x_clone/features/notification/repository/notification_service.dart';
 import 'package:x_clone/utils/utils.dart';
+
+import '../../auth/repository/user_data_service.dart';
 
 class NotificationScreen extends ConsumerStatefulWidget {
   const NotificationScreen({super.key});
@@ -17,31 +21,53 @@ class NotificationScreen extends ConsumerStatefulWidget {
 class _NotificationScreenState extends ConsumerState<NotificationScreen> {
   @override
   Widget build(BuildContext context) {
-    User? user = ref.watch(userProvider);
-    return CustomScrollView(
-      slivers: [
-        SliverAppBar(
-          leadingWidth: context.screenWidth * .2,
-          leading: XAvatar(),
-          title: Text(
-            "Notifications",
-            style: kTextStyle(
-              25,
-               ref,
-              fontWeight: FontWeight.bold,
+    return Scaffold(
+      appBar: AppBar(
+        leading: XAvatar(),
+        title: Text(
+          "Notifications",
+          style: kTextStyle(25, ref),
+        ),
+        actions: const [
+          Icon(Icons.settings),
+        ],
+      ),
+      body: ref.watch(notificationsStreamProvider).when(
+            data: (notifications) {
+              ref.watch(xUserStreamProvider(ref.watch(uidProvider))).when(
+                    data: (user) {
+                      if (user!.notificationCount! > 0) {
+                        ref.read(notificationProvider).resetNotificationCount();
+                      }
+                    },
+                    error: (_, __) => null,
+                    loading: () => null,
+                  );
+              return notifications!.isEmpty
+                  ? const SizedBox()
+                  : Column(
+                      children: [
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Expanded(
+                          child: ListView.builder(
+                            itemCount: notifications.length,
+                            itemBuilder: (context, index) {
+                              return NotificationTile(
+                                notificationModel: notifications[index],
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    );
+            },
+            error: (_, __) => const Center(
+              child: Text("An error occured"),
             ),
+            loading: () => const XLoader(),
           ),
-          actions: [
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                FeatherIcons.settings,
-                size: 20,
-              ),
-            )
-          ],
-        )
-      ],
     );
   }
 }

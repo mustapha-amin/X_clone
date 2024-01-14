@@ -7,7 +7,7 @@ class XWidgets {
     return AppBar(
       title: SvgPicture.asset(
         ImagesPaths.x_icon,
-        color: Colors.white,
+        colorFilter: const ColorFilter.mode( Colors.white, BlendMode.srcIn),
         width: 28,
       ),
       centerTitle: true,

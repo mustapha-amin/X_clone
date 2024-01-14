@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:x_clone/common/x_appbar.dart';
 import 'package:x_clone/common/x_loader.dart';
+import 'package:x_clone/core/core.dart';
 import 'package:x_clone/features/auth/controller/auth_controller.dart';
 import 'package:x_clone/theme/theme.dart';
 import 'package:x_clone/utils/utils.dart';
@@ -18,39 +19,8 @@ class _LogInState extends ConsumerState<LogIn> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  ValueNotifier<bool> emailFieldTapped = ValueNotifier(false);
-  ValueNotifier<bool> passwordFieldTapped = ValueNotifier(false);
-  ValueNotifier<String?> emailErrorText = ValueNotifier<String?>(null);
-  ValueNotifier<String?> passwordErrorText = ValueNotifier<String?>(null);
   bool isObscure = true;
-
-  void displayEmailError() {
-    if (emailController.text.isEmpty) {
-      emailErrorText.value = "email cannot be empty";
-    } else if (!isValidEmail(emailController.text)) {
-      emailErrorText.value = "Not a valid email";
-    } else if (isValidEmail(emailController.text)) {
-      emailErrorText.value = null;
-    }
-  }
-
-  toggleFieldsTapped() {
-    emailFieldTapped.value = true;
-    passwordFieldTapped.value = true;
-  }
-
-  void displayPasswordError() {
-    if (passwordController.text.isEmpty) {
-      passwordErrorText.value = "password cannot be empty";
-    } else {
-      passwordErrorText.value = null;
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-  }
+  AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
 
   @override
   Widget build(BuildContext context) {
@@ -72,6 +42,7 @@ class _LogInState extends ConsumerState<LogIn> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 18),
                     child: Form(
+                      autovalidateMode: autovalidateMode,
                       key: _formKey,
                       child: ListView(
                         children: [
@@ -85,80 +56,76 @@ class _LogInState extends ConsumerState<LogIn> {
                             ),
                           ),
                           VerticalSpacing(size: 25),
-                          ValueListenableBuilder(
-                            valueListenable: emailErrorText,
-                            builder: (context, error, _) => TextFormField(
-                              controller: emailController,
-                              decoration: InputDecoration(
-                                label: Text(
-                                  "email",
-                                  style:
-                                      kTextStyle(15, ref, color: Colors.grey),
-                                ),
-                                errorText: error,
-                                labelStyle: kTextStyle(15, ref,
-                                    color: AppColors.blueColor),
-                                focusedBorder: const OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: AppColors.blueColor,
-                                    width: 2,
-                                  ),
-                                ),
-                                focusColor: AppColors.blueColor,
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                ),
-                                border: const OutlineInputBorder(),
+                          TextFormField(
+                            controller: emailController,
+                            decoration: InputDecoration(
+                              label: Text(
+                                "email",
+                                style: kTextStyle(15, ref, color: Colors.grey),
                               ),
-                              onChanged: (_) {
-                                if (emailFieldTapped.value) {
-                                  displayEmailError();
-                                }
-                              },
+                              labelStyle: kTextStyle(15, ref,
+                                  color: AppColors.blueColor),
+                              focusedBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: AppColors.blueColor,
+                                  width: 2,
+                                ),
+                              ),
+                              focusColor: AppColors.blueColor,
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                              ),
+                              border: const OutlineInputBorder(),
                             ),
+                            validator: (email) {
+                              if (email!.isEmpty) {
+                                return "email cannot be empty";
+                              } else if (!isValidEmail(email)) {
+                                return "Not a valid email";
+                              } else {
+                                return null;
+                              }
+                            },
                           ),
                           VerticalSpacing(size: 20),
-                          ValueListenableBuilder(
-                            valueListenable: passwordErrorText,
-                            builder: (context, error, _) => TextFormField(
-                              obscureText: isObscure,
-                              controller: passwordController,
-                              decoration: InputDecoration(
-                                label: Text(
-                                  "password",
-                                  style:
-                                      kTextStyle(15, ref, color: Colors.grey),
-                                ),
-                                errorText: error,
-                                labelStyle: kTextStyle(15, ref,
-                                    color: AppColors.blueColor),
-                                focusedBorder: const OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: AppColors.blueColor,
-                                    width: 2,
-                                  ),
-                                ),
-                                suffixIcon: IconButton(
-                                  icon: Icon(isObscure
-                                      ? Icons.visibility
-                                      : Icons.visibility_off),
-                                  onPressed: () {
-                                    setState(() {
-                                      isObscure = !isObscure;
-                                    });
-                                  },
-                                ),
-                                focusColor: AppColors.blueColor,
-                                contentPadding:
-                                    const EdgeInsets.symmetric(horizontal: 8),
-                                border: const OutlineInputBorder(),
+                          TextFormField(
+                            obscureText: isObscure,
+                            controller: passwordController,
+                            decoration: InputDecoration(
+                              label: Text(
+                                "password",
+                                style: kTextStyle(15, ref, color: Colors.grey),
                               ),
-                              onChanged: (_) {
-                                if (passwordFieldTapped.value) {
-                                  displayPasswordError();
-                                }
-                              },
+                              labelStyle: kTextStyle(15, ref,
+                                  color: AppColors.blueColor),
+                              focusedBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: AppColors.blueColor,
+                                  width: 2,
+                                ),
+                              ),
+                              suffixIcon: IconButton(
+                                icon: Icon(isObscure
+                                    ? Icons.visibility
+                                    : Icons.visibility_off),
+                                onPressed: () {
+                                  setState(() {
+                                    isObscure = !isObscure;
+                                  });
+                                },
+                              ),
+                              focusColor: AppColors.blueColor,
+                              contentPadding:
+                                  const EdgeInsets.symmetric(horizontal: 8),
+                              border: const OutlineInputBorder(),
                             ),
+                            validator: (password) {
+                              if (password!.isEmpty) {
+                                return "password cannot be empty";
+                              } else {
+                                return null;
+                              }
+                            },
                           ),
                         ],
                       ),
@@ -193,36 +160,48 @@ class _LogInState extends ConsumerState<LogIn> {
                           ),
                           Padding(
                             padding: const EdgeInsets.only(right: 15),
-                            child: ElevatedButton(
-                              style: OutlinedButton.styleFrom(
-                                backgroundColor: Colors.white,
+                            child: ListenableBuilder(
+                              listenable: Listenable.merge(
+                                [emailController, passwordController],
                               ),
-                              onPressed: () {
-                                if (isValidEmail(emailController.text) &&
-                                    passwordController.text.isNotEmpty) {
-                                  try {
-                                    ref
-                                        .read(authControllerProvider.notifier)
-                                        .signIn(
-                                          context: context,
-                                          email: emailController.text,
-                                          password: passwordController.text,
-                                        );
-                                  } catch (e) {
-                                    log(e.toString());
-                                  }
-                                } else {
-                                  toggleFieldsTapped();
-                                  displayEmailError();
-                                  displayPasswordError();
-                                }
+                              builder: (_, __) {
+                                bool? isEnabled =
+                                    emailController.text.isNotEmpty &&
+                                        passwordController.text.isNotEmpty;
+                                return ElevatedButton(
+                                  style: OutlinedButton.styleFrom(
+                                    backgroundColor:
+                                        isEnabled ? Colors.white : Colors.grey,
+                                  ),
+                                  onPressed: () {
+                                    if (_formKey.currentState!.validate()) {
+                                      try {
+                                        ref
+                                            .read(
+                                                authControllerProvider.notifier)
+                                            .signIn(
+                                              context: context,
+                                              email: emailController.text,
+                                              password: passwordController.text,
+                                            );
+                                      } catch (e) {
+                                        log(e.toString());
+                                      }
+                                    } else {
+                                      setState(() {
+                                        autovalidateMode =
+                                            AutovalidateMode.always;
+                                      });
+                                    }
+                                  },
+                                  child: Text(
+                                    "Next",
+                                    style: kTextStyle(15, ref,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black),
+                                  ),
+                                );
                               },
-                              child: Text(
-                                "Next",
-                                style: kTextStyle(15, ref,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black),
-                              ),
                             ),
                           ),
                         ],

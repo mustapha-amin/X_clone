@@ -26,11 +26,18 @@ extension WidgetExtensions on Widget {
 extension JoinTimeFormatting on DateTime {
   String get formatJoinTime {
     final months = [
-      '', // Leave the first element empty for index alignment
+      '',
       'January', 'February', 'March', 'April', 'May', 'June',
       'July', 'August', 'September', 'October', 'November', 'December'
     ];
 
-    return '${months[month]}, $year';
+    return '$day ${months[month]}, $year';
+  }
+
+  String get formatTime {
+    String hr = hour < 12 ? '0$hour' : '$hour';
+    String min = '$minute';
+    String symbol = hour < 12 ? 'am' : 'pm'; 
+    return '$hr:$min $symbol';
   }
 }

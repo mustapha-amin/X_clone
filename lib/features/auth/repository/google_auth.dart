@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fpdart/fpdart.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:x_clone/core/core.dart';
 
@@ -44,7 +43,7 @@ class GoogleAuthService {
 
   FutureVoid googleSignOut() async {
     try {
-      await googleSignIn.signOut();
+      await firebaseAuth!.signOut();
     } catch (e) {
       log(e.toString());
     }

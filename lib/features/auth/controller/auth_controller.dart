@@ -1,8 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:x_clone/features/auth/auth.dart';
-import 'package:x_clone/services/auth/google_auth.dart';
-import '/../services/services.dart';
+import '../repository/auth_service.dart';
+import '../repository/google_auth.dart';
 import '/../utils/utils.dart';
 import 'package:x_clone/features/nav bar/nav_bar.dart';
 
@@ -74,16 +76,20 @@ class GoogleAuthContoller extends StateNotifier<bool> {
     this.authService,
   }) : super(false);
 
-  void signInWithGoogle(BuildContext context) async {
+  void signInWithGoogle() async {
     state = true;
-    await googleAuthService!.googleLogin();
+    try {
+      await googleAuthService!.googleLogin();
+    } catch (e) {
+      log(e.toString());
+    }
     state = false;
   }
 
   void signOutWithGoogle() async {
     state = true;
-    await googleAuthService!.googleSignOut();
     await authService!.signOut();
+    await googleAuthService!.googleSignOut();
     state = false;
   }
 }

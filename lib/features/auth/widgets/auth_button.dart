@@ -27,8 +27,8 @@ class AuthButton extends ConsumerWidget {
       child: SizedBox(
         width: double.infinity,
         height: 40,
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
+        child: OutlinedButton(
+          style: OutlinedButton.styleFrom(
             backgroundColor: bgColor ?? Colors.white,
           ),
           onPressed: onPressed,
@@ -48,7 +48,7 @@ class AuthButton extends ConsumerWidget {
                 label!,
                 style: kTextStyle(
                   16,
-                   ref,
+                  ref,
                   color: fgColor ?? Colors.black,
                   fontWeight: FontWeight.bold,
                 ),

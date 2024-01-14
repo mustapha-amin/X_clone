@@ -17,11 +17,6 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   ScrollController scrollController = ScrollController();
-  void openDrawer(WidgetRef ref) {
-    ref.watch(scaffoldKeyProvider).currentState!.isDrawerOpen
-        ? ref.read(scaffoldKeyProvider).currentState!.closeEndDrawer()
-        : ref.read(scaffoldKeyProvider).currentState!.openEndDrawer();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +75,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         
       ),
       
-    );
-    
+    );    
   }
 }

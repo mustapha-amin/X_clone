@@ -1,21 +1,25 @@
 import 'dart:io';
-
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
+import 'package:x_clone/features/home/widgets/image_carousel.dart';
+import 'package:x_clone/features/notification/controller/notification_controller.dart';
 import 'package:x_clone/features/user_profile/views/user_profile_screen.dart';
 import 'package:x_clone/models/comment_model.dart';
+import 'package:x_clone/models/notification_model.dart';
 import 'package:x_clone/models/post_model.dart';
 import 'package:x_clone/models/user_model.dart';
-import 'package:x_clone/services/posts_db/post_service.dart';
-import 'package:x_clone/services/user_data_db/user_data_service.dart';
+import 'package:x_clone/features/post/repository/post_service.dart';
 import 'package:x_clone/theme/theme.dart';
+import 'package:x_clone/utils/enums.dart';
+import 'package:x_clone/utils/image_pickers.dart';
 import 'package:x_clone/utils/utils.dart';
 
 import '../../../../core/core.dart';
+import '../../../auth/repository/user_data_service.dart';
 import '../../widgets/comment_card.dart';
 import '../../widgets/post_icon_buttons.dart';
 
@@ -38,23 +42,24 @@ class _PostDetailsScreenState extends ConsumerState<PostDetailsScreen> {
     return widget.post!.likesIDs!.contains(uid);
   }
 
-  FutureVoid pickImageFromCamera() async {
-    ImagePicker imagePicker = ImagePicker();
-    final image = await imagePicker.pickImage(source: ImageSource.camera);
+  void pickCameraImage() async {
+    final image = await pickImageFromCamera();
     if (image != null) {
-      pickedImages.add(File(image.path));
+      pickedImages.add(image);
       setState(() {});
     }
   }
 
-  FutureVoid pickImagesFromGallery() async {
-    ImagePicker imagePicker = ImagePicker();
-    final images = await imagePicker.pickMultiImage();
-    if (images.isNotEmpty) {
-      images.forEach((image) {
-        pickedImages.length < 4 ? pickedImages.add(File(image.path)) : null;
-      });
-      setState(() {});
+  FutureVoid pickGalleryImages(BuildContext context) async {
+    final images = await pickImagesFromGallery();
+    if (images!.isNotEmpty) {
+      if (images.length <= 4) {
+        pickedImages.addAll(images);
+        setState(() {});
+      } else {
+        showErrorDialog(
+            context: context, message: "You can only pick 4 images or less");
+      }
     }
   }
 
@@ -81,17 +86,28 @@ class _PostDetailsScreenState extends ConsumerState<PostDetailsScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        backgroundImage:
-                            NetworkImage(widget.xUser!.profilePicUrl!),
-                      ).padX(8),
-                      Text(
-                        widget.xUser!.name!,
-                        style: kTextStyle(23, ref, fontWeight: FontWeight.bold),
-                      ),
-                    ],
+                  GestureDetector(
+                    onTap: () {
+                      navigateTo(
+                        context,
+                        UserProfileScreen(
+                          user: widget.xUser,
+                        ),
+                      );
+                    },
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          backgroundImage:
+                              NetworkImage(widget.xUser!.profilePicUrl!),
+                        ).padX(8),
+                        Text(
+                          widget.xUser!.name!,
+                          style:
+                              kTextStyle(23, ref, fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
                   ),
                   Text(
                     widget.post!.text!,
@@ -99,25 +115,15 @@ class _PostDetailsScreenState extends ConsumerState<PostDetailsScreen> {
                   ).padAll(8),
                   widget.post!.imagesUrl!.isEmpty
                       ? const SizedBox()
-                      : CarouselSlider(
-                          items: widget.post!.imagesUrl!
-                              .map((e) => Image.network(
-                                    e,
-                                    fit: BoxFit.cover,
-                                  ))
-                              .toList(),
-                          options: CarouselOptions(
-                            initialPage: currentPage,
-                            enableInfiniteScroll: false,
-                            height: context.screenHeight * .4,
-                            onPageChanged: (newPage, _) {
-                              setState(() {
-                                currentPage = newPage;
-                              });
-                            },
-                          ),
+                      : UserPostImageCarousel(
+                          post: widget.post,
+                          user: widget.xUser,
                         ),
-                  ref.watch(fetchPostByID(widget.post!)).when(
+                  Text(
+                    '${widget.post!.timeCreated!.formatTime} - ${widget.post!.timeCreated!.formatJoinTime}',
+                    style: kTextStyle(15, ref, color: Colors.grey),
+                  ).padX(8),
+                  ref.watch(fetchPostByID(widget.post!.postID!)).when(
                         data: (post) => Column(
                           children: [
                             Row(
@@ -156,6 +162,7 @@ class _PostDetailsScreenState extends ConsumerState<PostDetailsScreen> {
                                 ),
                               ],
                             ),
+                            const SizedBox(height: 20),
                             ...post.comments!.map((comment) {
                               return ref
                                   .watch(xUserStreamProvider(comment.uid!))
@@ -163,6 +170,7 @@ class _PostDetailsScreenState extends ConsumerState<PostDetailsScreen> {
                                     data: (user) => CommentCard(
                                       comment: comment,
                                       user: user!,
+                                      post: widget.post!,
                                     ).padY(8).padX(10),
                                     error: (_, __) =>
                                         const Text("Error fetching comments"),
@@ -172,10 +180,12 @@ class _PostDetailsScreenState extends ConsumerState<PostDetailsScreen> {
                             })
                           ],
                         ),
-                        error: (_, __) =>
-                            Center(child: Text("Error loading comments")),
-                        loading: () =>
-                            Center(child: CircularProgressIndicator()),
+                        error: (_, __) => const Center(
+                          child: Text("Error loading comments"),
+                        ),
+                        loading: () => Center(
+                          child: const CircularProgressIndicator().padAll(7),
+                        ),
                       ),
                 ],
               ),
@@ -243,7 +253,7 @@ class _PostDetailsScreenState extends ConsumerState<PostDetailsScreen> {
                           color: AppColors.blueColor,
                           onPressed: () {
                             pickedImages.length < 4
-                                ? pickImagesFromGallery()
+                                ? pickGalleryImages(context)
                                 : showDialog(
                                     context: context,
                                     builder: (context) {
@@ -270,7 +280,7 @@ class _PostDetailsScreenState extends ConsumerState<PostDetailsScreen> {
                           color: AppColors.blueColor,
                           onPressed: () {
                             pickedImages.length < 4
-                                ? pickImageFromCamera()
+                                ? pickCameraImage()
                                 : showDialog(
                                     context: context,
                                     builder: (context) {
@@ -306,10 +316,11 @@ class _PostDetailsScreenState extends ConsumerState<PostDetailsScreen> {
                           onPressed: value.text.isEmpty
                               ? null
                               : () async {
+                                  String commentID = const Uuid().v4();
                                   ref.read(postServiceProvider).commentOnPost(
                                         CommentModel(
                                           uid: ref.watch(uidProvider),
-                                          commentID: const Uuid().v4(),
+                                          commentID: commentID,
                                           text: commentController.text,
                                           imagesUrls: pickedImages
                                               .map((e) => e.path)
@@ -317,12 +328,28 @@ class _PostDetailsScreenState extends ConsumerState<PostDetailsScreen> {
                                         ),
                                         widget.post,
                                       );
+                                  ref.read(
+                                    createNotificationProvider(
+                                      NotificationModel(
+                                        senderID: ref.watch(uidProvider),
+                                        recipientID: widget.post!.uid,
+                                        targetID:
+                                            "${widget.post!.postID}-$commentID",
+                                        message: "commented on your post",
+                                        notificationType:
+                                            NotificationType.comment,
+                                      ),
+                                    ),
+                                  );
                                   commentController.clear();
                                   setState(() {
                                     pickedImages.clear();
                                   });
-                                  ref.refresh(
-                                      fetchPostByID(widget.post!).future);
+                                  ref.invalidate(
+                                    fetchPostByID(
+                                      widget.post!.postID!,
+                                    ),
+                                  );
                                 },
                           child: Text(
                             "Reply",

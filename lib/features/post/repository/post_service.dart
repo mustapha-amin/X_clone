@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -36,8 +37,10 @@ final postServiceProvider = Provider((ref) {
   );
 });
 
-final fetchPostByID = FutureProvider.family<PostModel, PostModel>((ref, post) {
-  return ref.read(postServiceProvider).fetchPostByID(post.postID!, post.uid!);
+final fetchPostByID =
+    FutureProvider.family<PostModel, String>((ref, pid) async {
+  final fetchedPost = await ref.read(postServiceProvider).fetchPostByID(pid);
+  return fetchedPost;
 });
 
 class PostService {
@@ -62,8 +65,6 @@ class PostService {
       PostModel updatedPost = post.copyWith(imagesUrl: imageUrls);
       await firebaseFirestore!
           .collection(FirebaseConstants.postsCollection)
-          .doc(updatedPost.uid)
-          .collection("posts")
           .doc(updatedPost.postID)
           .set(updatedPost.toJson());
     } catch (e) {
@@ -73,12 +74,10 @@ class PostService {
 
   FutureVoid deletePost(PostModel post) async {
     try {
-      final postDoc = firebaseFirestore!
+      await firebaseFirestore!
           .collection(FirebaseConstants.postsCollection)
-          .doc(post.uid)
-          .collection("posts")
-          .doc(post.postID);
-      await postDoc.delete();
+          .doc(post.postID)
+          .delete();
       final storagePath =
           "${FirebaseConstants.uploadedMedia}/${post.uid}/${post.postID}/";
       await firebaseStorage!.ref(storagePath).delete();
@@ -88,20 +87,23 @@ class PostService {
   }
 
   Stream<List<PostModel>> fetchFeedPosts() {
-    return firebaseFirestore!.collectionGroup('posts').snapshots().map((snap) =>
-        snap.docs.map((doc) => PostModel.fromJson(doc.data())).toList());
+    return firebaseFirestore!
+        .collection(FirebaseConstants.postsCollection)
+        .snapshots()
+        .map((snap) =>
+            snap.docs.map((e) => PostModel.fromJson(e.data())).toList());
   }
 
   Future<List<PostModel>> fetchUserPosts(String? uid) async {
     try {
-      final snaps = await firebaseFirestore!
+      final querySnap = await firebaseFirestore!
           .collection(FirebaseConstants.postsCollection)
-          .doc(uid)
-          .collection("posts")
+          .where('uid', isEqualTo: uid)
           .get();
 
-      final posts =
-          snaps.docs.map((post) => PostModel.fromJson(post.data())).toList();
+      final posts = querySnap.docs
+          .map((post) => PostModel.fromJson(post.data()))
+          .toList();
       return posts;
     } catch (e) {
       throw UnableToPostException();
@@ -111,9 +113,7 @@ class PostService {
   FutureVoid likePost(PostModel? post) async {
     await firebaseFirestore!
         .collection(FirebaseConstants.postsCollection)
-        .doc(post!.uid)
-        .collection('posts')
-        .doc(post.postID)
+        .doc(post!.postID)
         .update({
       'likesIDs': post.likesIDs,
     });
@@ -136,19 +136,15 @@ class PostService {
     PostModel newPost = post.copyWith(comments: comments);
     await firebaseFirestore!
         .collection(FirebaseConstants.postsCollection)
-        .doc(newPost.uid)
-        .collection('posts')
         .doc(newPost.postID)
         .update(
             {'comments': newPost.comments!.map((comment) => comment.toJson())});
   }
 
-  Future<PostModel> fetchPostByID(String pid, String uid) async {
+  Future<PostModel> fetchPostByID(String? postID) async {
     final doc = await firebaseFirestore!
         .collection(FirebaseConstants.postsCollection)
-        .doc(uid)
-        .collection("posts")
-        .doc(pid)
+        .doc(postID)
         .get();
     return PostModel.fromJson(doc.data()!);
   }

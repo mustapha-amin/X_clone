@@ -1,9 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:x_clone/models/user_model.dart';
 import 'package:x_clone/services/user_data_db/saved_searches.dart';
-import 'package:x_clone/services/user_data_db/user_data_service.dart';
-
 import '../../../core/typedefs.dart';
+import '../../auth/repository/user_data_service.dart';
 
 final searchUsersProvider =
     StreamProvider.autoDispose.family<List<XUser>, String>((ref, name) {

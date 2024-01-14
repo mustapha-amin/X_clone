@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,6 +5,7 @@ import 'package:x_clone/core/core.dart';
 import 'package:x_clone/features/post/controllers/post_controller.dart';
 import 'package:x_clone/models/post_model.dart';
 import 'package:uuid/uuid.dart';
+import 'package:x_clone/utils/enums.dart';
 import '../../../theme/theme.dart';
 import '../../../utils/utils.dart';
 
@@ -17,10 +17,11 @@ class PostButton extends ConsumerWidget {
   });
 
   final TextEditingController postTextEditingController;
-  final ValueNotifier<List<File>> images;
+  final ValueNotifier<List<File?>> images;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    Status postStatus = ref.watch(postNotifierProvider);
     return ListenableBuilder(
       listenable: Listenable.merge(
         [
@@ -32,24 +33,24 @@ class PostButton extends ConsumerWidget {
         return GestureDetector(
           onTap: switch (postTextEditingController.text.isNotEmpty ||
               images.value.isNotEmpty) {
-            true => () async => {
-                  await ref.read(postNotifierProvider.notifier).createPost(
-                        context,
-                        PostModel(
-                          uid: ref.watch(userProvider)!.uid,
-                          postID: const Uuid().v4(),
-                          text: postTextEditingController.text,
-                          imagesUrl: images.value.isEmpty
-                              ? []
-                              : images.value.map((e) => e.path).toList(),
-                          comments: [],
-                          likesIDs: [],
-                          repostCount: 0,
-                          timeCreated: DateTime.now(),
-                        ),
+            true => () async {
+                await ref.read(postNotifierProvider.notifier).createPost(
+                      context,
+                      PostModel(
+                        uid: ref.watch(userProvider)!.uid,
+                        postID: const Uuid().v4(),
+                        text: postTextEditingController.text,
+                        imagesUrl: images.value.isEmpty
+                            ? []
+                            : images.value.map((e) => e!.path).toList(),
+                        comments: [],
+                        likesIDs: [],
+                        repostCount: 0,
+                        timeCreated: DateTime.now(),
                       ),
-                  
-                },
+                    );
+                Navigator.pop(context);
+              },
             _ => null
           },
           child: Container(
@@ -64,10 +65,18 @@ class PostButton extends ConsumerWidget {
               borderRadius: BorderRadius.circular(30),
             ),
             child: Center(
-              child: Text(
-                "Post",
-                style: kTextStyle(15, ref, fontWeight: FontWeight.bold),
-              ),
+              child: postStatus == Status.loading
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                      ),
+                    )
+                  : Text(
+                      "Post",
+                      style: kTextStyle(15, ref, fontWeight: FontWeight.bold),
+                    ),
             ),
           ).padX(8),
         );

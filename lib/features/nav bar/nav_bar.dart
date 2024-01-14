@@ -2,6 +2,7 @@ import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:x_clone/common/x_drawer.dart';
+import 'package:x_clone/features/auth/repository/user_data_service.dart';
 import 'package:x_clone/features/explore/views/explore_screen.dart';
 import 'package:x_clone/features/home/home.dart';
 import 'package:x_clone/features/messaging/views/message_screen.dart';
@@ -29,11 +30,11 @@ class XBottomNavBar extends ConsumerStatefulWidget {
 }
 
 class _XBottomNavBarState extends ConsumerState<XBottomNavBar> {
-  List<Widget> screens = [
-    const HomeScreen(),
-    const ExploreScreen(),
-    const NotificationScreen(),
-    const MessageScreen(),
+  final List<Widget> screens = const [
+    HomeScreen(),
+    ExploreScreen(),
+    NotificationScreen(),
+    MessageScreen(),
   ];
 
   void toggleExpanded() {
@@ -89,16 +90,34 @@ class _XBottomNavBarState extends ConsumerState<XBottomNavBar> {
                     Icon(index == 0 ? Icons.home_filled : Icons.home_outlined),
                 label: '',
               ),
-              BottomNavigationBarItem(
+              const BottomNavigationBarItem(
                 icon: Icon(
                   FeatherIcons.search,
                 ),
                 label: '',
               ),
               BottomNavigationBarItem(
-                icon: Icon(
-                  index == 2 ? Icons.notifications : Icons.notifications_none,
-                  size: 27,
+                icon: Stack(
+                  alignment: Alignment.topRight,
+                  children: [
+                    Icon(
+                      index == 2
+                          ? Icons.notifications
+                          : Icons.notifications_none,
+                      size: 27,
+                    ),
+                    ref.watch(xUserStreamProvider(ref.watch(uidProvider))).when(
+                          data: (user) => user!.notificationCount! > 0
+                              ? Badge.count(
+                                  count: user.notificationCount!,
+                                  backgroundColor: AppColors.blueColor,
+                                  textColor: Colors.white,
+                                )
+                              : const SizedBox(),
+                          error: (_, __) => const SizedBox(),
+                          loading: () => const SizedBox(),
+                        )
+                  ],
                 ),
                 label: '',
               ),

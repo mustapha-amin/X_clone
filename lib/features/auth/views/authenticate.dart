@@ -1,17 +1,12 @@
-import 'dart:developer';
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:x_clone/common/x_loader.dart';
 import 'package:x_clone/features/auth/auth.dart';
 import 'package:x_clone/features/auth/controller/auth_controller.dart';
 import 'package:x_clone/features/auth/widgets/auth_button.dart';
 import 'package:x_clone/features/auth/widgets/signup_terms_one.dart';
-import 'package:x_clone/features/auth/widgets/signup_terms_two.dart';
-import 'package:x_clone/services/auth/google_auth.dart';
 import 'package:x_clone/utils/extensions.dart';
 import 'package:x_clone/utils/navigation.dart';
 import 'package:x_clone/utils/textstyle.dart';
@@ -27,8 +22,9 @@ class Authenticate extends ConsumerStatefulWidget {
 }
 
 class _AuthenticateState extends ConsumerState<Authenticate> {
-  void signInGoogle(BuildContext context) {
-    ref.read(googleAuthProvider.notifier).signInWithGoogle(context);
+  
+  void signInGoogle() {
+    ref.read(googleAuthProvider.notifier).signInWithGoogle();
   }
 
   @override
@@ -62,8 +58,8 @@ class _AuthenticateState extends ConsumerState<Authenticate> {
                     AuthButton(
                       label: "Continue with Google",
                       isGoogle: true,
-                      onPressed: () => {
-                        signInGoogle(context),
+                      onPressed: () {
+                        signInGoogle();
                       },
                     ),
                     const AuthDivider(),

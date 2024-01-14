@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:x_clone/features/auth/controller/auth_controller.dart';
 import 'package:x_clone/utils/extensions.dart';
 import 'package:x_clone/utils/textstyle.dart';
+
+import '../features/auth/repository/auth_service.dart';
 
 class XBtmModalSheet extends ConsumerStatefulWidget {
   const XBtmModalSheet({super.key});
@@ -18,7 +19,7 @@ class _XBtmModalSheetState extends ConsumerState<XBtmModalSheet> {
       height: context.screenHeight * .2,
       width: context.screenWidth,
       decoration: const BoxDecoration(
-        color:  Colors.black,
+        color: Colors.black,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -34,33 +35,38 @@ class _XBtmModalSheetState extends ConsumerState<XBtmModalSheet> {
           SizedBox(
             width: context.screenWidth * .7,
             child: OutlinedButton(
-              onPressed: () async {
-                await showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      title: const Text("Sign out"),
-                      content: const Text("Are you sure you want to sign out?"),
-                      actions: [
-                        TextButton(
-                          onPressed: () => {
-                            ref.read(authControllerProvider.notifier).signOut(),
-                            ref
-                                .read(googleAuthProvider.notifier)
-                                .signOutWithGoogle()
-                          },
-                          child: const Text("Yes"),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: const Text("No"),
-                        ),
-                      ],
-                    );
-                  },
-                );
+              onPressed: () {
+                Navigator.of(context).pop();
+                ref.read(authServiceProvider).signOut();
+                setState(() {});
+
+                // await showDialog(
+                //   context: context,
+                //   builder: (context) {
+                //     return AlertDialog(
+                //       title: const Text("Sign out"),
+                //       content: const Text("Are you sure you want to sign out?"),
+                //       actions: [
+                //         TextButton(
+                //           onPressed: () {
+                //             ref.read(authControllerProvider.notifier).signOut();
+                //             ref
+                //                 .read(googleAuthProvider.notifier)
+                //                 .signOutWithGoogle();
+                //             Navigator.of(context).pop();
+                //           },
+                //           child: const Text("Yes"),
+                //         ),
+                //         TextButton(
+                //           onPressed: () {
+                //             Navigator.of(context).pop();
+                //           },
+                //           child: const Text("No"),
+                //         ),
+                //       ],
+                //     );
+                //   },
+                //);
               },
               child: Text(
                 "Sign out",

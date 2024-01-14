@@ -2,12 +2,11 @@ import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:x_clone/core/core.dart';
-import 'package:x_clone/features/auth/controller/user_data_controller.dart';
 import 'package:x_clone/features/user_profile/views/edit_profile.dart';
-import 'package:x_clone/services/user_data_db/user_data_service.dart';
 
 import '../../../models/user_model.dart';
 import '../../../utils/utils.dart';
+import '../../auth/repository/user_data_service.dart';
 
 class UserInfo extends ConsumerWidget {
   const UserInfo({
@@ -73,6 +72,7 @@ class UserInfo extends ConsumerWidget {
           user!.bio!,
           style: kTextStyle(16, ref),
         ),
+        VerticalSpacing(size: 5),
         Row(
           children: [
             user!.location!.isEmpty

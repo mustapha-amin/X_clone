@@ -13,6 +13,7 @@ class XUser {
   String? website;
   String? profilePicUrl;
   String? coverPicUrl;
+  int? notificationCount;
 
   XUser({
     this.uid,
@@ -27,6 +28,7 @@ class XUser {
     this.website,
     this.profilePicUrl,
     this.coverPicUrl,
+    this.notificationCount,
   });
 
   factory XUser.fromJson(Map<String, dynamic> json) {
@@ -38,11 +40,12 @@ class XUser {
       bio: json['bio'],
       location: json['location'],
       joined: (json['joined'] as Timestamp).toDate(),
-      followers: List.from( json['followers'] ?? []),
-      following: List.from( json['following'] ?? []),
+      followers: List.from(json['followers'] ?? []),
+      following: List.from(json['following'] ?? []),
       website: json['website'],
       profilePicUrl: json['profilePicUrl'],
       coverPicUrl: json['coverPicUrl'],
+      notificationCount: json['notificationCount'] as int,
     );
   }
 
@@ -60,23 +63,24 @@ class XUser {
       'website': website,
       'profilePicUrl': profilePicUrl,
       'coverPicUrl': coverPicUrl,
+      'notificationCount': notificationCount,
     };
   }
 
-  XUser copyWith({
-    String? uid,
-    String? name,
-    String? username,
-    String? email,
-    String? bio,
-    String? location,
-    DateTime? joined,
-    List<String>? followers,
-    List<String>? following,
-    String? website,
-    String? profilePicUrl,
-    String? coverPicUrl,
-  }) {
+  XUser copyWith(
+      {String? uid,
+      String? name,
+      String? username,
+      String? email,
+      String? bio,
+      String? location,
+      DateTime? joined,
+      List<String>? followers,
+      List<String>? following,
+      String? website,
+      String? profilePicUrl,
+      String? coverPicUrl,
+      int? notificationCount}) {
     return XUser(
       uid: uid ?? this.uid,
       name: name ?? this.name,
@@ -90,6 +94,7 @@ class XUser {
       website: website ?? this.website,
       profilePicUrl: profilePicUrl ?? this.profilePicUrl,
       coverPicUrl: coverPicUrl ?? this.coverPicUrl,
+      notificationCount: notificationCount ?? this.notificationCount,
     );
   }
 }

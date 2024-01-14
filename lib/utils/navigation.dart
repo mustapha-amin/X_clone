@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-void navigateTo(BuildContext context, Widget screen) {
-  Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
+void navigateTo(BuildContext context, Widget? screen) {
+  Navigator.push(context, MaterialPageRoute(builder: (context) => screen!));
 }
 
-void navigateAndReplace(BuildContext context, Widget screen) {
+void navigateAndReplace(BuildContext context, Widget? screen) {
   Navigator.pushAndRemoveUntil(context,
-      MaterialPageRoute(builder: (context) => screen), (route) => false);
+      MaterialPageRoute(builder: (context) => screen!), (route) => false);
 }

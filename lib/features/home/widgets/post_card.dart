@@ -7,10 +7,13 @@ import 'package:x_clone/core/core.dart';
 import 'package:x_clone/features/auth/controller/user_data_controller.dart';
 import 'package:x_clone/features/home/views/for%20you/post_detail_screen.dart';
 import 'package:x_clone/features/home/widgets/post_icon_buttons.dart';
+import 'package:x_clone/features/notification/controller/notification_controller.dart';
 import 'package:x_clone/features/user_profile/views/user_profile_screen.dart';
+import 'package:x_clone/models/notification_model.dart';
 import 'package:x_clone/models/post_model.dart';
 import 'package:timeago/timeago.dart' as timeago;
-import 'package:x_clone/services/posts_db/post_service.dart';
+import 'package:x_clone/features/post/repository/post_service.dart';
+import 'package:x_clone/utils/enums.dart';
 import 'package:x_clone/utils/utils.dart';
 
 class PostCard extends ConsumerStatefulWidget {
@@ -64,7 +67,7 @@ class _PostCardState extends ConsumerState<PostCard> {
                           text: TextSpan(
                             text: user.name!,
                             style: kTextStyle(
-                              19,
+                              17,
                               ref,
                               fontWeight: FontWeight.bold,
                             ),
@@ -153,7 +156,7 @@ class _PostCardState extends ConsumerState<PostCard> {
                                   ],
                                 ),
                               ),
-                        VerticalSpacing(size: 10),
+                        VerticalSpacing(size: 3),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -172,10 +175,38 @@ class _PostCardState extends ConsumerState<PostCard> {
                               count: widget.post!.likesIDs!.length,
                               callback: () async {
                                 isLiked(ref.watch(uidProvider))
-                                    ? widget.post!.likesIDs!
-                                        .remove(ref.watch(uidProvider))
-                                    : widget.post!.likesIDs!
-                                        .add(ref.watch(uidProvider));
+                                    ? {
+                                        widget.post!.likesIDs!
+                                            .remove(ref.watch(uidProvider)),
+                                        ref
+                                            .read(notificationsStreamProvider)
+                                            .when(
+                                              data: (notifications) => ref.read(
+                                                  deleteNotificationProvider([
+                                                widget.post!.uid!,
+                                                ref.watch(uidProvider),
+                                                widget.post!.postID!
+                                              ])),
+                                              error: (_, __) => null,
+                                              loading: () => null,
+                                            )
+                                      }
+                                    : {
+                                        widget.post!.likesIDs!
+                                            .add(ref.watch(uidProvider)),
+                                        ref.read(
+                                          createNotificationProvider(
+                                            NotificationModel(
+                                              senderID: ref.watch(uidProvider),
+                                              recipientID: widget.post!.uid,
+                                              targetID: widget.post!.postID,
+                                              message: "liked your post",
+                                              notificationType:
+                                                  NotificationType.like,
+                                            ),
+                                          ),
+                                        ),
+                                      };
                                 await ref
                                     .read(postServiceProvider)
                                     .likePost(widget.post);

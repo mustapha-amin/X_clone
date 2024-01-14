@@ -1,5 +1,4 @@
 import 'package:feather_icons/feather_icons.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:x_clone/common/x_avatar.dart';
@@ -7,7 +6,6 @@ import 'package:x_clone/common/x_loader.dart';
 import 'package:x_clone/features/explore/controllers/search_controller.dart';
 import 'package:x_clone/features/user_profile/views/user_profile_screen.dart';
 import 'package:x_clone/utils/utils.dart';
-import '../../../core/core.dart';
 
 class ExploreScreen extends ConsumerStatefulWidget {
   const ExploreScreen({super.key});
@@ -103,7 +101,8 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                                 context: context,
                                 builder: (context) {
                                   return AlertDialog(
-                                    title: const Text("Clear all recent searches"),
+                                    title:
+                                        const Text("Clear all recent searches"),
                                     content: const Text(
                                         "This cannot be undone and you'll remove all your recent searches"),
                                     actions: [
