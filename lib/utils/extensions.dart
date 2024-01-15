@@ -6,7 +6,6 @@ extension BuildContextExtensions on BuildContext {
 }
 
 extension WidgetExtensions on Widget {
-  
   Widget padX(double? size) => Padding(
         padding: EdgeInsets.symmetric(horizontal: size!),
         child: this,
@@ -27,17 +26,27 @@ extension JoinTimeFormatting on DateTime {
   String get formatJoinTime {
     final months = [
       '',
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
     ];
 
     return '$day ${months[month]}, $year';
   }
 
   String get formatTime {
-    String hr = hour < 12 ? '0$hour' : '$hour';
+    String hr = hour < 10 ? '0$hour' : '$hour';
     String min = '$minute';
-    String symbol = hour < 12 ? 'am' : 'pm'; 
+    String symbol = hour < 12 ? 'am' : 'pm';
     return '$hr:$min $symbol';
   }
 }

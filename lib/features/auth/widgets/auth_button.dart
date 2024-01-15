@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:x_clone/constants/images_paths.dart';
 import 'package:x_clone/utils/textstyle.dart';
+import 'package:sizer/sizer.dart';
 
 class AuthButton extends ConsumerWidget {
   VoidCallback? onPressed;
@@ -26,7 +27,7 @@ class AuthButton extends ConsumerWidget {
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: SizedBox(
         width: double.infinity,
-        height: 40,
+        height: 7.h,
         child: OutlinedButton(
           style: OutlinedButton.styleFrom(
             backgroundColor: bgColor ?? Colors.white,

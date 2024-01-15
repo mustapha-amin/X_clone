@@ -10,6 +10,7 @@ import 'package:x_clone/theme/app_theme.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'core/core.dart';
 import 'firebase_options.dart';
+import 'package:sizer/sizer.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,17 +37,21 @@ class MyApp extends ConsumerWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: theme ? AppTheme.darkTheme() : AppTheme.lightTheme(),
-      home: ref.watch(authChangesProvider).when(
-            data: (user) {
-              if (user != null) {
-                return const Wrapper();
-              } else {
-                return const Authenticate();
-              }
-            },
-            error: (_, __) => const ErrorScreen(),
-            loading: () => const XLoader(),
-          ),
+      home: Sizer(
+        builder: (context, _, __) {
+          return ref.watch(authChangesProvider).when(
+                data: (user) {
+                  if (user != null) {
+                    return const Wrapper();
+                  } else {
+                    return const Authenticate();
+                  }
+                },
+                error: (_, __) => const ErrorScreen(),
+                loading: () => const XLoader(),
+              );
+        },
+      ),
     );
   }
 }

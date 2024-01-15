@@ -19,7 +19,7 @@ class Message {
     return Message(
         id: json['id'],
         content: json['content'],
-        senderID: json['content'],
+        senderID: json['senderID'],
         receiverID: json['receiverID'],
         timeSent: (json["timeSent"] as Timestamp).toDate());
   }
