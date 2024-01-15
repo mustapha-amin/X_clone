@@ -9,14 +9,16 @@ import 'core.dart';
 
 final firebaseAuthProvider = Provider((ref) => FirebaseAuth.instance);
 final googleSignInProvider = Provider((ref) => GoogleSignIn());
-final authChangesProvider =
-    StreamProvider((ref) => ref.watch(firebaseAuthProvider).authStateChanges());
+final authChangesProvider = StreamProvider((ref) {
+  final firebaseAuth = ref.watch(firebaseAuthProvider);
+  return firebaseAuth.authStateChanges();
+});
 final userProvider =
     Provider((ref) => ref.watch(firebaseAuthProvider).currentUser);
 
 final firestoreProvider = Provider((ref) => FirebaseFirestore.instance);
 final firebaseStorageProvider = Provider((ref) => FirebaseStorage.instance);
-final uidProvider =  Provider((ref) {
+final uidProvider = Provider((ref) {
   return FirebaseAuth.instance.currentUser!.uid;
 });
 

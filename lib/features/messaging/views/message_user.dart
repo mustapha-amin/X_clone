@@ -83,11 +83,17 @@ class _MessageUserState extends ConsumerState<MessageUser> {
                                     textStyle: kTextStyle(15, ref),
                                   ),
                                 ),
-                                Text(
-                                  message.timeSent!.formatTime,
-                                  style: kTextStyle(12, ref,
-                                      color: Colors.grey[500]),
-                                ).padX(16),
+                                Align(
+                                  alignment:
+                                      message.senderID != ref.watch(uidProvider)
+                                          ? Alignment.topLeft
+                                          : Alignment.topRight,
+                                  child: Text(
+                                    message.timeSent!.formatTime,
+                                    style: kTextStyle(12, ref,
+                                        color: Colors.grey[500]),
+                                  ).padX(16),
+                                ),
                               ],
                             );
                           },

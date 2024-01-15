@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:x_clone/utils/extensions.dart';
@@ -16,7 +19,7 @@ class _XBtmModalSheetState extends ConsumerState<XBtmModalSheet> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: context.screenHeight * .2,
+      height: 100,
       width: context.screenWidth,
       decoration: const BoxDecoration(
         color: Colors.black,
@@ -36,8 +39,8 @@ class _XBtmModalSheetState extends ConsumerState<XBtmModalSheet> {
             width: context.screenWidth * .7,
             child: OutlinedButton(
               onPressed: () {
-                Navigator.of(context).pop();
                 ref.read(authServiceProvider).signOut();
+                Navigator.of(context).pop();
                 setState(() {});
 
                 // await showDialog(

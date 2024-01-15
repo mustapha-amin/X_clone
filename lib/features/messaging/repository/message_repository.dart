@@ -15,6 +15,14 @@ class MessageRepository {
   MessageRepository({required this.firebaseFirestore});
 
   FutureVoid sendMessage(Message message) async {
+    // sender
+    firebaseFirestore
+        .collection(FirebaseConstants.messagesCollection)
+        .doc(message.senderID)
+        .collection('messagesWith${message.receiverID}')
+        .doc(message.id)
+        .set(message.toJson());
+    // receiver
     firebaseFirestore
         .collection(FirebaseConstants.messagesCollection)
         .doc(message.receiverID)
@@ -26,18 +34,27 @@ class MessageRepository {
   Stream<List<Message>> fetchMessages(String? receiverID) {
     return firebaseFirestore
         .collection(FirebaseConstants.messagesCollection)
-        .doc(receiverID)
-        .collection('messagesWith${FirebaseAuth.instance.currentUser!.uid}')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection('messagesWith$receiverID')
         .snapshots()
         .map((snap) =>
             snap.docs.map((doc) => Message.fromJson(doc.data())).toList());
   }
 
   FutureVoid deleteMessage(Message? message) async {
+    // sender
     await firebaseFirestore
         .collection(FirebaseConstants.messagesCollection)
-        .doc(message!.receiverID)
-        .collection('messagesWith${FirebaseAuth.instance.currentUser!.uid}')
+        .doc(message!.senderID)
+        .collection('messagesWith${message.receiverID}')
+        .doc(message.id)
+        .delete();
+
+    // receiver
+    await firebaseFirestore
+        .collection(FirebaseConstants.messagesCollection)
+        .doc(message.receiverID)
+        .collection('messagesWith${message.senderID}')
         .doc(message.id)
         .delete();
   }
