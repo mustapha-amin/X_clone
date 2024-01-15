@@ -178,18 +178,18 @@ class _PostCardState extends ConsumerState<PostCard> {
                                     ? {
                                         widget.post!.likesIDs!
                                             .remove(ref.watch(uidProvider)),
-                                        ref
-                                            .read(notificationsStreamProvider)
-                                            .when(
-                                              data: (notifications) => ref.read(
-                                                  deleteNotificationProvider([
-                                                widget.post!.uid!,
-                                                ref.watch(uidProvider),
-                                                widget.post!.postID!
-                                              ])),
-                                              error: (_, __) => null,
-                                              loading: () => null,
-                                            )
+                                        // ref
+                                        //     .read(notificationsStreamProvider)
+                                        //     .when(
+                                        //       data: (notifications) => ref.read(
+                                        //           deleteNotificationProvider([
+                                        //         widget.post!.uid!,
+                                        //         ref.watch(uidProvider),
+                                        //         widget.post!.postID!
+                                        //       ])),
+                                        //       error: (_, __) => null,
+                                        //       loading: () => null,
+                                        //     )
                                       }
                                     : {
                                         widget.post!.likesIDs!

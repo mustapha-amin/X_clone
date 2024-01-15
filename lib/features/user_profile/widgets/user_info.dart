@@ -2,6 +2,7 @@ import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:x_clone/core/core.dart';
+import 'package:x_clone/features/messaging/views/message_user.dart';
 import 'package:x_clone/features/user_profile/views/edit_profile.dart';
 
 import '../../../models/user_model.dart';
@@ -29,37 +30,55 @@ class UserInfo extends ConsumerWidget {
               user!.name!,
               style: kTextStyle(25, ref, fontWeight: FontWeight.bold),
             ),
-            OutlinedButton(
-              onPressed: () {
-                user!.uid == uid
-                    ? navigateTo(
-                        context,
-                        EditProfile(
-                          user: user,
-                        ))
-                    : {
-                        if (user!.followers!.contains(uid))
-                          {
-                            ref
-                                .read(userDataServiceProvider)
-                                .unfollowUser(user!, uid)
-                          }
-                        else
-                          {
-                            ref
-                                .read(userDataServiceProvider)
-                                .followUser(user!, uid)
-                          }
-                      };
-              },
-              child: Text(
-                user!.uid == uid
-                    ? "Edit profile"
-                    : user!.followers!.contains(uid)
-                        ? "unfollow"
-                        : "Follow",
-                style: kTextStyle(15, ref),
-              ),
+            Row(
+              children: [
+                IconButton.outlined(
+                  onPressed: () {
+                    navigateTo(
+                      context,
+                      MessageUser(
+                        xUser: user!,
+                      ),
+                    );
+                  },
+                  icon: Icon(Icons.local_post_office_outlined),
+                ),
+                SizedBox(
+                  height: 30,
+                  child: OutlinedButton(
+                    onPressed: () {
+                      user!.uid == uid
+                          ? navigateTo(
+                              context,
+                              EditProfile(
+                                user: user,
+                              ))
+                          : {
+                              if (user!.followers!.contains(uid))
+                                {
+                                  ref
+                                      .read(userDataServiceProvider)
+                                      .unfollowUser(user!, uid)
+                                }
+                              else
+                                {
+                                  ref
+                                      .read(userDataServiceProvider)
+                                      .followUser(user!, uid)
+                                }
+                            };
+                    },
+                    child: Text(
+                      user!.uid == uid
+                          ? "Edit profile"
+                          : user!.followers!.contains(uid)
+                              ? "unfollow"
+                              : "Follow",
+                      style: kTextStyle(17, ref),
+                    ),
+                  ),
+                ),
+              ],
             )
           ],
         ),
