@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:x_clone/common/x_avatar.dart';
 import 'package:x_clone/constants/images_paths.dart';
 import 'package:x_clone/core/core.dart';
+import 'package:x_clone/features/home/views/following/following.dart';
 import 'package:x_clone/features/home/views/for%20you/for_you.dart';
 import 'package:x_clone/utils/extensions.dart';
 import 'package:x_clone/utils/textstyle.dart';
@@ -69,12 +70,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         body: const TabBarView(
           children: [
             ForYou(),
-            Center(child: Text("Hi")),
+            Following(),
           ],
         ),
-        
       ),
-      
-    );    
+    );
   }
 }
