@@ -79,7 +79,7 @@ class GoogleAuthContoller extends StateNotifier<bool> {
   void signInWithGoogle() async {
     state = true;
     try {
-      await googleAuthService!.googleLogin();
+      googleAuthService!.googleLogin();
     } catch (e) {
       log(e.toString());
     }
@@ -88,8 +88,8 @@ class GoogleAuthContoller extends StateNotifier<bool> {
 
   void signOutWithGoogle() async {
     state = true;
-    await authService!.signOut();
-    await googleAuthService!.googleSignOut();
+    authService!.signOut();
+    googleAuthService!.googleSignOut();
     state = false;
   }
 }

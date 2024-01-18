@@ -45,7 +45,7 @@ extension JoinTimeFormatting on DateTime {
 
   String get formatTime {
     String hr = hour < 10 ? '0$hour' : '$hour';
-    String min = '$minute';
+    String min = minute < 10 ? '0$minute' : '$minute';
     String symbol = hour < 12 ? 'am' : 'pm';
     return '$hr:$min $symbol';
   }

@@ -70,8 +70,8 @@ class DialogContent extends ConsumerWidget {
                     fontWeight: FontWeight.bold,
                     color: Colors.redAccent,
                   ),
-                ),
-              ),
+                
+              ),),
         ListTile(
           splashColor: Colors.transparent,
           onTap: () async {

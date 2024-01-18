@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:x_clone/utils/extensions.dart';
 import 'package:x_clone/utils/textstyle.dart';
-
+import '../features/auth/controller/auth_controller.dart';
 import '../features/auth/repository/auth_service.dart';
 
 class XBtmModalSheet extends ConsumerStatefulWidget {
@@ -39,8 +39,8 @@ class _XBtmModalSheetState extends ConsumerState<XBtmModalSheet> {
             width: context.screenWidth * .7,
             child: OutlinedButton(
               onPressed: () {
-                ref.read(authServiceProvider).signOut();
                 Navigator.of(context).pop();
+                ref.read(authControllerProvider.notifier).signOut();
                 setState(() {});
 
                 // await showDialog(

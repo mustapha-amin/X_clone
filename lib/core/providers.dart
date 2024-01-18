@@ -4,14 +4,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:x_clone/features/auth/repository/auth_service.dart';
 import '../services/theme/theme_prefs.dart';
 import 'core.dart';
 
 final firebaseAuthProvider = Provider((ref) => FirebaseAuth.instance);
 final googleSignInProvider = Provider((ref) => GoogleSignIn());
 final authChangesProvider = StreamProvider((ref) {
-  final firebaseAuth = ref.watch(firebaseAuthProvider);
-  return firebaseAuth.authStateChanges();
+  final authProvider = ref.watch(authServiceProvider);
+  return authProvider.authStateChanges;
 });
 final userProvider =
     Provider((ref) => ref.watch(firebaseAuthProvider).currentUser);

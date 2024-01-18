@@ -15,6 +15,8 @@ class Message {
     this.timeSent,
   });
 
+  
+
   factory Message.fromJson(Map<String, dynamic> json) {
     return Message(
         id: json['id'],

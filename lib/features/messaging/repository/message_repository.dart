@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:x_clone/constants/firebase_constants.dart';
 import 'package:x_clone/core/core.dart';
 import 'package:x_clone/models/message_model.dart';
+import 'package:x_clone/models/user_model.dart';
 
 final messageRepoProvider = Provider((ref) {
   return MessageRepository(firebaseFirestore: ref.watch(firestoreProvider));
@@ -36,6 +37,7 @@ class MessageRepository {
         .collection(FirebaseConstants.messagesCollection)
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .collection('messagesWith$receiverID')
+        .orderBy('timeSent')
         .snapshots()
         .map((snap) =>
             snap.docs.map((doc) => Message.fromJson(doc.data())).toList());
@@ -49,13 +51,14 @@ class MessageRepository {
         .collection('messagesWith${message.receiverID}')
         .doc(message.id)
         .delete();
+  }
 
-    // receiver
+  Future<void> addToConversationList(String? id) async {
     await firebaseFirestore
-        .collection(FirebaseConstants.messagesCollection)
-        .doc(message.receiverID)
-        .collection('messagesWith${message.senderID}')
-        .doc(message.id)
-        .delete();
+        .collection(FirebaseConstants.usersCollection)
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .update({
+      'conversationList': FieldValue.arrayUnion([id]),
+    });
   }
 }

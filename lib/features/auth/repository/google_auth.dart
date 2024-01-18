@@ -15,8 +15,8 @@ final googleAuthServiceProvider = Provider((ref) {
 });
 
 class GoogleAuthService {
-  GoogleSignIn googleSignIn;
-  FirebaseAuth? firebaseAuth;
+  final GoogleSignIn googleSignIn;
+  final FirebaseAuth firebaseAuth;
 
   GoogleAuthService({
     required this.googleSignIn,
@@ -34,7 +34,7 @@ class GoogleAuthService {
           idToken: googleAuth.idToken,
         );
 
-        await firebaseAuth!.signInWithCredential(credential);
+        await firebaseAuth.signInWithCredential(credential);
       }
     } catch (e) {
       log(e.toString());
@@ -43,7 +43,7 @@ class GoogleAuthService {
 
   FutureVoid googleSignOut() async {
     try {
-      await firebaseAuth!.signOut();
+      await firebaseAuth.signOut();
     } catch (e) {
       log(e.toString());
     }

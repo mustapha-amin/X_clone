@@ -15,6 +15,8 @@ class AuthService extends BaseAuthService {
   final FirebaseAuth firebaseAuth;
   AuthService({required this.firebaseAuth});
 
+  Stream<User?> get authStateChanges => firebaseAuth.authStateChanges();
+
   @override
   FutureEither<UserCredential> signIn({
     required String email,

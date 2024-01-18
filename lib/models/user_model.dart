@@ -14,6 +14,7 @@ class XUser {
   String? profilePicUrl;
   String? coverPicUrl;
   int? notificationCount;
+  List<String>? conversationList;
 
   XUser({
     this.uid,
@@ -29,6 +30,7 @@ class XUser {
     this.profilePicUrl,
     this.coverPicUrl,
     this.notificationCount,
+    this.conversationList,
   });
 
   factory XUser.fromJson(Map<String, dynamic> json) {
@@ -46,6 +48,7 @@ class XUser {
       profilePicUrl: json['profilePicUrl'],
       coverPicUrl: json['coverPicUrl'],
       notificationCount: json['notificationCount'] as int,
+      conversationList: List.from(json['conversationList'] ?? []),
     );
   }
 
@@ -64,23 +67,26 @@ class XUser {
       'profilePicUrl': profilePicUrl,
       'coverPicUrl': coverPicUrl,
       'notificationCount': notificationCount,
+      'conversationList' : conversationList,
     };
   }
 
-  XUser copyWith(
-      {String? uid,
-      String? name,
-      String? username,
-      String? email,
-      String? bio,
-      String? location,
-      DateTime? joined,
-      List<String>? followers,
-      List<String>? following,
-      String? website,
-      String? profilePicUrl,
-      String? coverPicUrl,
-      int? notificationCount}) {
+  XUser copyWith({
+    String? uid,
+    String? name,
+    String? username,
+    String? email,
+    String? bio,
+    String? location,
+    DateTime? joined,
+    List<String>? followers,
+    List<String>? following,
+    String? website,
+    String? profilePicUrl,
+    String? coverPicUrl,
+    int? notificationCount,
+    List<String>? conversationList,
+  }) {
     return XUser(
       uid: uid ?? this.uid,
       name: name ?? this.name,
@@ -95,6 +101,7 @@ class XUser {
       profilePicUrl: profilePicUrl ?? this.profilePicUrl,
       coverPicUrl: coverPicUrl ?? this.coverPicUrl,
       notificationCount: notificationCount ?? this.notificationCount,
+      conversationList: conversationList ?? this.conversationList,
     );
   }
 }
