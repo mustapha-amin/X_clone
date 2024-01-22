@@ -42,9 +42,8 @@ class MyApp extends ConsumerWidget {
                   if (user != null) {
                     return const XBottomNavBar();
                   } else {
-                     return const Authenticate();
+                    return const Authenticate();
                   }
-                 
                 },
                 error: (_, __) => const Authenticate(),
                 loading: () => const XLoader(),

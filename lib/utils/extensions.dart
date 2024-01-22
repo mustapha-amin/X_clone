@@ -23,7 +23,7 @@ extension WidgetExtensions on Widget {
 }
 
 extension JoinTimeFormatting on DateTime {
-  String get formatJoinTime {
+  String get formatDate {
     final months = [
       '',
       'January',

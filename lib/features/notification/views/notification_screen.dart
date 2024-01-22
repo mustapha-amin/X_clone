@@ -33,36 +33,25 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
         ],
       ),
       body: ref.watch(notificationsStreamProvider).when(
-            data: (notifications) {
-              ref.watch(xUserStreamProvider(ref.watch(uidProvider))).when(
-                    data: (user) {
-                      if (user!.notificationCount! > 0) {
-                        ref.read(notificationProvider).resetNotificationCount();
-                      }
-                    },
-                    error: (_, __) => null,
-                    loading: () => null,
-                  );
-              return notifications!.isEmpty
-                  ? const SizedBox()
-                  : Column(
-                      children: [
-                        const SizedBox(
-                          height: 10,
+            data: (notifications) => notifications!.isEmpty
+                ? const SizedBox()
+                : Column(
+                    children: [
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: notifications.length,
+                          itemBuilder: (context, index) {
+                            return NotificationTile(
+                              notificationModel: notifications[index],
+                            );
+                          },
                         ),
-                        Expanded(
-                          child: ListView.builder(
-                            itemCount: notifications.length,
-                            itemBuilder: (context, index) {
-                              return NotificationTile(
-                                notificationModel: notifications[index],
-                              );
-                            },
-                          ),
-                        ),
-                      ],
-                    );
-            },
+                      ),
+                    ],
+                  ),
             error: (_, __) => const Center(
               child: Text("An error occured"),
             ),

@@ -25,7 +25,9 @@ class _ForYouState extends ConsumerState<ForYou> {
             },
           ),
           error: (_, __) => const Center(child: Text("Error fetching posts")),
-          loading: () => const XLoader(),
+          loading: () => const Center(
+            child: CircularProgressIndicator(),
+          ),
         );
   }
 }

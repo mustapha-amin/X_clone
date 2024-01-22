@@ -1,9 +1,7 @@
 import 'dart:io';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 import 'package:x_clone/features/home/widgets/image_carousel.dart';
 import 'package:x_clone/features/notification/controller/notification_controller.dart';
@@ -57,6 +55,7 @@ class _PostDetailsScreenState extends ConsumerState<PostDetailsScreen> {
         pickedImages.addAll(images);
         setState(() {});
       } else {
+        // ignore: use_build_context_synchronously
         showErrorDialog(
             context: context, message: "You can only pick 4 images or less");
       }
@@ -120,7 +119,7 @@ class _PostDetailsScreenState extends ConsumerState<PostDetailsScreen> {
                           user: widget.xUser,
                         ),
                   Text(
-                    '${widget.post!.timeCreated!.formatTime} - ${widget.post!.timeCreated!.formatJoinTime}',
+                    '${widget.post!.timeCreated!.formatTime} - ${widget.post!.timeCreated!.formatDate}',
                     style: kTextStyle(15, ref, color: Colors.grey),
                   ).padX(8),
                   ref.watch(fetchPostByID(widget.post!.postID!)).when(
@@ -144,10 +143,28 @@ class _PostDetailsScreenState extends ConsumerState<PostDetailsScreen> {
                                   count: widget.post!.likesIDs!.length,
                                   callback: () async {
                                     isLiked(ref.watch(uidProvider))
-                                        ? widget.post!.likesIDs!
-                                            .remove(ref.watch(uidProvider))
-                                        : widget.post!.likesIDs!
-                                            .add(ref.watch(uidProvider));
+                                        ? {
+                                            widget.post!.likesIDs!
+                                                .remove(ref.watch(uidProvider)),
+                                            
+                                          }
+                                        : {
+                                            widget.post!.likesIDs!
+                                                .add(ref.watch(uidProvider)),
+                                            ref.read(
+                                              createNotificationProvider(
+                                                NotificationModel(
+                                                  senderID:
+                                                      ref.watch(uidProvider),
+                                                  recipientID: widget.post!.uid,
+                                                  targetID: widget.post!.postID,
+                                                  message: "liked your post",
+                                                  notificationType:
+                                                      NotificationType.like,
+                                                ),
+                                              ),
+                                            ),
+                                          };
                                     await ref
                                         .read(postServiceProvider)
                                         .likePost(widget.post);

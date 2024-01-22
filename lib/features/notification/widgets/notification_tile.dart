@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -34,7 +36,7 @@ class _NotificationTileState extends ConsumerState<NotificationTile> {
           data: (user) => ListTile(
             tileColor: widget.notificationModel!.isRead!
                 ? Theme.of(context).scaffoldBackgroundColor
-                : Colors.blue,
+                : const Color(0xFF051D2B),
             onTap: switch (widget.notificationModel!.notificationType) {
               NotificationType.follow => () => navigateTo(
                     context,
@@ -47,7 +49,7 @@ class _NotificationTileState extends ConsumerState<NotificationTile> {
                       fetchPostByID(widget.notificationModel!.targetID!));
                   fetchedPost.when(
                     data: (post) => {
-                      ref.read(readNotificationProvider(widget.notificationModel!.id!)),
+                      log(widget.notificationModel.toString()),
                       navigateTo(
                         context,
                         PostDetailsScreen(post: post, xUser: user),
@@ -75,7 +77,18 @@ class _NotificationTileState extends ConsumerState<NotificationTile> {
                         radius: 10,
                         backgroundImage: NetworkImage(user.profilePicUrl!),
                       ),
-                Text("${user.name} ${widget.notificationModel!.message}"),
+                RichText(
+                  text: TextSpan(
+                    text: '${user.name!} ',
+                    style: kTextStyle(14, ref, fontWeight: FontWeight.bold),
+                    children: [
+                      TextSpan(
+                        text: widget.notificationModel!.message,
+                        style: kTextStyle(13, ref),
+                      )
+                    ],
+                  ),
+                )
               ],
             ),
             leading: switch (widget.notificationModel!.notificationType) {

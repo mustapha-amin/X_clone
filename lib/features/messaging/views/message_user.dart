@@ -123,7 +123,11 @@ class _MessageUserState extends ConsumerState<MessageUser> {
                                         ? Alignment.topLeft
                                         : Alignment.topRight,
                                     child: Text(
-                                      message.timeSent!.formatTime,
+                                      message.timeSent!
+                                                  .compareTo(DateTime.now()) ==
+                                              -1
+                                          ? '${message.timeSent!.formatDate} - ${message.timeSent!.formatTime}'
+                                          : message.timeSent!.formatTime,
                                       style: kTextStyle(12, ref,
                                           color: Colors.grey[500]),
                                     ).padX(16),

@@ -44,6 +44,7 @@ dependencies:
   google_sign_in: ^6.1.6
   image_picker: ^1.0.4
   shared_preferences: ^2.2.2
+  shimmer: ^3.0.0
   sizer: ^2.0.15
   timeago: ^3.6.0
   uuid: ^4.2.1

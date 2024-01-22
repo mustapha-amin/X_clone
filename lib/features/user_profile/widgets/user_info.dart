@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:x_clone/core/core.dart';
 import 'package:x_clone/features/messaging/views/message_user.dart';
+import 'package:x_clone/features/notification/controller/notification_controller.dart';
 import 'package:x_clone/features/user_profile/views/edit_profile.dart';
+import 'package:x_clone/models/notification_model.dart';
+import 'package:x_clone/utils/enums.dart';
 
 import '../../../models/user_model.dart';
 import '../../../utils/utils.dart';
@@ -58,13 +61,27 @@ class UserInfo extends ConsumerWidget {
                                 {
                                   ref
                                       .read(userDataServiceProvider)
-                                      .unfollowUser(user!, uid)
+                                      .unfollowUser(user!, uid),
+                                  ref.read(
+                                      deleteFollowNotificationProvider(uid)),
                                 }
                               else
                                 {
                                   ref
                                       .read(userDataServiceProvider)
-                                      .followUser(user!, uid)
+                                      .followUser(user!, uid),
+                                  ref.read(
+                                    createNotificationProvider(
+                                      NotificationModel(
+                                        senderID: uid,
+                                        recipientID: user!.uid,
+                                        message: "followed you",
+                                        targetID: uid,
+                                        notificationType:
+                                            NotificationType.follow,
+                                      ),
+                                    ),
+                                  ),
                                 }
                             };
                     },
@@ -135,7 +152,7 @@ class UserInfo extends ConsumerWidget {
               color: Colors.grey,
             ),
             Text(
-              "Joined ${user!.joined!.formatJoinTime}",
+              "Joined ${user!.joined!.formatDate}",
               style: kTextStyle(
                 15,
                 ref,

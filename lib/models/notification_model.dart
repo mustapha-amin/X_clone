@@ -14,7 +14,7 @@ class NotificationModel {
   bool? isRead;
 
   NotificationModel({
-    String? id,
+    this.id,
     this.senderID,
     this.recipientID,
     this.message,
@@ -22,10 +22,11 @@ class NotificationModel {
     this.notificationType,
     this.isRead,
     DateTime? timeCreated,
-  }) : timeCreated = DateTime.now(), id = const Uuid().v4();
+  }) : timeCreated = DateTime.now();
 
   factory NotificationModel.fromJson(Map<String, dynamic> json) {
     return NotificationModel(
+      id: json['id'],
       senderID: json['senderID'],
       recipientID: json['recipientID'],
       message: json['message'],
@@ -38,6 +39,7 @@ class NotificationModel {
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'senderID': senderID,
       'recipientID': recipientID,
       'message': message,
@@ -57,5 +59,41 @@ class NotificationModel {
       default:
         return NotificationType.comment;
     }
+  }
+
+  @override
+  String toString() {
+    return 'NotificationModel {'
+        'id: $id, '
+        'senderID: $senderID, '
+        'recipientID: $recipientID, '
+        'message: $message, '
+        'targetID: $targetID, '
+        'notificationType: ${notificationType?.name}, '
+        'timeCreated: $timeCreated, '
+        'isRead: $isRead'
+        '}';
+  }
+
+  NotificationModel copyWith({
+    String? id,
+    String? senderID,
+    String? recipientID,
+    String? message,
+    String? targetID,
+    NotificationType? notificationType,
+    DateTime? timeCreated,
+    bool? isRead,
+  }) {
+    return NotificationModel(
+      id: id ?? this.id,
+      senderID: senderID ?? this.senderID,
+      recipientID: recipientID ?? this.recipientID,
+      message: message ?? this.message,
+      targetID: targetID ?? this.targetID,
+      notificationType: notificationType ?? this.notificationType,
+      timeCreated: timeCreated ?? this.timeCreated,
+      isRead: isRead ?? this.isRead,
+    );
   }
 }

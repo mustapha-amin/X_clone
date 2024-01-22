@@ -229,7 +229,9 @@ class _PostCardState extends ConsumerState<PostCard> {
             );
           },
           error: (_, __) => const Text("Error"),
-          loading: () => const XLoader(),
+          loading: () => const Center(
+            child: CircularProgressIndicator(),
+          ),
         );
   }
 }

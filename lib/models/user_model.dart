@@ -13,7 +13,6 @@ class XUser {
   String? website;
   String? profilePicUrl;
   String? coverPicUrl;
-  int? notificationCount;
   List<String>? conversationList;
 
   XUser({
@@ -29,7 +28,6 @@ class XUser {
     this.website,
     this.profilePicUrl,
     this.coverPicUrl,
-    this.notificationCount,
     this.conversationList,
   });
 
@@ -47,7 +45,6 @@ class XUser {
       website: json['website'],
       profilePicUrl: json['profilePicUrl'],
       coverPicUrl: json['coverPicUrl'],
-      notificationCount: json['notificationCount'] as int,
       conversationList: List.from(json['conversationList'] ?? []),
     );
   }
@@ -66,7 +63,6 @@ class XUser {
       'website': website,
       'profilePicUrl': profilePicUrl,
       'coverPicUrl': coverPicUrl,
-      'notificationCount': notificationCount,
       'conversationList' : conversationList,
     };
   }
@@ -84,7 +80,6 @@ class XUser {
     String? website,
     String? profilePicUrl,
     String? coverPicUrl,
-    int? notificationCount,
     List<String>? conversationList,
   }) {
     return XUser(
@@ -100,7 +95,6 @@ class XUser {
       website: website ?? this.website,
       profilePicUrl: profilePicUrl ?? this.profilePicUrl,
       coverPicUrl: coverPicUrl ?? this.coverPicUrl,
-      notificationCount: notificationCount ?? this.notificationCount,
       conversationList: conversationList ?? this.conversationList,
     );
   }

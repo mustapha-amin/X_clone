@@ -12,12 +12,26 @@ final createNotificationProvider =
   await notificationService.createNotification(notification);
 });
 
-// final deleteNotificationProvider =
-//     FutureProvider.family<void, List<String>>((ref, args) async {
-//   final notificationService = ref.watch(notificationProvider);
-//   await notificationService.deleteNotification(args[0], args[1], args[2]);
-// });
+final deleteLikeNotificationProvider =
+    FutureProvider.family<void, String>((ref, pid) async {
+  final notificationService = ref.watch(notificationProvider);
+  await notificationService.deleteLikeNotification(pid);
+});
 
-final readNotificationProvider = FutureProvider.family<void, String>(
-  (ref, id) => ref.read(notificationProvider).readNotification(id),
-);
+final deleteCommentNotificationProvider =
+    FutureProvider.family<void, String>((ref, pid) async {
+  final notificationService = ref.watch(notificationProvider);
+  await notificationService.deleteCommentNotification(pid);
+});
+
+final deleteFollowNotificationProvider =
+    FutureProvider.family<void, String>((ref, uid) async {
+  final notificationService = ref.watch(notificationProvider);
+  await notificationService.deleteFollowNotification(uid);
+});
+
+final readNotificationProvider =
+    FutureProvider.family<void, String>((ref, id) async {
+  final notificationService = ref.watch(notificationProvider);
+  await notificationService.readNotification(id);
+});

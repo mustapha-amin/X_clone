@@ -76,20 +76,19 @@ class GoogleAuthContoller extends StateNotifier<bool> {
     this.authService,
   }) : super(false);
 
-  void signInWithGoogle() async {
+  void signInWithGoogle(BuildContext context) async {
     state = true;
     try {
-      googleAuthService!.googleLogin();
+      await googleAuthService!.googleLogin(context);
     } catch (e) {
-      log(e.toString());
+      showErrorDialog(context: context, message: e.toString());
     }
     state = false;
   }
 
   void signOutWithGoogle() async {
     state = true;
-    authService!.signOut();
-    googleAuthService!.googleSignOut();
+    await googleAuthService!.googleSignOut();
     state = false;
   }
 }

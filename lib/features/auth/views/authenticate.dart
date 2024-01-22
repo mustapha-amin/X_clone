@@ -23,8 +23,8 @@ class Authenticate extends ConsumerStatefulWidget {
 
 class _AuthenticateState extends ConsumerState<Authenticate> {
   
-  void signInGoogle() {
-    ref.read(googleAuthProvider.notifier).signInWithGoogle();
+  void signInGoogle(BuildContext context) {
+    ref.read(googleAuthProvider.notifier).signInWithGoogle(context);
   }
 
   @override
@@ -59,7 +59,7 @@ class _AuthenticateState extends ConsumerState<Authenticate> {
                       label: "Continue with Google",
                       isGoogle: true,
                       onPressed: () {
-                        signInGoogle();
+                        signInGoogle(context);
                       },
                     ),
                     const AuthDivider(),

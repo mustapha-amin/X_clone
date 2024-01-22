@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -5,12 +7,14 @@ import 'package:x_clone/common/x_loader.dart';
 import 'package:x_clone/features/auth/auth.dart';
 import 'package:x_clone/features/auth/controller/user_data_controller.dart';
 import 'package:x_clone/common/x_drawer.dart';
-import 'package:x_clone/features/auth/repository/user_data_service.dart';
 import 'package:x_clone/features/explore/views/explore_screen.dart';
 import 'package:x_clone/features/home/home.dart';
+import 'package:x_clone/features/messaging/views/message_by_search.dart';
 import 'package:x_clone/features/messaging/views/message_screen.dart';
 import 'package:x_clone/features/nav%20bar/widgets/XFab.dart';
+import 'package:x_clone/features/notification/controller/notification_controller.dart';
 import 'package:x_clone/features/post/views/post_screen.dart';
+import 'package:x_clone/models/notification_model.dart';
 import 'package:x_clone/theme/pallete.dart';
 import 'package:x_clone/utils/spacing.dart';
 import '../../core/core.dart';
@@ -88,6 +92,28 @@ class _XBottomNavBarState extends ConsumerState<XBottomNavBar> {
                   currentIndex: index,
                   onTap: (index) {
                     ref.read(navbarProvider.notifier).state = index;
+                    if (ref.watch(navbarProvider) == 2) {
+                      ref.watch(notificationsStreamProvider).when(
+                            data: (notifications) {
+                              List<NotificationModel> unreadNotifications =
+                                  notifications!
+                                      .where((notification) =>
+                                          notification.isRead! == false)
+                                      .toList();
+                              // log(unreadNotifications.length.toString());
+                              if (unreadNotifications.isNotEmpty) {
+                                for (final notification
+                                    in unreadNotifications) {
+                                  log(notification.id!);
+                                  ref.read(readNotificationProvider(
+                                      notification.id!));
+                                }
+                              }
+                            },
+                            error: (_, __) => null,
+                            loading: () => null,
+                          );
+                    }
                   },
                   type: BottomNavigationBarType.fixed,
                   items: [
@@ -112,17 +138,21 @@ class _XBottomNavBarState extends ConsumerState<XBottomNavBar> {
                                 : Icons.notifications_none,
                             size: 27,
                           ),
-                          ref
-                              .watch(
-                                  xUserStreamProvider(ref.watch(uidProvider)))
-                              .when(
-                                data: (user) => user!.notificationCount! > 0
-                                    ? Badge.count(
-                                        count: user.notificationCount!,
-                                        backgroundColor: AppColors.blueColor,
-                                        textColor: Colors.white,
-                                      )
-                                    : const SizedBox(),
+                          ref.watch(notificationsStreamProvider).when(
+                                data: (notifications) {
+                                  List<NotificationModel> unreadNotifications =
+                                      notifications!
+                                          .where((notification) =>
+                                              !notification.isRead!)
+                                          .toList();
+                                  return unreadNotifications.isNotEmpty
+                                      ? Badge.count(
+                                          count: unreadNotifications.length,
+                                          backgroundColor: AppColors.blueColor,
+                                          textColor: Colors.white,
+                                        )
+                                      : const SizedBox();
+                                },
                                 error: (_, __) => const SizedBox(),
                                 loading: () => const SizedBox(),
                               )
@@ -190,7 +220,9 @@ class _XBottomNavBarState extends ConsumerState<XBottomNavBar> {
                         isMain: true,
                         bgColor: AppColors.blueColor,
                         fgColor: Colors.white,
-                        onTap: () {},
+                        onTap: () {
+                          navigateTo(context, const MessageBySearch());
+                        },
                         iconData: Icons.local_post_office_outlined,
                       ),
                       Positioned(

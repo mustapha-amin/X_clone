@@ -7,6 +7,7 @@ import 'package:x_clone/features/auth/controller/user_data_controller.dart';
 import 'package:x_clone/features/auth/repository/user_data_service.dart';
 import 'package:x_clone/features/messaging/controller/message_controller.dart';
 import 'package:x_clone/features/messaging/views/message_user.dart';
+import 'package:x_clone/models/message_model.dart';
 import 'package:x_clone/utils/utils.dart';
 
 class MessageScreen extends ConsumerStatefulWidget {
@@ -80,6 +81,22 @@ class _MessageScreenState extends ConsumerState<MessageScreen> {
                                         "Error fetching latest messages"),
                                     loading: () => const Text("Loading..."),
                                   ),
+                          trailing: ref
+                              .watch(fetchMessagesProvider(user.uid!))
+                              .when(
+                                data: (messages) => Text(
+                                    messages[index]
+                                                .timeSent!
+                                                .compareTo(DateTime.now()) ==
+                                            -1
+                                        ? messages[index].timeSent!.formatDate
+                                        : messages[index].timeSent!.formatTime,
+                                    style: kTextStyle(12, ref,
+                                        color: Colors.grey[500])),
+                                error: (_, __) =>
+                                    const Text("Error fetching time"),
+                                loading: () => const Text("Loading..."),
+                              ),
                         ),
                         error: (_, __) => const Text("An error occured"),
                         loading: () => const XLoader(),

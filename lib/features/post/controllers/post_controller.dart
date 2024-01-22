@@ -51,10 +51,6 @@ class PostController extends StateNotifier<Status> {
     return postService!.fetchFeedPosts();
   }
 
-  Stream<List<PostModel>> fetchFollowingPosts() {
-    return postService!.fetchFeedPosts();
-  }
-
   Future<List<PostModel>?> fetchUserPosts(String? uid) async {
     try {
       return postService!.fetchUserPosts(uid);

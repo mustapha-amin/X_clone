@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uuid/uuid.dart';
 import 'package:x_clone/constants/firebase_constants.dart';
 import 'package:x_clone/core/core.dart';
 import 'package:x_clone/models/notification_model.dart';
@@ -22,17 +23,17 @@ class NotificationService {
   NotificationService({this.firebaseFirestore, this.userDataService});
 
   FutureVoid createNotification(NotificationModel? notificationModel) async {
+    NotificationModel? newNotifcation = notificationModel!.copyWith(
+      id: const Uuid().v4(),
+      isRead: false,
+    );
     try {
       await firebaseFirestore!
           .collection(FirebaseConstants.notificationsCollection)
-          .doc(notificationModel!.recipientID)
-          .collection('notifications').doc(notificationModel.id)
-          .set(notificationModel.toJson());
-
-      await firebaseFirestore!
-          .collection(FirebaseConstants.usersCollection)
-          .doc(notificationModel.recipientID)
-          .update({'notificationCount': FieldValue.increment(1)});
+          .doc(newNotifcation.recipientID)
+          .collection('notifications')
+          .doc(newNotifcation.id)
+          .set(newNotifcation.toJson());
     } catch (e) {
       log(e.toString());
     }
@@ -50,42 +51,58 @@ class NotificationService {
         .toList());
   }
 
-  // FutureVoid deleteNotification(String? id) async {
-  //   try {
-  //     final querySnapshot = await firebaseFirestore!
-  //         .collection(FirebaseConstants.notificationsCollection)
-  //         .doc(recipientID)
-  //         .collection('notifications')
-  //         .where('targetID', isEqualTo: '$targetID')
-  //         .where('senderID', isEqualTo: senderID)
-  //         .get();
-  //     for (final doc in querySnapshot.docs) {
-  //       await doc.reference.delete();
-  //     }
-  //     await firebaseFirestore!
-  //         .collection(FirebaseConstants.usersCollection)
-  //         .doc(recipientID)
-  //         .update({'notificationCount': FieldValue.increment(-1)});
-  //   } catch (e) {
-  //     log(e.toString());
-  //   }
-  // }
+  FutureVoid deleteLikeNotification(String? pid) async {
+    try {
+      final querySnapshot = await firebaseFirestore!
+          .collectionGroup('notifications')
+          .where('targetID', isEqualTo: '$pid')
+          .where('notificationType', isEqualTo: 'like')
+          .get();
+      for (final doc in querySnapshot.docs) {
+        await doc.reference.delete();
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+  }
 
-  FutureVoid resetNotificationCount() async {
-    await firebaseFirestore!
-        .collection(FirebaseConstants.usersCollection)
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .update({'notificationCount': 0});
+  FutureVoid deleteCommentNotification(String? pid) async {
+    try {
+      final querySnapshot = await firebaseFirestore!
+          .collectionGroup('notifications')
+          .where('targetID', isEqualTo: '$pid')
+          .where('notificationType', isEqualTo: 'comment')
+          .get();
+      for (final doc in querySnapshot.docs) {
+        await doc.reference.delete();
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  FutureVoid deleteFollowNotification(String? uid) async {
+    try {
+      final querySnapshot = await firebaseFirestore!
+          .collectionGroup('notifications')
+          .where('targetID', isEqualTo: '$uid')
+          .where('notificationType', isEqualTo: 'like')
+          .get();
+      for (final doc in querySnapshot.docs) {
+        await doc.reference.delete();
+      }
+    } catch (e) {
+      log(e.toString());
+    }
   }
 
   FutureVoid readNotification(String? id) async {
-    final doc = firebaseFirestore!
-        .collection(FirebaseConstants.usersCollection)
+    await firebaseFirestore!
+        .collection(FirebaseConstants.notificationsCollection)
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .collection('notifications')
-        .doc(id);
-
-    await doc.update({
+        .doc(id)
+        .update({
       'isRead': true,
     });
   }

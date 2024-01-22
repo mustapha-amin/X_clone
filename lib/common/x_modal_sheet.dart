@@ -1,12 +1,8 @@
-import 'dart:developer';
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:x_clone/utils/extensions.dart';
 import 'package:x_clone/utils/textstyle.dart';
 import '../features/auth/controller/auth_controller.dart';
-import '../features/auth/repository/auth_service.dart';
 
 class XBtmModalSheet extends ConsumerStatefulWidget {
   const XBtmModalSheet({super.key});
@@ -39,10 +35,8 @@ class _XBtmModalSheetState extends ConsumerState<XBtmModalSheet> {
             width: context.screenWidth * .7,
             child: OutlinedButton(
               onPressed: () {
-                Navigator.of(context).pop();
                 ref.read(authControllerProvider.notifier).signOut();
-                setState(() {});
-
+                Navigator.of(context).pop();
                 // await showDialog(
                 //   context: context,
                 //   builder: (context) {
