@@ -1,9 +1,14 @@
+// ignore_for_file: unnecessary_null_comparison
+
 import 'dart:developer';
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:x_clone/common/x_loader.dart';
+import 'package:x_clone/core/core.dart';
 import 'package:x_clone/features/auth/controller/user_data_controller.dart';
 import 'package:x_clone/theme/pallete.dart';
 import 'package:x_clone/utils/utils.dart';
@@ -27,8 +32,8 @@ class _UserDetailsState extends ConsumerState<UserDetails> {
   FocusNode focusNode3 = FocusNode();
   final _formKey = GlobalKey<FormState>();
   AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
-  ValueNotifier<File>? profileImage;
-  ValueNotifier<File>? coverImage;
+  ValueNotifier<File?>? profileImage;
+  ValueNotifier<File?>? coverImage;
 
   Future<void> selectImage({bool? isProfileImage = true}) async {
     try {
@@ -104,7 +109,7 @@ class _UserDetailsState extends ConsumerState<UserDetails> {
                                             ? DecorationImage(
                                                 fit: BoxFit.fitWidth,
                                                 image: FileImage(
-                                                    coverImage!.value),
+                                                    coverImage!.value!),
                                               )
                                             : null,
                                       ),
@@ -202,7 +207,7 @@ class _UserDetailsState extends ConsumerState<UserDetails> {
                                           ? DecorationImage(
                                               fit: BoxFit.cover,
                                               image: FileImage(
-                                                  profileImage!.value),
+                                                  profileImage!.value!),
                                             )
                                           : null,
                                     ),
@@ -247,20 +252,26 @@ class _UserDetailsState extends ConsumerState<UserDetails> {
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
                               try {
-                                await ref
-                                    .read(userDataProvider.notifier)
-                                    .saveUserData(
+                                ref.read(userDataProvider.notifier).saveUserData(
                                       context,
-                                      ref: ref,
+                                      uid: ref.watch(uidProvider),
+                                      email: ref
+                                          .watch(userProvider)!
+                                          .providerData[0]
+                                          .email!,
                                       name: nameController.text.trim(),
                                       username: usernameController.text.trim(),
                                       bio: bioController.text.trim(),
-                                      profilePicUrl: profileImage!.value.path,
-                                      coverPicUrl: coverImage!.value.path,
+                                      profilePath:
+                                          profileImage!.value! != null
+                                              ? profileImage!.value!.path
+                                              : "",
+                                      coverpath: coverImage!.value! != null
+                                          ? coverImage!.value!.path
+                                          : "",
                                     );
                                 // ignore: use_build_context_synchronously
-                                navigateAndReplace(
-                                    context, const XBottomNavBar());
+                                
                               } catch (e) {
                                 log(e.toString());
                               }

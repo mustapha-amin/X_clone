@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:x_clone/features/explore/repository/explore_repository.dart';
+import 'package:x_clone/models/recent_search_model.dart';
 import 'package:x_clone/models/user_model.dart';
-import 'package:x_clone/services/user_data_db/saved_searches.dart';
-import '../../../core/typedefs.dart';
 import '../../auth/repository/user_data_service.dart';
 
 final searchUsersProvider =
@@ -9,27 +9,24 @@ final searchUsersProvider =
   return ref.read(userDataServiceProvider).searchUser(name);
 });
 
-final recentSearchesProvider = StateNotifierProvider<RecentSearchesNotifier, List<String>>((ref) {
-  return RecentSearchesNotifier(savedSearches: ref.watch(savedSearchesProvider));
+final saveSearchProvider =
+    FutureProvider.family<void, RecentSearch>((ref, recentSearch) async {
+  final exploreProvider = ref.watch(exploreRepositoryProvider);
+  await exploreProvider.saveSearch(recentSearch);
 });
 
-class RecentSearchesNotifier extends StateNotifier<List<String>> {
-  SavedSearches? savedSearches;
-  RecentSearchesNotifier({this.savedSearches}) : super([]) {
-    state = savedSearches!.getRecentSearches();
-  }
+final fetchSearchesProvider = StreamProvider((ref) {
+  final exploreProvider = ref.watch(exploreRepositoryProvider);
+  return exploreProvider.fetchSearches();
+});
 
-  void saveSearch(String query) async {
-    await savedSearches!.addToRecentSearches(query);
-    state = savedSearches!.getRecentSearches();
-  }
+final deleteSearchProvider =
+    FutureProvider.family<void, String>((ref, id) async {
+  final exploreProvider = ref.watch(exploreRepositoryProvider);
+  await exploreProvider.deleteSearch(id);
+});
 
-  List<String> getRecentSearches() {
-    return state;
-  }
-
-  FutureVoid clearSearches() async {
-    await savedSearches!.clearRecentSearches();
-    state = [];
-  }
-}
+final clearSearchesProvider = FutureProvider((ref) async {
+  final exploreProvider = ref.watch(exploreRepositoryProvider);
+  await exploreProvider.clearSearches();
+});

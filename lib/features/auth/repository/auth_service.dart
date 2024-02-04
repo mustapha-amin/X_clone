@@ -68,7 +68,12 @@ class AuthService extends BaseAuthService {
   }
 
   @override
-  FutureVoid signOut() async {
-    await firebaseAuth.signOut();
+  FutureEither<String> signOut() async {
+    try {
+      await firebaseAuth.signOut();
+      return right("success");
+    } catch (e, stackTrace) {
+      return left(Failure(message: e.toString(), stackTrace: stackTrace));
+    }
   }
 }

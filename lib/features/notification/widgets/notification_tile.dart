@@ -7,7 +7,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:x_clone/constants/images_paths.dart';
 import 'package:x_clone/features/auth/controller/user_data_controller.dart';
 import 'package:x_clone/features/home/views/for%20you/post_detail_screen.dart';
-import 'package:x_clone/features/notification/controller/notification_controller.dart';
 import 'package:x_clone/features/user_profile/views/user_profile_screen.dart';
 import 'package:x_clone/models/notification_model.dart';
 import 'package:x_clone/models/post_model.dart';

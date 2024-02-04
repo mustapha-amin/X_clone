@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:x_clone/core/core.dart';
 import 'package:x_clone/utils/dialog.dart';
@@ -25,7 +26,7 @@ class GoogleAuthService {
     required this.firebaseAuth,
   });
 
-  FutureVoid googleLogin(BuildContext? context) async {
+  FutureEither<UserCredential> googleLogin(BuildContext? context) async {
     try {
       final googleAcct = await googleSignIn.signIn();
 
@@ -35,19 +36,22 @@ class GoogleAuthService {
         idToken: googleAuth.idToken,
       );
 
-      await firebaseAuth.signInWithCredential(credential);
-    } on FirebaseAuthException catch (e) {
-      // ignore: use_build_context_synchronously
-      showErrorDialog(context: context, message: e.message);
+      final userCred = await firebaseAuth.signInWithCredential(credential);
+      await firebaseAuth.currentUser!.updateEmail(userCred.user!.email!);
+      return right(userCred);
+    } on FirebaseAuthException catch (e, stackTrace) {
+      return left(Failure(message: e.message!, stackTrace: stackTrace));
     }
   }
 
-  FutureVoid googleSignOut() async {
+  FutureEither<String> googleSignOut() async {
     try {
       await googleSignIn.signOut();
       await firebaseAuth.signOut();
-    } catch (e) {
+      return right("success");
+    } catch (e, stackTrace) {
       log(e.toString());
+      return left(Failure(message: e.toString(), stackTrace: stackTrace));
     }
   }
 }

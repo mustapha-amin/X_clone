@@ -12,7 +12,16 @@
           "package_name": "com.mustapha.x_clone"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "626883868212-arueta10i8rkhnocs6glic2vihs277bl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mustapha.x_clone",
+            "certificate_hash": "e39630fd4bb4e92e45790d514bb7abfc36b737bb"
+          }
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyD2s1Dj458ADiZGbVL_tTGWhLw54_qYa3E"

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart' as intl;
 
 extension BuildContextExtensions on BuildContext {
   double get screenHeight => MediaQuery.of(this).size.height;
@@ -20,33 +21,30 @@ extension WidgetExtensions on Widget {
         padding: EdgeInsets.all(size!),
         child: this,
       );
+
+  Widget centralize() => Center(
+        child: this,
+      );
 }
 
 extension JoinTimeFormatting on DateTime {
   String get formatDate {
-    final months = [
-      '',
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December'
-    ];
-
-    return '$day ${months[month]}, $year';
+    final dateFormat = intl.DateFormat.yMMM();
+    return "$day, ${dateFormat.format(this)}";
   }
 
   String get formatTime {
-    String hr = hour < 10 ? '0$hour' : '$hour';
-    String min = minute < 10 ? '0$minute' : '$minute';
-    String symbol = hour < 12 ? 'am' : 'pm';
-    return '$hr:$min $symbol';
+    final timeFormat = intl.DateFormat(intl.DateFormat.HOUR_MINUTE_TZ);
+    return timeFormat.format(this);
+  }
+
+  String get when {
+    if (day.compareTo(DateTime.now().day) == 0) {
+      return "Today";
+    } else if (DateTime.now().difference(this).inDays == 1) {
+      return "Yesterday";
+    } else {
+      return formatDate;
+    }
   }
 }

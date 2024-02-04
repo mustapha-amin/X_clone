@@ -1,9 +1,13 @@
+import 'dart:developer';
+
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:x_clone/constants/firebase_constants.dart';
 import 'package:x_clone/core/core.dart';
+import 'package:x_clone/features/nav%20bar/nav_bar.dart';
 import 'package:x_clone/models/user_model.dart';
 import 'package:x_clone/utils/dialog.dart';
+import 'package:x_clone/utils/navigation.dart';
 import '../../../utils/enums.dart';
 import '../repository/auth_service.dart';
 import '../repository/user_data_service.dart';
@@ -41,48 +45,49 @@ class UserDataController extends StateNotifier<Status> {
 
   FutureVoid saveUserData(
     BuildContext context, {
-    WidgetRef? ref,
-    String? name,
-    String? username,
-    String? bio,
-    String? profilePicUrl,
-    String? coverPicUrl,
+    required String uid,
+    required String email,
+    required String name,
+    required String username,
+    required String bio,
+    required String profilePath,
+    required String coverpath,
   }) async {
-    state = Status.loading;
-    XUser xUser = XUser(
-      uid: ref!.watch(userProvider)!.uid,
-      name: name!,
-      username: username!,
-      email: ref.watch(userProvider)!.email!,
-      bio: bio!,
-      location: "",
-      joined: DateTime.now(),
-      followers: [],
-      following: [],
-      website: "",
-      profilePicUrl: profilePicUrl!,
-      coverPicUrl: coverPicUrl!,
-    );
+    String? profilePicUrl, coverpicUrl;
     try {
-      if (xUser.profilePicUrl!.isNotEmpty) {
-        xUser = await userDataService!.updateImageUrl(
-          xUser,
-          profilePicUrl,
-        );
+      state = Status.loading;
+      if (profilePath.isNotEmpty) {
+        profilePicUrl = await userDataService!.updateImageUrl(uid, profilePath);
       }
-      if (xUser.coverPicUrl!.isNotEmpty) {
-        xUser = await userDataService!.updateImageUrl(
-          xUser,
-          coverPicUrl,
-          isProfilePic: false,
-        );
+      if (coverpath.isNotEmpty) {
+        coverpicUrl = await userDataService!
+            .updateImageUrl(uid, coverpath, isProfilePic: false);
       }
+      XUser xUser = XUser(
+        uid: uid,
+        name: name,
+        username: username,
+        email: email,
+        bio: bio,
+        location: "",
+        joined: DateTime.now(),
+        followers: [],
+        following: [],
+        website: "",
+        profilePicUrl: profilePicUrl ?? "",
+        coverPicUrl: coverpicUrl ?? "",
+        conversationList: [],
+      );
+      log(xUser.toString());
       await userDataService!.saveUserData(xUser);
+      navigateAndReplace(context, XBottomNavBar());
       state = Status.success;
     } catch (e) {
+      log('error');
       state = Status.failure;
-
       showErrorDialog(context: context, message: "An error occured");
+    } finally {
+      state = Status.initial;
     }
   }
 

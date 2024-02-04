@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:x_clone/common/x_loader.dart';
+import 'package:x_clone/constants/images_paths.dart';
 import 'package:x_clone/features/auth/controller/user_data_controller.dart';
 import 'package:x_clone/features/home/widgets/post_card.dart';
 import 'package:x_clone/features/post/controllers/post_controller.dart';
 import 'package:x_clone/models/user_model.dart';
 import 'package:x_clone/theme/pallete.dart';
 import 'package:x_clone/utils/extensions.dart';
-
+import 'package:x_clone/constants/firebase_constants.dart';
 import '../widgets/user_info.dart';
 
 class UserProfileScreen extends ConsumerWidget {
@@ -49,8 +50,12 @@ class UserProfileScreen extends ConsumerWidget {
                             bottom: 0,
                             left: 5,
                             child: CircleAvatar(
-                              backgroundImage:
-                                  NetworkImage(user.profilePicUrl!),
+                              backgroundColor: Colors.white,
+                              backgroundImage: NetworkImage(
+                                user.profilePicUrl!.isEmpty
+                                    ? ImagesPaths.person
+                                    : user.profilePicUrl!,
+                              ),
                               radius: 35,
                             ),
                           ),
@@ -78,8 +83,12 @@ class UserProfileScreen extends ConsumerWidget {
                       ),
                     ),
                   ],
-                  error: (_, __) => [const Text("Error fetching user data")],
-                  loading: () => [const XLoader()],
+                  error: (_, __) => [
+                    const Text("Error fetching user data"),
+                  ],
+                  loading: () => [
+                    const XLoader(),
+                  ],
                 );
           },
           body: ref.watch(userPostsProvider(user!.uid!)).when(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:x_clone/services/signin_method/sign_in_method.dart';
 import 'package:x_clone/utils/extensions.dart';
 import 'package:x_clone/utils/textstyle.dart';
 import '../features/auth/controller/auth_controller.dart';
@@ -35,35 +36,16 @@ class _XBtmModalSheetState extends ConsumerState<XBtmModalSheet> {
             width: context.screenWidth * .7,
             child: OutlinedButton(
               onPressed: () {
-                ref.read(authControllerProvider.notifier).signOut();
                 Navigator.of(context).pop();
-                // await showDialog(
-                //   context: context,
-                //   builder: (context) {
-                //     return AlertDialog(
-                //       title: const Text("Sign out"),
-                //       content: const Text("Are you sure you want to sign out?"),
-                //       actions: [
-                //         TextButton(
-                //           onPressed: () {
-                //             ref.read(authControllerProvider.notifier).signOut();
-                //             ref
-                //                 .read(googleAuthProvider.notifier)
-                //                 .signOutWithGoogle();
-                //             Navigator.of(context).pop();
-                //           },
-                //           child: const Text("Yes"),
-                //         ),
-                //         TextButton(
-                //           onPressed: () {
-                //             Navigator.of(context).pop();
-                //           },
-                //           child: const Text("No"),
-                //         ),
-                //       ],
-                //     );
-                //   },
-                //);
+                final bool isGoogleSignIn =
+                    ref.watch(signInMethodProvider).signInMethodIsGoogle()!;
+                isGoogleSignIn
+                    ? ref
+                        .read(googleAuthProvider.notifier)
+                        .signOutWithGoogle(context, ref)
+                    : ref
+                        .read(authControllerProvider.notifier)
+                        .signOut(context);
               },
               child: Text(
                 "Sign out",

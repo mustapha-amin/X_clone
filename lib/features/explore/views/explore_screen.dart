@@ -5,6 +5,7 @@ import 'package:x_clone/common/x_avatar.dart';
 import 'package:x_clone/common/x_loader.dart';
 import 'package:x_clone/features/explore/controllers/search_controller.dart';
 import 'package:x_clone/features/user_profile/views/user_profile_screen.dart';
+import 'package:x_clone/models/recent_search_model.dart';
 import 'package:x_clone/utils/utils.dart';
 
 class ExploreScreen extends ConsumerStatefulWidget {
@@ -37,7 +38,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> recentSearches = ref.watch(recentSearchesProvider);
+    final recentSearches = ref.watch(fetchSearchesProvider);
     return Scaffold(
         appBar: AppBar(
           leadingWidth: context.screenWidth * .2,
@@ -113,10 +114,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                                           child: const Text("Cancel")),
                                       TextButton(
                                           onPressed: () {
-                                            ref
-                                                .read(recentSearchesProvider
-                                                    .notifier)
-                                                .clearSearches();
+                                            ref.read(clearSearchesProvider);
                                             Navigator.of(context).pop();
                                           },
                                           child: const Text("Clear")),
@@ -140,26 +138,37 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                         ],
                       ).padX(10),
                       VerticalSpacing(size: 20),
-                      ...recentSearches.map(
-                        (search) => ListTile(
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 2,
-                          ),
-                          onTap: () {
-                            setState(() {
-                              searchController.text = search;
-                            });
-                          },
-                          leading: const Icon(
-                            Icons.history,
-                            size: 15,
-                            color: Colors.grey,
-                          ),
-                          title: Text(
-                            search,
-                            style: kTextStyle(18, ref, color: Colors.grey),
-                          ),
+                      recentSearches.when(
+                        data: (searches) => Column(
+                          children: [
+                            ...searches.map(
+                              (search) => ListTile(
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 2,
+                                ),
+                                onTap: () {
+                                  setState(() {
+                                    searchController.text = search.query!;
+                                  });
+                                },
+                                leading: const Icon(
+                                  Icons.history,
+                                  size: 15,
+                                  color: Colors.grey,
+                                ),
+                                title: Text(
+                                  search.query!,
+                                  style:
+                                      kTextStyle(18, ref, color: Colors.grey),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        error: (err, _) => Text("An error occured"),
+                        loading: () => const Center(
+                          child: CircularProgressIndicator(),
                         ),
                       )
                     ],
@@ -174,9 +183,11 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         onTap: () {
-                          ref
-                              .read(recentSearchesProvider.notifier)
-                              .saveSearch(searchController.text);
+                          ref.read(
+                            saveSearchProvider(
+                              RecentSearch(query: searchController.text.trim()),
+                            ),
+                          );
                           navigateTo(
                             context,
                             UserProfileScreen(

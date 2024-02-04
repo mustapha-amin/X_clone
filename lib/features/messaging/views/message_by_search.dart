@@ -59,7 +59,7 @@ class _MessageBySearchState extends ConsumerState<MessageBySearch> {
                           .when(
                             data: (following) => ListTile(
                               onTap: () {
-                                navigateAndReplace(
+                                navigateTo(
                                   context,
                                   MessageUser(xUser: following),
                                 );

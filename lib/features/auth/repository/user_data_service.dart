@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -29,39 +30,40 @@ class UserDataService implements BaseUserDataService {
 
   @override
   FutureVoid saveUserData(XUser user) async {
-    await firebaseFirestore!
-        .collection(FirebaseConstants.usersCollection)
-        .doc(user.uid)
-        .set(user.toJson());
+    try {
+      await firebaseFirestore!
+          .collection(FirebaseConstants.usersCollection)
+          .doc(user.uid)
+          .set(user.toJson());
+    } catch (e) {
+      log(e.toString());
+    }
   }
 
-  Future<XUser> updateImageUrl(
-    XUser xUser,
+  Future<String> updateImageUrl(
+    String uid,
     String imgPath, {
     bool isProfilePic = true,
   }) async {
     String? imgUrl;
     File? file;
-    Reference ref;
+    Reference? ref;
+    final storagePathProfile = '${FirebaseConstants.usersProfilePics}/$uid/}';
+    final storagePathCover = '${FirebaseConstants.usersCoverPics}/$uid/}';
     try {
       if (isProfilePic) {
-        final storagePath =
-            '${FirebaseConstants.usersProfilePics}/${xUser.uid}/';
         file = File(imgPath);
-        ref = firebaseStorage!.ref().child(storagePath);
+        ref = firebaseStorage!.ref().child(storagePathProfile);
         await ref.putFile(file);
       } else {
-        final storagePath = '${FirebaseConstants.usersCoverPics}/${xUser.uid}/';
         file = File(imgPath);
-        ref = firebaseStorage!.ref().child(storagePath);
+        ref = firebaseStorage!.ref().child(storagePathCover);
         await ref.putFile(file);
       }
       imgUrl = await ref.getDownloadURL();
-      xUser = isProfilePic
-          ? xUser.copyWith(profilePicUrl: imgUrl)
-          : xUser.copyWith(coverPicUrl: imgUrl);
-      return xUser;
+      return imgUrl;
     } catch (e) {
+      log(e.toString());
       throw Exception("An error occured");
     }
   }

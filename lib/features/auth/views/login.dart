@@ -4,6 +4,7 @@ import 'package:x_clone/common/x_appbar.dart';
 import 'package:x_clone/common/x_loader.dart';
 import 'package:x_clone/core/core.dart';
 import 'package:x_clone/features/auth/controller/auth_controller.dart';
+import 'package:x_clone/services/signin_method/sign_in_method.dart';
 import 'package:x_clone/theme/theme.dart';
 import 'package:x_clone/utils/utils.dart';
 import 'dart:developer';
@@ -184,6 +185,9 @@ class _LogInState extends ConsumerState<LogIn> {
                                               email: emailController.text,
                                               password: passwordController.text,
                                             );
+                                        ref
+                                            .read(signInMethodProvider)
+                                            .saveAsDefault();
                                       } catch (e) {
                                         log(e.toString());
                                       }

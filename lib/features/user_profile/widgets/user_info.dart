@@ -1,6 +1,7 @@
 import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sizer/sizer.dart';
 import 'package:x_clone/core/core.dart';
 import 'package:x_clone/features/messaging/views/message_user.dart';
 import 'package:x_clone/features/notification/controller/notification_controller.dart';
@@ -29,9 +30,12 @@ class UserInfo extends ConsumerWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              user!.name!,
-              style: kTextStyle(25, ref, fontWeight: FontWeight.bold),
+            SizedBox(
+              width: 40.w,
+              child: Text(
+                user!.name!,
+                style: kTextStyle(25, ref, fontWeight: FontWeight.bold),
+              ),
             ),
             Row(
               children: [
@@ -89,7 +93,7 @@ class UserInfo extends ConsumerWidget {
                       user!.uid == uid
                           ? "Edit profile"
                           : user!.followers!.contains(uid)
-                              ? "unfollow"
+                              ? "Unfollow"
                               : "Follow",
                       style: kTextStyle(17, ref),
                     ),

@@ -7,6 +7,7 @@ import 'package:x_clone/core/core.dart';
 import 'package:x_clone/features/auth/controller/user_data_controller.dart';
 import 'package:x_clone/features/home/views/for%20you/post_detail_screen.dart';
 import 'package:x_clone/features/home/widgets/post_icon_buttons.dart';
+import 'package:x_clone/features/home/widgets/post_skeleton.dart';
 import 'package:x_clone/features/notification/controller/notification_controller.dart';
 import 'package:x_clone/features/user_profile/views/user_profile_screen.dart';
 import 'package:x_clone/models/notification_model.dart';
@@ -229,9 +230,7 @@ class _PostCardState extends ConsumerState<PostCard> {
             );
           },
           error: (_, __) => const Text("Error"),
-          loading: () => const Center(
-            child: CircularProgressIndicator(),
-          ),
+          loading: () => const PostSkeleton(),
         );
   }
 }

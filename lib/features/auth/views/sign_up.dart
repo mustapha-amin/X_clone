@@ -6,6 +6,7 @@ import 'package:x_clone/common/x_loader.dart';
 import 'package:x_clone/core/core.dart';
 import 'package:x_clone/features/auth/widgets/auth_button.dart';
 import 'package:x_clone/features/auth/widgets/signup_terms_two.dart';
+import 'package:x_clone/services/signin_method/sign_in_method.dart';
 import 'package:x_clone/utils/utils.dart';
 import 'package:x_clone/features/auth/controller/auth_controller.dart';
 import 'package:x_clone/common/x_appbar.dart';
@@ -174,6 +175,7 @@ class _SignUpState extends ConsumerState<SignUp> {
                             if (_formKey.currentState!.validate()) {
                               try {
                                 signUp(context);
+                                ref.read(signInMethodProvider).saveAsDefault();
                               } catch (e) {
                                 log(e.toString());
                               }

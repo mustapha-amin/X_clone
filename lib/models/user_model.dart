@@ -31,6 +31,14 @@ class XUser {
     this.conversationList,
   });
 
+  @override
+  String toString() {
+    return 'XUser{uid: $uid, name: $name, username: $username, email: $email, '
+        'bio: $bio, location: $location, joined: $joined, followers: $followers, '
+        'following: $following, website: $website, profilePicUrl: $profilePicUrl, '
+        'coverPicUrl: $coverPicUrl, conversationList: $conversationList}';
+  }
+
   factory XUser.fromJson(Map<String, dynamic> json) {
     return XUser(
       uid: json['uid'],
@@ -63,7 +71,7 @@ class XUser {
       'website': website,
       'profilePicUrl': profilePicUrl,
       'coverPicUrl': coverPicUrl,
-      'conversationList' : conversationList,
+      'conversationList': conversationList,
     };
   }
 

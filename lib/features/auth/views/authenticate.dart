@@ -7,6 +7,7 @@ import 'package:x_clone/features/auth/auth.dart';
 import 'package:x_clone/features/auth/controller/auth_controller.dart';
 import 'package:x_clone/features/auth/widgets/auth_button.dart';
 import 'package:x_clone/features/auth/widgets/signup_terms_one.dart';
+import 'package:x_clone/services/signin_method/sign_in_method.dart';
 import 'package:x_clone/utils/extensions.dart';
 import 'package:x_clone/utils/navigation.dart';
 import 'package:x_clone/utils/textstyle.dart';
@@ -22,9 +23,8 @@ class Authenticate extends ConsumerStatefulWidget {
 }
 
 class _AuthenticateState extends ConsumerState<Authenticate> {
-  
-  void signInGoogle(BuildContext context) {
-    ref.read(googleAuthProvider.notifier).signInWithGoogle(context);
+  void signInGoogle(BuildContext context, WidgetRef ref) {
+    ref.read(googleAuthProvider.notifier).signInWithGoogle(context, ref);
   }
 
   @override
@@ -59,7 +59,7 @@ class _AuthenticateState extends ConsumerState<Authenticate> {
                       label: "Continue with Google",
                       isGoogle: true,
                       onPressed: () {
-                        signInGoogle(context);
+                        signInGoogle(context, ref);
                       },
                     ),
                     const AuthDivider(),

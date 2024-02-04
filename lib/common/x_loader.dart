@@ -21,12 +21,15 @@ class XLoader extends ConsumerWidget {
             height: context.screenWidth * .2,
             child: const CircularProgressIndicator(color: AppColors.blueColor),
           ),
-          SvgPicture.asset(
-            ImagesPaths.x_icon,
-            width: 30,
-            colorFilter: ColorFilter.mode(
-              isDark ? Colors.white : Colors.black,
-              BlendMode.srcIn,
+          GestureDetector(
+            onTap: (){},
+            child: SvgPicture.asset(
+              ImagesPaths.x_icon,
+              width: 30,
+              colorFilter: ColorFilter.mode(
+                isDark ? Colors.white : Colors.black,
+                BlendMode.srcIn,
+              ),
             ),
           ),
         ],
