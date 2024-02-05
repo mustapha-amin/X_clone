@@ -11,14 +11,14 @@ import '/../utils/utils.dart';
 import 'package:x_clone/features/nav bar/nav_bar.dart';
 
 final authControllerProvider =
-    StateNotifierProvider<AuthController, bool>((ref) {
+    StateNotifierProvider.autoDispose<AuthController, bool>((ref) {
   return AuthController(
     authService: ref.watch(authServiceProvider),
   );
 });
 
 final googleAuthProvider =
-    StateNotifierProvider<GoogleAuthContoller, bool>((ref) {
+    StateNotifierProvider.autoDispose<GoogleAuthContoller, bool>((ref) {
   return GoogleAuthContoller(
     googleAuthService: ref.watch(googleAuthServiceProvider),
     authService: ref.watch(authServiceProvider),

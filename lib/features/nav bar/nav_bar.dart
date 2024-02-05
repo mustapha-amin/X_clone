@@ -58,6 +58,7 @@ class _XBottomNavBarState extends ConsumerState<XBottomNavBar> {
       data: (userExists) => switch (userExists) {
         true => SafeArea(
             child: Scaffold(
+              key: ref.watch(scaffoldKey),
               drawer: const XDrawer(),
               body: GestureDetector(
                 onTap: () => isExpanded ? toggleExpanded() : null,

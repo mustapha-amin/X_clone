@@ -34,7 +34,7 @@ class _MessageUserState extends ConsumerState<MessageUser> {
       if (scrollController.hasClients) {
         scrollController.position.animateTo(
           scrollController.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 300),
+          duration: const Duration(milliseconds: 100),
           curve: Curves.bounceIn,
         );
       }
