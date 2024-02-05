@@ -78,15 +78,6 @@ class MessageTextField extends ConsumerWidget {
             );
             textEditingController.clear();
             onSuccess.call();
-            ref.watch(currentUserProvider).when(
-                  data: (user) => !user!.conversationList!.contains(user.uid)
-                      ? ref
-                          .read(messageRepoProvider)
-                          .addToConversationList(xUser.uid)
-                      : null,
-                  error: (_, __) => null,
-                  loading: () => null,
-                );
           },
           icon: const Icon(Icons.send),
         ),

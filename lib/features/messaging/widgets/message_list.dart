@@ -23,8 +23,6 @@ class MessageList extends ConsumerStatefulWidget {
 }
 
 class _MessageListState extends ConsumerState<MessageList> {
-  List<Iterable<DateTime>> groups = [];
-
   bool isSender(Message message, WidgetRef ref) {
     return message.senderID == ref.watch(uidProvider);
   }
@@ -73,7 +71,11 @@ class _MessageListState extends ConsumerState<MessageList> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              if (!sameDateAsAbove) Text(dateTime.formatDate),
+              if (!sameDateAsAbove)
+                Text(
+                  dateTime.when,
+                  style: kTextStyle(15, ref),
+                ),
               ChatBubble(
                 isSender: isSender(message, ref),
                 message: message,
@@ -83,7 +85,10 @@ class _MessageListState extends ConsumerState<MessageList> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text(dateTime.formatTime),
+                    Text(
+                      dateTime.formatTime,
+                      style: kTextStyle(13, ref, color: Colors.grey),
+                    ),
                   ],
                 ),
             ],

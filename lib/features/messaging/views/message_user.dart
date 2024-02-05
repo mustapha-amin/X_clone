@@ -8,11 +8,13 @@ import 'package:x_clone/features/messaging/widgets/message_list.dart';
 import 'package:x_clone/features/messaging/widgets/message_textfield.dart';
 import 'package:x_clone/features/user_profile/views/user_profile_screen.dart';
 import 'package:x_clone/models/user_model.dart';
-import 'package:x_clone/utils/datetime_grouping.dart';
 import 'package:x_clone/utils/extensions.dart';
 import 'package:x_clone/utils/navigation.dart';
 import 'package:x_clone/utils/spacing.dart';
 import 'package:x_clone/utils/textstyle.dart';
+
+import '../../auth/controller/user_data_controller.dart';
+import '../repository/message_repository.dart';
 
 class MessageUser extends ConsumerStatefulWidget {
   final XUser xUser;
@@ -28,12 +30,15 @@ class _MessageUserState extends ConsumerState<MessageUser> {
   @override
   void initState() {
     super.initState();
-    if (scrollController.hasClients) {
-      scrollController.jumpTo(
-        scrollController.position.maxScrollExtent,
-      );
-      setState(() {});
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (scrollController.hasClients) {
+        scrollController.position.animateTo(
+          scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.bounceIn,
+        );
+      }
+    });
   }
 
   @override
@@ -66,29 +71,43 @@ class _MessageUserState extends ConsumerState<MessageUser> {
       ),
       body: ref.watch(fetchMessagesProvider(widget.xUser.uid!)).when(
             data: (messages) {
-              return SingleChildScrollView(
-                keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 78.h,
-                      child: MessageList(
-                        messages: messages,
-                        scrollController: scrollController,
-                      ),
-                    ),
-                    MessageTextField(
-                      ref: ref,
-                      textEditingController: textEditingController,
-                      xUser: widget.xUser,
-                      scrollController: scrollController,
-                      onSuccess: () {
-                        scrollController
-                            .jumpTo(scrollController.position.maxScrollExtent);
-                      },
-                    )
-                  ],
-                ),
+              return Column(
+                children: [
+                  Expanded(
+                    child: messages.isEmpty
+                        ? Text(
+                            "Start chat",
+                            style: kTextStyle(20, ref),
+                          ).centralize()
+                        : MessageList(
+                            messages: messages,
+                            scrollController: scrollController,
+                          ),
+                  ),
+                  MessageTextField(
+                    ref: ref,
+                    textEditingController: textEditingController,
+                    xUser: widget.xUser,
+                    scrollController: scrollController,
+                    onSuccess: () {
+                      scrollController.animateTo(
+                        scrollController.position.maxScrollExtent,
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.bounceIn,
+                      );
+                      ref.watch(currentUserProvider).when(
+                            data: (user) => !user!.conversationList!
+                                    .contains(widget.xUser.uid)
+                                ? ref
+                                    .read(messageRepoProvider)
+                                    .addToConversationList(widget.xUser.uid)
+                                : null,
+                            error: (_, __) => null,
+                            loading: () => null,
+                          );
+                    },
+                  )
+                ],
               );
             },
             error: (_, __) => Text(

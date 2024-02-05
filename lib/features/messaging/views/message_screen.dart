@@ -70,69 +70,73 @@ class _MessageScreenState extends ConsumerState<MessageScreen> {
                       itemBuilder: (context, index) {
                         String id = user.conversationList![index];
                         return ref.watch(xUserStreamProvider(id)).when(
-                              data: (user) => ListTile(
-                                onTap: () => navigateTo(
-                                  context,
-                                  MessageUser(xUser: user),
-                                ),
-                                leading: CircleAvatar(
-                                  backgroundImage:
-                                      NetworkImage(user!.profilePicUrl!),
-                                ),
-                                title: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      user.name!,
-                                      style: kTextStyle(
-                                        15,
-                                        ref,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    ref
-                                        .watch(fetchMessagesProvider(user.uid!))
-                                        .when(
-                                          data: (messages) => messages.isEmpty
-                                              ? const SizedBox()
-                                              : Text(
-                                                  messages
-                                                              .last.timeSent!
-                                                              .compareTo(
-                                                                  DateTime
-                                                                      .now()) ==
-                                                          -1
-                                                      ? messages[index]
-                                                          .timeSent!
-                                                          .formatDate
-                                                      : messages[index]
-                                                          .timeSent!
-                                                          .formatTime,
-                                                  style: kTextStyle(12, ref,
-                                                      color: Colors.grey[500])),
-                                          error: (_, __) =>
-                                              const Text("Error fetching time"),
-                                          loading: () =>
-                                              const Text("Loading..."),
+                              data: (user) {
+                                return ListTile(
+                                  onTap: () => navigateTo(
+                                    context,
+                                    MessageUser(xUser: user),
+                                  ),
+                                  leading: CircleAvatar(
+                                    backgroundImage:
+                                        NetworkImage(user!.profilePicUrl!),
+                                  ),
+                                  title: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        user.name!,
+                                        style: kTextStyle(
+                                          15,
+                                          ref,
+                                          fontWeight: FontWeight.bold,
                                         ),
-                                  ],
-                                ),
-                                subtitle: ref
-                                    .watch(fetchMessagesProvider(user.uid!))
-                                    .when(
-                                      data: (messages) => messages.isEmpty
-                                          ? const SizedBox()
-                                          : Text(
-                                              messages.last.content!.length < 40
-                                                  ? messages.last.content!
-                                                  : '${messages.last.content!.substring(0, 40)}...',
-                                            ),
-                                      error: (_, __) => const Text(
-                                          "Error fetching latest messages"),
-                                      loading: () => const Text("Loading..."),
-                                    ),
-                              ),
+                                      ),
+                                      ref
+                                          .watch(
+                                              fetchMessagesProvider(user.uid!))
+                                          .when(
+                                            data: (messages) => messages.isEmpty
+                                                ? const SizedBox()
+                                                : Text(
+                                                    messages.last.timeSent!
+                                                                .compareTo(
+                                                                    DateTime
+                                                                        .now()) ==
+                                                            -1
+                                                        ? messages[index]
+                                                            .timeSent!
+                                                            .formatDate
+                                                        : messages[index]
+                                                            .timeSent!
+                                                            .formatTime,
+                                                    style: kTextStyle(12, ref,
+                                                        color:
+                                                            Colors.grey[500])),
+                                            error: (_, __) => const Text(
+                                                "Error fetching time"),
+                                            loading: () =>
+                                                const Text("Loading..."),
+                                          ),
+                                    ],
+                                  ),
+                                  subtitle: ref
+                                      .watch(fetchMessagesProvider(user.uid!))
+                                      .when(
+                                        data: (messages) => messages.isEmpty
+                                            ? const SizedBox()
+                                            : Text(
+                                                messages.last.content!.length <
+                                                        40
+                                                    ? messages.last.content!
+                                                    : '${messages.last.content!.substring(0, 40)}...',
+                                              ),
+                                        error: (_, __) => const Text(
+                                            "Error fetching latest messages"),
+                                        loading: () => const Text("Loading..."),
+                                      ),
+                                );
+                              },
                               error: (_, __) => const Text("An error occured"),
                               loading: () => const XLoader(),
                             );
