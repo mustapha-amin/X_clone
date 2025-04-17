@@ -1,8 +1,8 @@
-import 'package:carousel_slider/carousel_slider.dart';
+import 'dart:math';
+
 import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:x_clone/common/x_loader.dart';
 import 'package:x_clone/core/core.dart';
 import 'package:x_clone/features/auth/controller/user_data_controller.dart';
 import 'package:x_clone/features/home/views/for%20you/post_detail_screen.dart';
@@ -56,7 +56,7 @@ class _PostCardState extends ConsumerState<PostCard> {
                     },
                     child: CircleAvatar(
                       backgroundImage: NetworkImage(user!.profilePicUrl!),
-                      radius: 24,
+                      radius: 18,
                     ),
                   ),
                   HorizontalSpacing(size: 15),
@@ -68,7 +68,7 @@ class _PostCardState extends ConsumerState<PostCard> {
                           text: TextSpan(
                             text: user.name!,
                             style: kTextStyle(
-                              17,
+                              15,
                               ref,
                               fontWeight: FontWeight.bold,
                             ),
@@ -76,7 +76,7 @@ class _PostCardState extends ConsumerState<PostCard> {
                               TextSpan(
                                 text: " @${user.username}  ",
                                 style: kTextStyle(
-                                  13,
+                                  12,
                                   ref,
                                   color: Colors.grey,
                                 ),
@@ -97,7 +97,7 @@ class _PostCardState extends ConsumerState<PostCard> {
                         Text(
                           widget.post!.text!,
                           style: kTextStyle(
-                            16,
+                            14,
                             ref,
                           ),
                         ),
@@ -118,28 +118,6 @@ class _PostCardState extends ConsumerState<PostCard> {
                                 child: Stack(
                                   alignment: Alignment.topRight,
                                   children: [
-                                    CarouselSlider(
-                                      items: [
-                                        ...widget.post!.imagesUrl!.map(
-                                          (e) => Image.network(
-                                            e,
-                                            errorBuilder: (context, _, __) {
-                                              return const Icon(Icons.error);
-                                            },
-                                          ).padX(5),
-                                        ),
-                                      ],
-                                      options: CarouselOptions(
-                                        initialPage: currentPage,
-                                        enableInfiniteScroll: false,
-                                        height: context.screenHeight * .3,
-                                        onPageChanged: (newPage, _) {
-                                          setState(() {
-                                            currentPage = newPage;
-                                          });
-                                        },
-                                      ),
-                                    ),
                                     Container(
                                       padding: const EdgeInsets.all(6),
                                       decoration: BoxDecoration(
@@ -157,7 +135,7 @@ class _PostCardState extends ConsumerState<PostCard> {
                                   ],
                                 ),
                               ),
-                        VerticalSpacing(size: 3),
+                        VerticalSpacing(size: 8),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -216,6 +194,13 @@ class _PostCardState extends ConsumerState<PostCard> {
                               color: isLiked(ref.watch(uidProvider))
                                   ? Colors.red
                                   : Colors.grey,
+                            ),
+                            PostIconButton(
+                              iconData: FeatherIcons.barChart2,
+                              count: Random().nextInt(300) + 100,
+                            ),
+                            PostIconButton(
+                              iconData: Icons.bookmark_outline,
                             ),
                             PostIconButton(
                               iconData: Icons.share,

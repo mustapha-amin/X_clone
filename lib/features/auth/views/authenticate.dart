@@ -32,39 +32,58 @@ class _AuthenticateState extends ConsumerState<Authenticate> {
     bool isLoading = ref.watch(authControllerProvider);
     bool isLoadingGoogle = ref.watch(googleAuthProvider);
     return Scaffold(
+      appBar: AppBar(),
       body: isLoading || isLoadingGoogle
           ? const XLoader()
           : Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25),
+              padding: const EdgeInsets.symmetric(horizontal: 30),
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Row(
+                      children: [
+                        SvgPicture.asset(
+                          ImagesPaths.x_icon,
+                          width: 50,
+                          colorFilter:
+                              ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                        ),
+                      ],
+                    ),
+                    VerticalSpacing(size: 50),
+                    Text("Happening\nnow",
+                        style:
+                            kTextStyle(50, ref, fontWeight: FontWeight.bold)),
                     VerticalSpacing(size: context.screenHeight * .05),
-                    Center(
-                      child: SvgPicture.asset(
-                        ImagesPaths.x_icon,
-                        colorFilter: const ColorFilter.mode(
-                            Colors.white, BlendMode.srcIn),
-                        width: 25,
-                      ),
-                    ),
-                    VerticalSpacing(size: context.screenHeight * .15),
                     Text(
-                      "See what's\nhappening in the\nworld right now.",
-                      style: kTextStyle(28, ref, fontWeight: FontWeight.bold),
+                      "Join today.",
+                      style: kTextStyle(30, ref, fontWeight: FontWeight.bold),
                     ),
-                    VerticalSpacing(size: context.screenHeight * .15),
                     AuthButton(
-                      label: "Continue with Google",
-                      isGoogle: true,
+                      label: "Sign up with Google",
+                      icon: SvgPicture.asset(
+                        ImagesPaths.google,
+                        width: 30,
+                      ),
                       onPressed: () {
                         signInGoogle(context, ref);
                       },
                     ),
+                    AuthButton(
+                      label: "Sign up with Apple",
+                      icon: Icon(
+                        Icons.apple,
+                        size: 30,
+                        color: Colors.black,
+                      ),
+                      onPressed: () {},
+                    ),
                     const AuthDivider(),
                     AuthButton(
                       label: "Create account",
+                      bgColor: Colors.blue,
+                      fgColor: Colors.white,
                       onPressed: () {
                         navigateTo(context, const SignUp());
                       },
@@ -72,23 +91,18 @@ class _AuthenticateState extends ConsumerState<Authenticate> {
                     VerticalSpacing(size: 15),
                     const SignUpTermsOne(),
                     VerticalSpacing(size: context.screenWidth * .15),
-                    RichText(
-                      text: TextSpan(
-                        style: kTextStyle(13, ref, color: Colors.grey[700]),
-                        text: "Have an account already? ",
-                        children: [
-                          TextSpan(
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () => navigateTo(
-                                    context,
-                                    const LogIn(),
-                                  ),
-                            text: "Log in",
-                            style: kTextStyle(13, ref, color: Colors.blue),
-                          )
-                        ],
-                      ),
+                    Text(
+                      "Already have an account?",
+                      style: kTextStyle(20, ref, fontWeight: FontWeight.bold),
                     ),
+                    AuthButton(
+                      label: "Sign in",
+                      bgColor: Colors.black,
+                      fgColor: Colors.blue,
+                      onPressed: () {
+                        navigateAndReplace(context, LogIn());
+                      },
+                    )
                   ],
                 ),
               ),

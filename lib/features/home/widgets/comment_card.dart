@@ -1,4 +1,3 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:x_clone/features/notification/controller/notification_controller.dart';
@@ -83,26 +82,7 @@ class _CommentCardState extends ConsumerState<CommentCard> {
                     VerticalSpacing(size: 10),
                     widget.comment.imagesUrls!.isEmpty
                         ? const SizedBox()
-                        : CarouselSlider(
-                            items: [
-                              ...widget.comment.imagesUrls!
-                                  .map((e) => Image.network(
-                                        e,
-                                        fit: BoxFit.cover,
-                                      ).padX(5))
-                            ],
-                            options: CarouselOptions(
-                              padEnds: false,
-                              initialPage: currentPage,
-                              enableInfiniteScroll: false,
-                              height: context.screenHeight * .3,
-                              onPageChanged: (newPage, _) {
-                                setState(() {
-                                  currentPage = newPage;
-                                });
-                              },
-                            ),
-                          ),
+                        : const SizedBox(),
                     VerticalSpacing(size: 10),
                   ],
                 ),

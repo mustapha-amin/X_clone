@@ -26,6 +26,13 @@ class UserProfileScreen extends ConsumerWidget {
                   data: (user) => [
                     SliverAppBar(
                       expandedHeight: context.screenHeight * .2,
+                      leading: BackButton(
+                        style: ButtonStyle(
+                          backgroundColor: WidgetStateColor.resolveWith(
+                            (_) => Colors.black.withOpacity(0.3),
+                          ),
+                        ),
+                      ),
                       floating: true,
                       snap: true,
                       flexibleSpace: Stack(
@@ -63,10 +70,16 @@ class UserProfileScreen extends ConsumerWidget {
                       ),
                       actions: [
                         IconButton.filledTonal(
+                          style: IconButton.styleFrom(
+                            backgroundColor: Colors.black.withOpacity(0.8),
+                          ),
                           onPressed: () {},
                           icon: const Icon(Icons.search),
                         ),
                         IconButton.filledTonal(
+                          style: IconButton.styleFrom(
+                            backgroundColor: Colors.black.withOpacity(0.8),
+                          ),
                           onPressed: () {},
                           icon: const Icon(Icons.more_vert),
                         ),

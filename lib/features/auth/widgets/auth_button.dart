@@ -4,11 +4,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:x_clone/constants/images_paths.dart';
 import 'package:x_clone/utils/textstyle.dart';
 import 'package:sizer/sizer.dart';
+import 'package:x_clone/utils/utils.dart';
 
 class AuthButton extends ConsumerWidget {
   VoidCallback? onPressed;
   String? label;
-  bool? isGoogle;
+  Widget? icon;
   Color? bgColor;
   Color? fgColor;
 
@@ -17,7 +18,7 @@ class AuthButton extends ConsumerWidget {
     this.onPressed,
     this.bgColor,
     this.fgColor,
-    this.isGoogle = false,
+    this.icon,
     super.key,
   });
 
@@ -27,24 +28,19 @@ class AuthButton extends ConsumerWidget {
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: SizedBox(
         width: double.infinity,
-        height: 7.h,
         child: OutlinedButton(
           style: OutlinedButton.styleFrom(
             backgroundColor: bgColor ?? Colors.white,
+            side: label == "Sign in"
+                ? BorderSide(color: Colors.grey[700]!)
+                : null,
           ),
           onPressed: onPressed,
           child: Row(
-            mainAxisAlignment:
-                isGoogle! ? MainAxisAlignment.start : MainAxisAlignment.center,
+            spacing: 5,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              isGoogle!
-                  ? Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: SvgPicture.asset(
-                        ImagesPaths.google,
-                      ),
-                    )
-                  : const SizedBox(),
+              if (icon != null) icon!,
               Text(
                 label!,
                 style: kTextStyle(
@@ -55,7 +51,7 @@ class AuthButton extends ConsumerWidget {
                 ),
               ),
             ],
-          ),
+          ).padY(10),
         ),
       ),
     );

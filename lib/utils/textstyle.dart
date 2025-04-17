@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../core/core.dart';
-import 'package:sizer/sizer.dart';
 
 TextStyle kTextStyle(
   double size,
@@ -11,10 +11,9 @@ TextStyle kTextStyle(
 }) {
   bool isDark = ref!.watch(themeNotifierProvider);
   Color defaultColor = isDark ? Colors.white : Colors.black;
-  return TextStyle(
-    fontSize: size.sp,
+  return GoogleFonts.manrope(
+    fontSize: size,
     fontWeight: fontWeight ?? FontWeight.normal,
     color: color ?? defaultColor,
-    fontFamily: 'Roboto',
   );
 }

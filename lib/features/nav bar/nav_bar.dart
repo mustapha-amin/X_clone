@@ -8,24 +8,24 @@ import 'package:x_clone/features/auth/auth.dart';
 import 'package:x_clone/features/auth/controller/user_data_controller.dart';
 import 'package:x_clone/common/x_drawer.dart';
 import 'package:x_clone/features/explore/views/explore_screen.dart';
+import 'package:x_clone/features/grok/view/grokscreen.dart';
 import 'package:x_clone/features/home/home.dart';
-import 'package:x_clone/features/messaging/views/message_by_search.dart';
 import 'package:x_clone/features/messaging/views/message_screen.dart';
 import 'package:x_clone/features/nav%20bar/widgets/XFab.dart';
+import 'package:x_clone/features/nav%20bar/widgets/add_message_icon.dart';
+import 'package:x_clone/features/nav%20bar/widgets/fab_content.dart';
+import 'package:x_clone/features/nav%20bar/widgets/grok_icon.dart';
 import 'package:x_clone/features/notification/controller/notification_controller.dart';
-import 'package:x_clone/features/post/views/post_screen.dart';
 import 'package:x_clone/models/notification_model.dart';
 import 'package:x_clone/theme/pallete.dart';
-import 'package:x_clone/utils/spacing.dart';
 import '../../core/core.dart';
-import '../../utils/navigation.dart';
 import '../notification/views/notification_screen.dart';
 
 final navbarProvider = StateProvider<int>((ref) {
   return 0;
 });
 
-final expandedProvider = StateProvider<bool>((ref) {
+final fabIsExpandedProvider = StateProvider<bool>((ref) {
   return false;
 });
 
@@ -40,25 +40,27 @@ class _XBottomNavBarState extends ConsumerState<XBottomNavBar> {
   final List<Widget> screens = const [
     HomeScreen(),
     ExploreScreen(),
+    GrokScreen(),
     NotificationScreen(),
     MessageScreen(),
   ];
 
   void toggleExpanded() {
-    ref.read(expandedProvider.notifier).state = !ref.watch(expandedProvider);
+    ref.read(fabIsExpandedProvider.notifier).state =
+        !ref.watch(fabIsExpandedProvider);
   }
 
   @override
   Widget build(BuildContext context) {
     int index = ref.watch(navbarProvider);
-    bool isExpanded = ref.watch(expandedProvider);
+    bool isExpanded = ref.watch(fabIsExpandedProvider);
     bool isDark = ref.watch(themeNotifierProvider);
     final userDetail = ref.watch(xUserDetailExistsProvider);
     return userDetail.when(
       data: (userExists) => switch (userExists) {
         true => SafeArea(
             child: Scaffold(
-              key: ref.watch(scaffoldKey),
+              key: scaffoldKey,
               drawer: const XDrawer(),
               body: GestureDetector(
                 onTap: () => isExpanded ? toggleExpanded() : null,
@@ -93,7 +95,7 @@ class _XBottomNavBarState extends ConsumerState<XBottomNavBar> {
                   currentIndex: index,
                   onTap: (index) {
                     ref.read(navbarProvider.notifier).state = index;
-                    if (ref.watch(navbarProvider) == 2) {
+                    if (ref.watch(navbarProvider) == 3) {
                       ref.watch(notificationsStreamProvider).when(
                             data: (notifications) {
                               List<NotificationModel> unreadNotifications =
@@ -126,7 +128,12 @@ class _XBottomNavBarState extends ConsumerState<XBottomNavBar> {
                     const BottomNavigationBarItem(
                       icon: Icon(
                         FeatherIcons.search,
+                        weight: 20,
                       ),
+                      label: '',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: GrokIcon(selected: index == 2),
                       label: '',
                     ),
                     BottomNavigationBarItem(
@@ -134,7 +141,7 @@ class _XBottomNavBarState extends ConsumerState<XBottomNavBar> {
                         alignment: Alignment.topRight,
                         children: [
                           Icon(
-                            index == 2
+                            index == 3
                                 ? Icons.notifications
                                 : Icons.notifications_none,
                             size: 27,
@@ -163,7 +170,7 @@ class _XBottomNavBarState extends ConsumerState<XBottomNavBar> {
                     ),
                     BottomNavigationBarItem(
                       icon: Icon(
-                        index == 3
+                        index == 4
                             ? Icons.local_post_office
                             : Icons.local_post_office_outlined,
                       ),
@@ -174,38 +181,7 @@ class _XBottomNavBarState extends ConsumerState<XBottomNavBar> {
               ),
               floatingActionButton: switch (index) {
                 0 => switch (isExpanded) {
-                    true => Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          XFab(
-                            label: "Go Live",
-                            onTap: () {},
-                            iconData: FeatherIcons.video,
-                          ),
-                          VerticalSpacing(size: 10),
-                          XFab(
-                            label: "Spaces",
-                            onTap: () {},
-                            iconData: FeatherIcons.mic,
-                          ),
-                          VerticalSpacing(size: 10),
-                          XFab(
-                            label: "Photos",
-                            onTap: () {},
-                            iconData: Icons.photo,
-                          ),
-                          VerticalSpacing(size: 10),
-                          XFab(
-                            isMain: true,
-                            bgColor: AppColors.blueColor,
-                            fgColor: Colors.white,
-                            label: "Post",
-                            onTap: () =>
-                                navigateTo(context, const PostScreen()),
-                            iconData: FeatherIcons.feather,
-                          ),
-                        ],
-                      ),
+                    true => const FabContent(),
                     _ => XFab(
                         isMain: true,
                         bgColor: AppColors.blueColor,
@@ -214,36 +190,7 @@ class _XBottomNavBarState extends ConsumerState<XBottomNavBar> {
                         iconData: Icons.add,
                       ),
                   },
-                3 => Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      XFab(
-                        isMain: true,
-                        bgColor: AppColors.blueColor,
-                        fgColor: Colors.white,
-                        onTap: () {
-                          navigateTo(context, const MessageBySearch());
-                        },
-                        iconData: Icons.local_post_office_outlined,
-                      ),
-                      Positioned(
-                        right: 10,
-                        bottom: 15,
-                        child: Container(
-                          decoration: const BoxDecoration(
-                            color: AppColors.blueColor,
-                          ),
-                          child: const Center(
-                            child: Icon(
-                              Icons.add,
-                              size: 14,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
+                4 => const AddMessageIcon(),
                 _ => const SizedBox(),
               },
             ),

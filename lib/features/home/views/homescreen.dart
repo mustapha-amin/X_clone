@@ -37,7 +37,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   isDark ? Colors.white : Colors.black,
                   BlendMode.srcIn,
                 ),
-                width: 30,
+                width: 25,
               ),
               centerTitle: true,
               bottom: TabBar(

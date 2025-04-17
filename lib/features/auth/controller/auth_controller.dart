@@ -41,10 +41,7 @@ class AuthController extends StateNotifier<bool> {
     state = false;
     res.fold(
       (l) => showErrorDialog(context: context, message: l.message),
-      (r) => {
-        navigateAndReplace(context, const XBottomNavBar()),
-        log("success"),
-      },
+      (r) => navigateAndReplace(context, const XBottomNavBar()),
     );
   }
 
@@ -61,10 +58,7 @@ class AuthController extends StateNotifier<bool> {
     state = false;
     res.fold(
       (l) => showErrorDialog(context: context, message: l.message),
-      (r) => {
-        navigateAndReplace(context, const XBottomNavBar()),
-        log("successfully logged in"),
-      },
+      (r) => navigateAndReplace(context, const XBottomNavBar()),
     );
   }
 
@@ -73,10 +67,7 @@ class AuthController extends StateNotifier<bool> {
     final res = await authService!.signOut();
     res.fold(
       (l) => showErrorDialog(context: context, message: l.message),
-      (r) => {
-        navigateAndReplace(context, const Authenticate()),
-        log(r),
-      },
+      (r) => navigateAndReplace(context, const Authenticate()),
     );
     state = false;
   }

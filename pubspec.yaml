@@ -28,7 +28,6 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  carousel_slider: ^4.2.1
   cloud_firestore: ^4.13.3
   cupertino_icons: ^1.0.2
   feather_icons: ^1.2.0
@@ -40,6 +39,7 @@ dependencies:
   flutter_riverpod: ^2.4.9
   flutter_svg: ^2.0.9
   fpdart: ^1.1.0
+  google_fonts: ^6.2.1
   google_sign_in: ^6.1.6
   image_picker: ^1.0.4
   intl: ^0.19.0
@@ -77,9 +77,10 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: Roboto
+    - family: Chirp
       fonts:
-        - asset: assets/fonts/Roboto-Regular.ttf
+        - asset: assets/fonts/Chirp Bold.ttf
+        - asset: assets/fonts/Chirp Regular.ttf
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf

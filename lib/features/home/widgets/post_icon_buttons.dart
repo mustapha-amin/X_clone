@@ -13,20 +13,16 @@ class PostIconButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Row(
+      spacing: 3,
+      mainAxisSize: MainAxisSize.min,
       children: [
-        IconButton(
-          icon: Icon(iconData),
-          iconSize: 18,
-          color: color,
-          onPressed: callback,
-        ),
+        InkWell(
+            onTap: callback,
+            child: Icon(iconData, size: 18, color: color ?? Colors.grey[600])),
         count != null
             ? Text(
                 '$count',
-                style: kTextStyle(
-                  18,
-                  ref,
-                ),
+                style: kTextStyle(13, ref, color: Colors.grey[600]),
               )
             : const SizedBox(),
       ],

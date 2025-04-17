@@ -29,7 +29,7 @@ class _XDrawerState extends ConsumerState<XDrawer> {
     return Drawer(
       backgroundColor: isDark ? Colors.black : Colors.white,
       surfaceTintColor: Colors.transparent,
-      width: context.screenWidth * .85,
+      width: context.screenWidth * .8,
       child: ListView(
         children: [
           Column(
@@ -73,11 +73,11 @@ class _XDrawerState extends ConsumerState<XDrawer> {
                   children: [
                     Text(
                       user!.name!,
-                      style: kTextStyle(22, ref, fontWeight: FontWeight.bold),
+                      style: kTextStyle(18, ref, fontWeight: FontWeight.bold),
                     ),
                     Text(
                       '@${user.username!}',
-                      style: kTextStyle(14, ref, color: Colors.grey),
+                      style: kTextStyle(12, ref, color: Colors.grey),
                     ),
                     VerticalSpacing(size: 16),
                     Row(
@@ -152,7 +152,7 @@ class _XDrawerState extends ConsumerState<XDrawer> {
           ),
           VerticalSpacing(size: 20),
           Divider(
-            height: isExpanded.value ? 3 : 0,
+            height: isExpanded.value ? 2 : 0,
           ),
           ExpansionTile(
             onExpansionChanged: (_) {

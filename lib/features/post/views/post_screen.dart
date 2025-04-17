@@ -11,8 +11,6 @@ import 'package:x_clone/theme/pallete.dart';
 import 'package:x_clone/utils/enums.dart';
 import 'package:x_clone/utils/image_pickers.dart';
 import 'package:x_clone/utils/utils.dart';
-import 'package:carousel_slider/carousel_slider.dart';
-
 import '../widgets/post_button.dart';
 
 class PostScreen extends ConsumerStatefulWidget {

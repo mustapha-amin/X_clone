@@ -18,7 +18,7 @@ final authChangesProvider = StreamProvider((ref) {
 final userProvider =
     Provider((ref) => ref.watch(firebaseAuthProvider).currentUser);
 
-final scaffoldKey = Provider.autoDispose((ref) => GlobalKey<ScaffoldState>());
+final scaffoldKey =  GlobalKey<ScaffoldState>();
 
 final firestoreProvider = Provider((ref) => FirebaseFirestore.instance);
 final firebaseStorageProvider = Provider((ref) => FirebaseStorage.instance);

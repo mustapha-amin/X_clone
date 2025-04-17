@@ -39,20 +39,27 @@ class UserInfo extends ConsumerWidget {
             ),
             Row(
               children: [
-                IconButton.outlined(
-                  onPressed: () {
-                    navigateTo(
-                      context,
-                      MessageUser(
-                        xUser: user!,
-                      ),
-                    );
-                  },
-                  icon: Icon(Icons.local_post_office_outlined),
-                ),
+                if (user!.uid != uid)
+                  IconButton.outlined(
+                    onPressed: () {
+                      navigateTo(
+                        context,
+                        MessageUser(
+                          xUser: user!,
+                        ),
+                      );
+                    },
+                    icon: Icon(
+                      Icons.local_post_office_outlined,
+                      size: 18,
+                    ),
+                  ),
                 SizedBox(
                   height: 30,
                   child: OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: Colors.grey,
+                    ),
                     onPressed: () {
                       user!.uid == uid
                           ? navigateTo(
@@ -95,7 +102,7 @@ class UserInfo extends ConsumerWidget {
                           : user!.followers!.contains(uid)
                               ? "Unfollow"
                               : "Follow",
-                      style: kTextStyle(17, ref),
+                      style: kTextStyle(15, ref),
                     ),
                   ),
                 ),
@@ -112,7 +119,7 @@ class UserInfo extends ConsumerWidget {
           user!.bio!,
           style: kTextStyle(16, ref),
         ),
-        VerticalSpacing(size: 5),
+        VerticalSpacing(size: 8),
         Row(
           children: [
             user!.location!.isEmpty
@@ -137,12 +144,12 @@ class UserInfo extends ConsumerWidget {
                     children: [
                       const Icon(
                         FeatherIcons.link,
-                        size: 15,
+                        size: 13,
                         color: Colors.grey,
                       ),
                       Text(
                         user!.website!,
-                        style: kTextStyle(15, ref, color: Colors.blue),
+                        style: kTextStyle(13, ref, color: Colors.blue),
                       )
                     ],
                   )
@@ -152,13 +159,13 @@ class UserInfo extends ConsumerWidget {
           children: [
             const Icon(
               Icons.calendar_month,
-              size: 15,
+              size: 13,
               color: Colors.grey,
             ),
             Text(
               "Joined ${user!.joined!.formatDate}",
               style: kTextStyle(
-                15,
+                13,
                 ref,
                 color: Colors.grey,
               ),

@@ -44,7 +44,7 @@ class DrawerTile extends ConsumerWidget {
             : Icon(iconData),
         title: Text(
           title!,
-          style: kTextStyle(titleSize ?? 20, ref, fontWeight: FontWeight.bold),
+          style: kTextStyle(titleSize ?? 18, ref, fontWeight: FontWeight.bold),
         ),
         onTap: onTap,
       ),
