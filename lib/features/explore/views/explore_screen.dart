@@ -46,10 +46,10 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
           titleSpacing: 0,
           title: SearchBar(
             focusNode: searchFocus,
-            elevation: const MaterialStatePropertyAll(0),
+            elevation: const WidgetStatePropertyAll(0),
             controller: searchController,
             constraints: BoxConstraints(
-              minHeight: context.screenHeight * .065,
+              minHeight: 40,
               minWidth: context.screenWidth * .8,
             ),
             shape: MaterialStatePropertyAll(
@@ -92,7 +92,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                         children: [
                           Text(
                             "Recent",
-                            style: kTextStyle(20, ref,
+                            style: kTextStyle(16, ref,
                                 color: Colors.grey[600],
                                 fontWeight: FontWeight.bold),
                           ),

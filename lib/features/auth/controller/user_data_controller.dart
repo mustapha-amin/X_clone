@@ -80,7 +80,9 @@ class UserDataController extends StateNotifier<Status> {
       );
       log(xUser.toString());
       await userDataService!.saveUserData(xUser);
-      navigateAndReplace(context, XBottomNavBar());
+     if(context.mounted) {
+       navigateAndReplace(context, XBottomNavBar());
+      }
       state = Status.success;
     } catch (e) {
       log('error');

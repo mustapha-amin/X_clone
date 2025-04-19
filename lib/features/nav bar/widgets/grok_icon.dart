@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:x_clone/constants/images_paths.dart';
+import 'package:x_clone/core/core.dart';
 import 'package:x_clone/utils/extensions.dart';
 import 'package:x_clone/utils/textstyle.dart';
 
@@ -12,7 +13,10 @@ class GrokIcon extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       decoration: BoxDecoration(
-        color: selected ? Colors.white : Colors.black,
+        color: switch (ref.watch(themeNotifierProvider)) {
+          true => selected ? Colors.white : Colors.black,
+          false => selected ? Colors.black : Colors.white,
+        },
         borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
@@ -21,12 +25,18 @@ class GrokIcon extends ConsumerWidget {
             ImagesPaths.grok,
             width: 18,
             colorBlendMode: BlendMode.srcIn,
-            color: selected ? Colors.black : Colors.white,
+            color: switch (ref.watch(themeNotifierProvider)) {
+              true => selected ? Colors.black : Colors.white,
+              false => selected ? Colors.white : Colors.black,
+            },
           ),
           Text(
             "GROK",
             style: kTextStyle(8, ref,
-                color: selected ? Colors.black : Colors.white,
+                color: switch (ref.watch(themeNotifierProvider)) {
+                  true => selected ? Colors.black : Colors.white,
+                  false => selected ? Colors.white : Colors.black,
+                },
                 fontWeight: FontWeight.w900),
           )
         ],

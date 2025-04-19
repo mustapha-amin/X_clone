@@ -7,9 +7,11 @@ class PostModel {
   String? text;
   List<String>? imagesUrl;
   List<CommentModel>? comments;
+  List<String>? repostIDs;
   List<String>? likesIDs;
-  int? repostCount;
   DateTime? timeCreated;
+  bool? isRetweet = false;
+  String? primaryPostID;
 
   PostModel({
     this.uid,
@@ -18,8 +20,10 @@ class PostModel {
     this.imagesUrl,
     this.comments,
     this.likesIDs,
-    this.repostCount,
+    this.repostIDs,
     this.timeCreated,
+    this.isRetweet,
+    this.primaryPostID = "",
   });
 
   factory PostModel.fromJson(Map<String, dynamic> json) {
@@ -28,10 +32,14 @@ class PostModel {
       postID: json["postID"],
       text: json["text"],
       imagesUrl: List.from(json["imagesUrl"] ?? []),
-      comments: (json["comments"] as List<dynamic>).map((e) => CommentModel.fromJson(e)).toList(),
+      comments: (json["comments"] as List<dynamic>)
+          .map((e) => CommentModel.fromJson(e))
+          .toList(),
       likesIDs: List.from(json["likesIDs"] ?? []),
-      repostCount: json["repostCount"],
       timeCreated: (json["timeCreated"] as Timestamp).toDate(),
+      isRetweet: json["isRetweet"] ?? false,
+      primaryPostID: json["primaryPostID"] ?? '',
+      repostIDs: List.from(json["repostIDs"] ?? []),
     );
   }
 
@@ -43,8 +51,10 @@ class PostModel {
       "imagesUrl": imagesUrl,
       "comments": comments!.map((e) => e.toJson()),
       "likesIDs": likesIDs,
-      "repostCount": repostCount,
+      "repostIDs": repostIDs,
       "timeCreated": timeCreated,
+      "isRetweet": isRetweet,
+      "primaryPostID": primaryPostID,
     };
   }
 
@@ -55,8 +65,10 @@ class PostModel {
     List<String>? imagesUrl,
     List<CommentModel>? comments,
     List<String>? likesIDs,
-    int? repostCount,
+    List<String>? repostIDs,
     DateTime? timeCreated,
+    bool? isRetweet,
+    String? primaryPostID,
   }) {
     return PostModel(
       uid: uid ?? this.uid,
@@ -65,9 +77,10 @@ class PostModel {
       imagesUrl: imagesUrl ?? this.imagesUrl,
       comments: comments ?? this.comments,
       likesIDs: likesIDs ?? this.likesIDs,
-      repostCount: repostCount ?? this.repostCount,
+      repostIDs: repostIDs ?? this.repostIDs,
       timeCreated: timeCreated ?? this.timeCreated,
+      isRetweet: isRetweet ?? this.isRetweet,
+      primaryPostID: primaryPostID ?? this.primaryPostID,
     );
   }
-
 }

@@ -5,6 +5,7 @@ import 'package:x_clone/common/x_drawer_tiles.dart';
 import 'package:x_clone/common/x_modal_sheet.dart';
 import 'package:x_clone/core/core.dart';
 import 'package:x_clone/features/auth/controller/user_data_controller.dart';
+import 'package:x_clone/features/bookmarks.dart';
 import 'package:x_clone/features/user_profile/views/user_profile_screen.dart';
 import 'package:x_clone/utils/extensions.dart';
 import 'package:x_clone/utils/navigation.dart';
@@ -133,7 +134,9 @@ class _XDrawerState extends ConsumerState<XDrawer> {
           DrawerTile(
             title: "Bookmarks",
             iconData: Icons.bookmark_outline,
-            onTap: () {},
+            onTap: () {
+              navigateTo(context, Bookmarks());
+            },
           ),
           DrawerTile(
             title: "Lists",

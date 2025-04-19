@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:x_clone/common/x_loader.dart';
+import 'package:x_clone/core/providers.dart';
 import 'package:x_clone/features/home/widgets/post_card.dart';
 import 'package:x_clone/features/post/controllers/post_controller.dart';
 import 'package:x_clone/utils/extensions.dart';
@@ -17,7 +18,10 @@ class _ForYouState extends ConsumerState<ForYou> {
   Widget build(BuildContext context) {
     return ref.watch(postsStreamProvider).when(
           data: (posts) => ListView.builder(
-            itemCount: posts.length,
+            itemCount: posts
+                .where((post) => !(post.isRetweet! &&
+                    post.repostIDs!.contains(ref.watch(uidProvider))))
+                .length,
             itemBuilder: (context, index) {
               return PostCard(
                 post: posts[index],

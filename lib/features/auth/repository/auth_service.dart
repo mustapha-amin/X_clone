@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:restart_app/restart_app.dart';
 import 'package:x_clone/core/failure.dart';
 import 'package:x_clone/core/providers.dart';
 import 'package:x_clone/core/typedefs.dart';
@@ -71,6 +72,7 @@ class AuthService extends BaseAuthService {
   FutureEither<String> signOut() async {
     try {
       await firebaseAuth.signOut();
+      await Restart.restartApp();
       return right("success");
     } catch (e, stackTrace) {
       return left(Failure(message: e.toString(), stackTrace: stackTrace));

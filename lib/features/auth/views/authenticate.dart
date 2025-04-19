@@ -2,7 +2,9 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:x_clone/common/x_loader.dart';
+import 'package:x_clone/core/providers.dart';
 import 'package:x_clone/features/auth/auth.dart';
 import 'package:x_clone/features/auth/controller/auth_controller.dart';
 import 'package:x_clone/features/auth/widgets/auth_button.dart';
@@ -52,13 +54,26 @@ class _AuthenticateState extends ConsumerState<Authenticate> {
                       ],
                     ),
                     VerticalSpacing(size: 50),
-                    Text("Happening\nnow",
-                        style:
-                            kTextStyle(50, ref, fontWeight: FontWeight.bold)),
+                    Text(
+                      "Happening\nnow",
+                      style: GoogleFonts.montserrat(
+                        fontSize: 50,
+                        fontWeight: FontWeight.bold,
+                        color: ref.watch(themeNotifierProvider)
+                            ? Colors.white
+                            : Colors.black,
+                      ),
+                    ),
                     VerticalSpacing(size: context.screenHeight * .05),
                     Text(
                       "Join today.",
-                      style: kTextStyle(30, ref, fontWeight: FontWeight.bold),
+                      style: GoogleFonts.montserrat(
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                        color: ref.watch(themeNotifierProvider)
+                            ? Colors.white
+                            : Colors.black,
+                      ),
                     ),
                     AuthButton(
                       label: "Sign up with Google",

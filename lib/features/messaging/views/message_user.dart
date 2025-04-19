@@ -84,28 +84,31 @@ class _MessageUserState extends ConsumerState<MessageUser> {
                             scrollController: scrollController,
                           ),
                   ),
-                  MessageTextField(
-                    ref: ref,
-                    textEditingController: textEditingController,
-                    xUser: widget.xUser,
-                    scrollController: scrollController,
-                    onSuccess: () {
-                      scrollController.animateTo(
-                        scrollController.position.maxScrollExtent,
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.bounceIn,
-                      );
-                      ref.watch(currentUserProvider).when(
-                            data: (user) => !user!.conversationList!
-                                    .contains(widget.xUser.uid)
-                                ? ref
-                                    .read(messageRepoProvider)
-                                    .addToConversationList(widget.xUser.uid)
-                                : null,
-                            error: (_, __) => null,
-                            loading: () => null,
-                          );
-                    },
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 25),
+                    child: MessageTextField(
+                      ref: ref,
+                      textEditingController: textEditingController,
+                      xUser: widget.xUser,
+                      scrollController: scrollController,
+                      onSuccess: () {
+                        scrollController.animateTo(
+                          scrollController.position.maxScrollExtent,
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.bounceIn,
+                        );
+                        ref.watch(currentUserProvider).when(
+                              data: (user) => !user!.conversationList!
+                                      .contains(widget.xUser.uid)
+                                  ? ref
+                                      .read(messageRepoProvider)
+                                      .addToConversationList(widget.xUser.uid)
+                                  : null,
+                              error: (_, __) => null,
+                              loading: () => null,
+                            );
+                      },
+                    ),
                   )
                 ],
               );

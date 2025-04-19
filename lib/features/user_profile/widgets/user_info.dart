@@ -28,86 +28,92 @@ class UserInfo extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            if (user!.uid != uid)
+              IconButton.outlined(
+                onPressed: () {
+                  navigateTo(
+                    context,
+                    MessageUser(
+                      xUser: user!,
+                    ),
+                  );
+                },
+                icon: Icon(
+                  Icons.local_post_office_outlined,
+                  size: 18,
+                ),
+              ),
+            InkWell(
+              onTap: () {
+                user!.uid == uid
+                    ? navigateTo(
+                        context,
+                        EditProfile(
+                          user: user,
+                        ))
+                    : {
+                        if (user!.followers!.contains(uid))
+                          {
+                            ref
+                                .read(userDataServiceProvider)
+                                .unfollowUser(user!, uid),
+                            ref.read(deleteFollowNotificationProvider(uid)),
+                          }
+                        else
+                          {
+                            ref
+                                .read(userDataServiceProvider)
+                                .followUser(user!, uid),
+                            ref.read(
+                              createNotificationProvider(
+                                NotificationModel(
+                                  senderID: uid,
+                                  recipientID: user!.uid,
+                                  message: "followed you",
+                                  targetID: uid,
+                                  notificationType: NotificationType.follow,
+                                ),
+                              ),
+                            ),
+                          }
+                      };
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 15,
+                  vertical: 10,
+                ),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    width: 1.5,
+                    color: Colors.grey[800]!,
+                  ),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  user!.uid == uid
+                      ? "Edit profile"
+                      : user!.followers!.contains(uid)
+                          ? "Unfollow"
+                          : "Follow",
+                  style: kTextStyle(15, ref, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ).padY(2),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             SizedBox(
-              width: 40.w,
+              width: 80.w,
               child: Text(
                 user!.name!,
-                style: kTextStyle(25, ref, fontWeight: FontWeight.bold),
+                style: kTextStyle(20, ref, fontWeight: FontWeight.bold),
               ),
             ),
-            Row(
-              children: [
-                if (user!.uid != uid)
-                  IconButton.outlined(
-                    onPressed: () {
-                      navigateTo(
-                        context,
-                        MessageUser(
-                          xUser: user!,
-                        ),
-                      );
-                    },
-                    icon: Icon(
-                      Icons.local_post_office_outlined,
-                      size: 18,
-                    ),
-                  ),
-                SizedBox(
-                  height: 30,
-                  child: OutlinedButton(
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.grey,
-                    ),
-                    onPressed: () {
-                      user!.uid == uid
-                          ? navigateTo(
-                              context,
-                              EditProfile(
-                                user: user,
-                              ))
-                          : {
-                              if (user!.followers!.contains(uid))
-                                {
-                                  ref
-                                      .read(userDataServiceProvider)
-                                      .unfollowUser(user!, uid),
-                                  ref.read(
-                                      deleteFollowNotificationProvider(uid)),
-                                }
-                              else
-                                {
-                                  ref
-                                      .read(userDataServiceProvider)
-                                      .followUser(user!, uid),
-                                  ref.read(
-                                    createNotificationProvider(
-                                      NotificationModel(
-                                        senderID: uid,
-                                        recipientID: user!.uid,
-                                        message: "followed you",
-                                        targetID: uid,
-                                        notificationType:
-                                            NotificationType.follow,
-                                      ),
-                                    ),
-                                  ),
-                                }
-                            };
-                    },
-                    child: Text(
-                      user!.uid == uid
-                          ? "Edit profile"
-                          : user!.followers!.contains(uid)
-                              ? "Unfollow"
-                              : "Follow",
-                      style: kTextStyle(15, ref),
-                    ),
-                  ),
-                ),
-              ],
-            )
           ],
         ),
         Text(

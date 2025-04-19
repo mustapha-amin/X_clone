@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uuid/uuid.dart';
 import 'package:x_clone/constants/firebase_constants.dart';
 import 'package:x_clone/core/core.dart';
 import 'package:x_clone/models/comment_model.dart';
@@ -43,6 +44,12 @@ final fetchPostByID =
   return fetchedPost;
 });
 
+final fetchCommentsProvider =
+    StreamProvider.family<List<CommentModel>, String>((ref, pid) {
+  final comments = ref.read(postServiceProvider).fetchComments(pid);
+  return comments;
+});
+
 class PostService {
   FirebaseFirestore? firebaseFirestore;
   FirebaseStorage? firebaseStorage;
@@ -62,7 +69,8 @@ class PostService {
           imageUrls.add(downloadUrl);
         }
       }
-      PostModel updatedPost = post.copyWith(imagesUrl: imageUrls);
+      PostModel updatedPost =
+          post.copyWith(imagesUrl: imageUrls, isRetweet: true);
       await firebaseFirestore!
           .collection(FirebaseConstants.postsCollection)
           .doc(updatedPost.postID)
@@ -119,6 +127,43 @@ class PostService {
     });
   }
 
+  FutureVoid repost(PostModel? post, {bool unRepost = false}) async {
+    if (post == null) return;
+    final firestore = firebaseFirestore!;
+    final posts = firestore.collection(FirebaseConstants.postsCollection);
+
+    if (unRepost) {
+      final repostQuery = await posts
+          .where("uid", isEqualTo: post.uid)
+          .where("primaryPostID", isEqualTo: post.postID)
+          .where("isRetweet", isEqualTo: true)
+          .limit(1)
+          .get();
+
+      if (repostQuery.docs.isNotEmpty) {
+        await posts.doc(repostQuery.docs.first.id).delete();
+      }
+
+      await posts.doc(post.postID).update({
+        'repostIDs': post.repostIDs,
+      });
+    } else {
+      final pid = Uuid().v4();
+      final newPost = post.copyWith(
+        postID: pid,
+        isRetweet: true,
+        timeCreated: DateTime.now(),
+        primaryPostID: post.postID,
+      );
+
+      await posts.doc(pid).set(newPost.toJson());
+
+      await posts.doc(post.postID).update({
+        'repostIDs': post.repostIDs,
+      });
+    }
+  }
+
   FutureVoid commentOnPost(CommentModel? comment, PostModel? post) async {
     final storagePath =
         "${FirebaseConstants.uploadedMedia}/${post!.uid}/${post.postID}/comments/${comment!.uid}/";
@@ -147,5 +192,16 @@ class PostService {
         .doc(postID)
         .get();
     return PostModel.fromJson(doc.data()!);
+  }
+
+  Stream<List<CommentModel>> fetchComments(String? postID) {
+    return firebaseFirestore!
+        .collection(FirebaseConstants.postsCollection)
+        .doc(postID)
+        .snapshots()
+        .map((event) {
+      final post = PostModel.fromJson(event.data()!);
+      return post.comments!;
+    });
   }
 }

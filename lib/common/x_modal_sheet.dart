@@ -52,7 +52,10 @@ class _XBtmModalSheetState extends ConsumerState<XBtmModalSheet> {
                 style: kTextStyle(18, ref, fontWeight: FontWeight.bold),
               ),
             ),
-          )
+          ),
+          SizedBox(
+            height: context.screenHeight * .02,
+          ),
         ],
       ),
     );

@@ -136,4 +136,19 @@ class UserDataService implements BaseUserDataService {
 
     return snaps;
   }
+
+  FutureVoid bookmark(String? uid, String? pid, bool bookmarked) async {
+    try {
+      await firebaseFirestore!
+          .collection(FirebaseConstants.usersCollection)
+          .doc(uid)
+          .update({
+        'bookmarkedPosts': bookmarked
+            ? FieldValue.arrayRemove([pid])
+            : FieldValue.arrayUnion([pid])
+      });
+    } on Exception catch (e) {
+      log(e.toString());
+    }
+  }
 }

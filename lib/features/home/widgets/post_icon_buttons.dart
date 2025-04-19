@@ -18,7 +18,7 @@ class PostIconButton extends ConsumerWidget {
       children: [
         InkWell(
             onTap: callback,
-            child: Icon(iconData, size: 18, color: color ?? Colors.grey[600])),
+            child: Icon(iconData, size: 20, color: color ?? Colors.grey[600])),
         count != null
             ? Text(
                 '$count',

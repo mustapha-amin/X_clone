@@ -56,7 +56,7 @@ class MessageRepository {
   Future<void> addToConversationList(String? id) async {
     await firebaseFirestore
         .collection(FirebaseConstants.usersCollection)
-        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .doc(id)
         .update({
       'conversationList': FieldValue.arrayUnion([id]),
     });

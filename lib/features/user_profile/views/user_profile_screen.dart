@@ -1,14 +1,15 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:x_clone/common/x_loader.dart';
 import 'package:x_clone/constants/images_paths.dart';
+import 'package:x_clone/core/core.dart';
 import 'package:x_clone/features/auth/controller/user_data_controller.dart';
 import 'package:x_clone/features/home/widgets/post_card.dart';
 import 'package:x_clone/features/post/controllers/post_controller.dart';
 import 'package:x_clone/models/user_model.dart';
 import 'package:x_clone/theme/pallete.dart';
-import 'package:x_clone/utils/extensions.dart';
-import 'package:x_clone/constants/firebase_constants.dart';
 import '../widgets/user_info.dart';
 
 class UserProfileScreen extends ConsumerWidget {
@@ -25,7 +26,7 @@ class UserProfileScreen extends ConsumerWidget {
             return ref.watch(userProviderWithID(user!.uid!)).when(
                   data: (user) => [
                     SliverAppBar(
-                      expandedHeight: context.screenHeight * .2,
+                      expandedHeight: 180,
                       leading: BackButton(
                         style: ButtonStyle(
                           backgroundColor: WidgetStateColor.resolveWith(
@@ -37,12 +38,16 @@ class UserProfileScreen extends ConsumerWidget {
                       snap: true,
                       flexibleSpace: Stack(
                         children: [
-                          Positioned.fill(
-                            child: user!.coverPicUrl!.isEmpty
-                                ? Container(
-                                    color: AppColors.blueColor,
-                                  )
-                                : Image.network(
+                          SizedBox(height: 200),
+                          user!.coverPicUrl!.isEmpty
+                              ? Container(
+                                  height: 180,
+                                  color: AppColors.blueColor,
+                                )
+                              : SizedBox(
+                                  height: 180,
+                                  width: double.infinity,
+                                  child: Image.network(
                                     user.coverPicUrl!,
                                     fit: BoxFit.fitWidth,
                                     errorBuilder: (context, _, __) {
@@ -52,7 +57,7 @@ class UserProfileScreen extends ConsumerWidget {
                                       );
                                     },
                                   ),
-                          ),
+                                ),
                           Positioned(
                             bottom: 0,
                             left: 5,
@@ -73,7 +78,10 @@ class UserProfileScreen extends ConsumerWidget {
                           style: IconButton.styleFrom(
                             backgroundColor: Colors.black.withOpacity(0.8),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            log(user.profilePicUrl!);
+                            log(user.coverPicUrl!);
+                          },
                           icon: const Icon(Icons.search),
                         ),
                         IconButton.filledTonal(
@@ -100,7 +108,7 @@ class UserProfileScreen extends ConsumerWidget {
                     const Text("Error fetching user data"),
                   ],
                   loading: () => [
-                    const XLoader(),
+                    SliverToBoxAdapter(child: const XLoader()),
                   ],
                 );
           },
@@ -108,7 +116,9 @@ class UserProfileScreen extends ConsumerWidget {
                 data: (posts) => posts!.isEmpty
                     ? const Center(child: Text("No posts yet"))
                     : ListView.builder(
-                        itemCount: posts.length,
+                        itemCount: user!.uid == ref.watch(uidProvider)
+                            ? posts.where((post) => !post.isRetweet!).length
+                            : posts.length,
                         itemBuilder: (context, index) {
                           return Padding(
                             padding: const EdgeInsets.all(8.0),

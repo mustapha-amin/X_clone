@@ -29,13 +29,13 @@ class _MessageScreenState extends ConsumerState<MessageScreen> {
           leadingWidth: context.screenWidth * .2,
           leading: XAvatar(),
           title: SearchBar(
-            elevation: const MaterialStatePropertyAll(0),
+            elevation: const WidgetStatePropertyAll(0),
             controller: searchController,
             constraints: BoxConstraints(
-              minHeight: context.screenHeight * .065,
+              minHeight: 40,
               minWidth: context.screenWidth * .8,
             ),
-            shape: MaterialStatePropertyAll(
+            shape: WidgetStatePropertyAll(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
                 side: BorderSide(
@@ -44,7 +44,7 @@ class _MessageScreenState extends ConsumerState<MessageScreen> {
               ),
             ),
             hintText: "Search Direct Messages",
-            hintStyle: MaterialStatePropertyAll(
+            hintStyle: WidgetStatePropertyAll(
               kTextStyle(13, ref, color: Colors.grey[500]),
             ),
           ),

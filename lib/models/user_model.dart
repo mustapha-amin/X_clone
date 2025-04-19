@@ -14,6 +14,7 @@ class XUser {
   String? profilePicUrl;
   String? coverPicUrl;
   List<String>? conversationList;
+  List<String>? bookmarkedPosts;
 
   XUser({
     this.uid,
@@ -29,6 +30,7 @@ class XUser {
     this.profilePicUrl,
     this.coverPicUrl,
     this.conversationList,
+    this.bookmarkedPosts,
   });
 
   @override
@@ -36,7 +38,7 @@ class XUser {
     return 'XUser{uid: $uid, name: $name, username: $username, email: $email, '
         'bio: $bio, location: $location, joined: $joined, followers: $followers, '
         'following: $following, website: $website, profilePicUrl: $profilePicUrl, '
-        'coverPicUrl: $coverPicUrl, conversationList: $conversationList}';
+        'coverPicUrl: $coverPicUrl, conversationList: $conversationList} ';
   }
 
   factory XUser.fromJson(Map<String, dynamic> json) {
@@ -54,6 +56,7 @@ class XUser {
       profilePicUrl: json['profilePicUrl'],
       coverPicUrl: json['coverPicUrl'],
       conversationList: List.from(json['conversationList'] ?? []),
+      bookmarkedPosts: List.from(json['bookmarkedPosts'] ?? []),
     );
   }
 
@@ -72,6 +75,7 @@ class XUser {
       'profilePicUrl': profilePicUrl,
       'coverPicUrl': coverPicUrl,
       'conversationList': conversationList,
+      'bookmarkedPosts': bookmarkedPosts,
     };
   }
 
@@ -89,6 +93,7 @@ class XUser {
     String? profilePicUrl,
     String? coverPicUrl,
     List<String>? conversationList,
+    List<String>? bookmarkedPosts,
   }) {
     return XUser(
       uid: uid ?? this.uid,
@@ -104,6 +109,7 @@ class XUser {
       profilePicUrl: profilePicUrl ?? this.profilePicUrl,
       coverPicUrl: coverPicUrl ?? this.coverPicUrl,
       conversationList: conversationList ?? this.conversationList,
+      bookmarkedPosts: bookmarkedPosts ?? this.bookmarkedPosts,
     );
   }
 }

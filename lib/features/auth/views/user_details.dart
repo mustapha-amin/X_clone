@@ -72,155 +72,163 @@ class _UserDetailsState extends ConsumerState<UserDetails> {
     Status status = ref.watch(userDataProvider);
     return SafeArea(
       child: Scaffold(
+        appBar: status != Status.loading
+            ? AppBar(
+                centerTitle: true,
+                title: Text(
+                  "Profile setup",
+                  style: kTextStyle(
+                    25,
+                    ref,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              )
+            : null,
         body: status == Status.loading
             ? const XLoader()
             : Column(
                 children: [
-                  VerticalSpacing(size: 3),
-                  Text(
-                    "Profile setup",
-                    style: kTextStyle(
-                      25,
-                      ref,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
                   Expanded(
                     child: Form(
                       key: _formKey,
                       autovalidateMode: autovalidateMode,
                       child: SingleChildScrollView(
-                        child: Center(
-                          child: Stack(
-                            children: [
-                              Column(
-                                children: [
-                                  VerticalSpacing(size: 20),
-                                  InkWell(
-                                    onTap: () =>
-                                        selectImage(isProfileImage: false),
-                                    child: Container(
-                                      height: context.screenHeight * .2,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(8),
-                                        color: Colors.grey.withOpacity(0.3),
-                                        image: coverImage != null
-                                            ? DecorationImage(
-                                                fit: BoxFit.fitWidth,
-                                                image: FileImage(
-                                                    coverImage!.value!),
-                                              )
-                                            : null,
-                                      ),
-                                      child: Center(
-                                        child: Icon(
-                                          Icons.photo_camera_outlined,
-                                          color: Colors.white.withOpacity(0.6),
-                                          size: 45,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  VerticalSpacing(size: 50),
-                                  TextFormField(
-                                    focusNode: focusNode1,
-                                    controller: nameController,
-                                    decoration: textfieldDecoration(
-                                      hint: "Name",
-                                    ),
-                                    textInputAction: TextInputAction.next,
-                                    onFieldSubmitted: (_) {
-                                      focusNode1.unfocus();
-                                      FocusScope.of(context)
-                                          .requestFocus(focusNode2);
-                                    },
-                                    validator: (name) {
-                                      if (name!.isEmpty) {
-                                        return "name cannot be empty";
-                                      } else {
-                                        return null;
-                                      }
-                                    },
-                                  ),
-                                  VerticalSpacing(size: 10),
-                                  TextFormField(
-                                    focusNode: focusNode2,
-                                    controller: usernameController,
-                                    decoration: textfieldDecoration(
-                                      hint: "username",
-                                    ),
-                                    textInputAction: TextInputAction.next,
-                                    onFieldSubmitted: (_) {
-                                      focusNode2.unfocus();
-                                      FocusScope.of(context)
-                                          .requestFocus(focusNode3);
-                                    },
-                                    validator: (username) {
-                                      if (username!.isEmpty) {
-                                        return "username cannot be empty";
-                                      } else {
-                                        return null;
-                                      }
-                                    },
-                                  ),
-                                  VerticalSpacing(size: 10),
-                                  TextFormField(
-                                    focusNode: focusNode3,
-                                    controller: bioController,
-                                    decoration: textfieldDecoration(
-                                      hint: "Bio",
-                                    ),
-                                    maxLength: 50,
-                                    textInputAction: TextInputAction.done,
-                                    maxLines: 3,
-                                    onFieldSubmitted: (_) {
-                                      focusNode3.unfocus();
-                                    },
-                                    validator: (bio) {
-                                      if (bio!.isEmpty) {
-                                        return "bio cannot be empty";
-                                      } else {
-                                        return null;
-                                      }
-                                    },
-                                  ),
-                                ],
-                              ),
-                              Positioned(
-                                left: 15,
-                                top: 100,
-                                child: InkWell(
-                                  customBorder: const CircleBorder(),
-                                  onTap: () => selectImage(),
+                        child: Column(
+                          spacing: 30,
+                          children: [
+                            Stack(
+                              children: [
+                                SizedBox(
+                                  height: context.screenHeight * .25,
+                                ),
+                                InkWell(
+                                  onTap: () =>
+                                      selectImage(isProfileImage: false),
                                   child: Container(
-                                    width: context.screenWidth * .22,
-                                    height: context.screenWidth * .22,
+                                    height: context.screenHeight * .18,
                                     decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                        width: 2,
-                                        color: Colors.black.withOpacity(0.8),
-                                      ),
-                                      color: Colors.grey[800],
-                                      image: profileImage != null
+                                      borderRadius: BorderRadius.circular(8),
+                                      color: Colors.grey.withOpacity(0.3),
+                                      image: coverImage != null
                                           ? DecorationImage(
                                               fit: BoxFit.cover,
-                                              image: FileImage(
-                                                  profileImage!.value!),
+                                              alignment: Alignment.center,
+                                              image:
+                                                  FileImage(coverImage!.value!),
                                             )
                                           : null,
                                     ),
-                                    child: Icon(
-                                      Icons.photo_camera_outlined,
-                                      size: 30,
-                                      color: Colors.white.withOpacity(0.6),
+                                    child: Center(
+                                      child: Icon(
+                                        Icons.photo_camera_outlined,
+                                        color: Colors.white.withOpacity(0.3),
+                                        size: 45,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
+                                Positioned(
+                                  left: 15,
+                                  top: 100,
+                                  child: InkWell(
+                                    customBorder: const CircleBorder(),
+                                    onTap: () => selectImage(),
+                                    child: Container(
+                                      width: context.screenWidth * .22,
+                                      height: context.screenWidth * .22,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          width: 2,
+                                          color: Colors.black.withOpacity(0.8),
+                                        ),
+                                        color: Colors.grey[800],
+                                        image: profileImage != null
+                                            ? DecorationImage(
+                                                fit: BoxFit.cover,
+                                                image: FileImage(
+                                                    profileImage!.value!),
+                                              )
+                                            : null,
+                                      ),
+                                      child: Icon(
+                                        Icons.photo_camera_outlined,
+                                        size: 30,
+                                        color: Colors.white.withOpacity(0.3),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Column(
+                              spacing: 10,
+                              children: [
+                                TextFormField(
+                                  focusNode: focusNode1,
+                                  controller: nameController,
+                                  decoration: textfieldDecoration(
+                                    hint: "Name",
+                                  ),
+                                  textInputAction: TextInputAction.next,
+                                  onFieldSubmitted: (_) {
+                                    focusNode1.unfocus();
+                                    FocusScope.of(context)
+                                        .requestFocus(focusNode2);
+                                  },
+                                  validator: (name) {
+                                    if (name!.isEmpty) {
+                                      return "name cannot be empty";
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                ),
+                                TextFormField(
+                                  focusNode: focusNode2,
+                                  controller: usernameController,
+                                  decoration: textfieldDecoration(
+                                    hint: "username",
+                                  ),
+                                  textInputAction: TextInputAction.next,
+                                  onFieldSubmitted: (_) {
+                                    focusNode2.unfocus();
+                                    FocusScope.of(context)
+                                        .requestFocus(focusNode3);
+                                  },
+                                  validator: (username) {
+                                    if (username!.isEmpty) {
+                                      return "username cannot be empty";
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                ),
+                                TextFormField(
+                                  focusNode: focusNode3,
+                                  controller: bioController,
+                                  decoration: textfieldDecoration(
+                                    hint: "Bio",
+                                  ),
+                                  maxLength: 300,
+                                  textInputAction: TextInputAction.done,
+                                  maxLines: 3,
+                                  onFieldSubmitted: (_) {
+                                    focusNode3.unfocus();
+                                  },
+                                  validator: (bio) {
+                                    if (bio!.isEmpty) {
+                                      return "bio cannot be empty";
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -252,7 +260,9 @@ class _UserDetailsState extends ConsumerState<UserDetails> {
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
                               try {
-                                ref.read(userDataProvider.notifier).saveUserData(
+                                ref
+                                    .read(userDataProvider.notifier)
+                                    .saveUserData(
                                       context,
                                       uid: ref.watch(uidProvider),
                                       email: ref
@@ -262,19 +272,18 @@ class _UserDetailsState extends ConsumerState<UserDetails> {
                                       name: nameController.text.trim(),
                                       username: usernameController.text.trim(),
                                       bio: bioController.text.trim(),
-                                      profilePath:
-                                          profileImage!.value! != null
-                                              ? profileImage!.value!.path
-                                              : "",
+                                      profilePath: profileImage!.value! != null
+                                          ? profileImage!.value!.path
+                                          : "",
                                       coverpath: coverImage!.value! != null
                                           ? coverImage!.value!.path
                                           : "",
                                     );
-                                // ignore: use_build_context_synchronously
-                                
-                              } catch (e) {
-                                log(e.toString());
+                                navigateAndReplace(context, XBottomNavBar());
+                              } on Exception catch (e) {
+                                // TODO
                               }
+                              // ignore: use_build_context_synchronously
                             } else {
                               setState(() {
                                 autovalidateMode = AutovalidateMode.always;

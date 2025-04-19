@@ -51,7 +51,7 @@ class _NotificationTileState extends ConsumerState<NotificationTile> {
                       log(widget.notificationModel.toString()),
                       navigateTo(
                         context,
-                        PostDetailsScreen(post: post, xUser: user),
+                        PostDetailCard(post: post),
                       ),
                     },
                     error: (_, __) =>

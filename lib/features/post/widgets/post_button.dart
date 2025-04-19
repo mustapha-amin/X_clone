@@ -45,7 +45,7 @@ class PostButton extends ConsumerWidget {
                             : images.value.map((e) => e!.path).toList(),
                         comments: [],
                         likesIDs: [],
-                        repostCount: 0,
+                        repostIDs: [],
                         timeCreated: DateTime.now(),
                       ),
                     );

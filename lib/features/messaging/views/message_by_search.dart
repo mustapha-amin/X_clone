@@ -38,12 +38,13 @@ class _MessageBySearchState extends ConsumerState<MessageBySearch> {
             ),
             child: TextField(
               controller: searchController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 hintText: 'Search user',
+                hintStyle: kTextStyle(17, ref, color: Colors.grey),
                 border: InputBorder.none,
                 prefixIcon: Icon(
                   Icons.search,
-                  size: 40,
+                  size: 30,
                 ),
               ),
               // onChanged: (query) {},
