@@ -18,7 +18,9 @@ import '../repository/message_repository.dart';
 
 class MessageUser extends ConsumerStatefulWidget {
   final XUser xUser;
-  const MessageUser({required this.xUser, super.key});
+  final bool inConversationList;
+  const MessageUser(
+      {required this.xUser, required this.inConversationList, super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _MessageUserState();
@@ -43,6 +45,7 @@ class _MessageUserState extends ConsumerState<MessageUser> {
 
   @override
   Widget build(BuildContext context) {
+    final currentUser = ref.watch(currentUserProvider);
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
@@ -97,16 +100,11 @@ class _MessageUserState extends ConsumerState<MessageUser> {
                           duration: const Duration(milliseconds: 300),
                           curve: Curves.bounceIn,
                         );
-                        ref.watch(currentUserProvider).when(
-                              data: (user) => !user!.conversationList!
-                                      .contains(widget.xUser.uid)
-                                  ? ref
-                                      .read(messageRepoProvider)
-                                      .addToConversationList(widget.xUser.uid)
-                                  : null,
-                              error: (_, __) => null,
-                              loading: () => null,
-                            );
+                        if (!widget.inConversationList) {
+                          ref.read(messageRepoProvider).addToConversationList(
+                              widget.xUser.uid,
+                              ref.read(currentUserProvider).value!.uid);
+                        }
                       },
                     ),
                   )

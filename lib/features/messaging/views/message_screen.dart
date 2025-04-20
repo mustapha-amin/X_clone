@@ -59,22 +59,22 @@ class _MessageScreenState extends ConsumerState<MessageScreen> {
           ],
         ),
         ref.watch(currentUserProvider).when(
-              data: (user) => user!.conversationList!.isEmpty
+              data: (currentUser) => currentUser!.conversationList!.isEmpty
                   ? const SliverToBoxAdapter(
                       child: Center(
                         child: Text("Start a conversation"),
                       ),
                     )
                   : SliverList.builder(
-                      itemCount: user.conversationList!.length,
+                      itemCount: currentUser.conversationList!.length,
                       itemBuilder: (context, index) {
-                        String id = user.conversationList![index];
+                        String id = currentUser.conversationList![index];
                         return ref.watch(xUserStreamProvider(id)).when(
                               data: (user) {
                                 return ListTile(
                                   onTap: () => navigateTo(
                                     context,
-                                    MessageUser(xUser: user),
+                                    MessageUser(xUser: user, inConversationList: user.conversationList!.contains(user.uid),),
                                   ),
                                   leading: CircleAvatar(
                                     backgroundImage:

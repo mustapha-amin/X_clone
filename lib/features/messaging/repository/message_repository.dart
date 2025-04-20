@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -53,12 +55,20 @@ class MessageRepository {
         .delete();
   }
 
-  Future<void> addToConversationList(String? id) async {
+  Future<void> addToConversationList(String? receiverId, String? senderId) async {
+  
     await firebaseFirestore
         .collection(FirebaseConstants.usersCollection)
-        .doc(id)
+        .doc(receiverId)
         .update({
-      'conversationList': FieldValue.arrayUnion([id]),
+      'conversationList': FieldValue.arrayUnion([senderId]),
+    });
+
+    await firebaseFirestore
+        .collection(FirebaseConstants.usersCollection)
+        .doc(senderId)
+        .update({
+      'conversationList': FieldValue.arrayUnion([receiverId]),
     });
   }
 }

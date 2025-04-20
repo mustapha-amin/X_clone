@@ -69,8 +69,7 @@ class PostService {
           imageUrls.add(downloadUrl);
         }
       }
-      PostModel updatedPost =
-          post.copyWith(imagesUrl: imageUrls, isRetweet: true);
+      PostModel updatedPost = post.copyWith(imagesUrl: imageUrls);
       await firebaseFirestore!
           .collection(FirebaseConstants.postsCollection)
           .doc(updatedPost.postID)
@@ -97,6 +96,7 @@ class PostService {
   Stream<List<PostModel>> fetchFeedPosts() {
     return firebaseFirestore!
         .collection(FirebaseConstants.postsCollection)
+        .orderBy("timeCreated", descending: true)
         .snapshots()
         .map((snap) =>
             snap.docs.map((e) => PostModel.fromJson(e.data())).toList());

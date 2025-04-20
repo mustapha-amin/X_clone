@@ -26,13 +26,15 @@ class _FollowingState extends ConsumerState<Following> {
               data: (posts) => ListView.builder(
                 itemCount: posts
                     .where(
-                      (post) => user
-                          .when(
-                            data: (user) => user!.following,
-                            error: (_, __) => null,
-                            loading: () => null,
-                          )!
-                          .contains(post.uid),
+                      (post) =>
+                          user
+                              .when(
+                                data: (user) => user!.following,
+                                error: (_, __) => null,
+                                loading: () => null,
+                              )!
+                              .contains(post.uid) &&
+                          !post.isRetweet!,
                     )
                     .length,
                 itemBuilder: (context, index) {

@@ -118,7 +118,10 @@ class UserProfileScreen extends ConsumerWidget {
                     : ListView.builder(
                         itemCount: user!.uid == ref.watch(uidProvider)
                             ? posts.where((post) => !post.isRetweet!).length
-                            : posts.length,
+                            : posts
+                                .where((post) =>
+                                    !(post.isRetweet! && post.uid == user!.uid))
+                                .length,
                         itemBuilder: (context, index) {
                           return Padding(
                             padding: const EdgeInsets.all(8.0),

@@ -7,7 +7,7 @@ class PostModel {
   String? text;
   List<String>? imagesUrl;
   List<CommentModel>? comments;
-  List<String>? repostIDs;
+  List<String>? repostIDs = [];
   List<String>? likesIDs;
   DateTime? timeCreated;
   bool? isRetweet = false;

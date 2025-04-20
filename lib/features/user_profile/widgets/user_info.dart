@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sizer/sizer.dart';
 import 'package:x_clone/core/core.dart';
+import 'package:x_clone/features/auth/controller/user_data_controller.dart';
 import 'package:x_clone/features/messaging/views/message_user.dart';
 import 'package:x_clone/features/notification/controller/notification_controller.dart';
 import 'package:x_clone/features/user_profile/views/edit_profile.dart';
@@ -37,6 +38,11 @@ class UserInfo extends ConsumerWidget {
                     context,
                     MessageUser(
                       xUser: user!,
+                      inConversationList: ref
+                          .watch(currentUserProvider)
+                          .value!
+                          .conversationList!
+                          .contains(user!.uid),
                     ),
                   );
                 },

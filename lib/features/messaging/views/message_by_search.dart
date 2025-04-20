@@ -62,7 +62,7 @@ class _MessageBySearchState extends ConsumerState<MessageBySearch> {
                               onTap: () {
                                 navigateTo(
                                   context,
-                                  MessageUser(xUser: following),
+                                  MessageUser(xUser: following, inConversationList: user.conversationList!.contains(following.uid)),
                                 );
                               },
                               leading: CircleAvatar(

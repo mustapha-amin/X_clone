@@ -16,22 +16,25 @@ class ForYou extends ConsumerStatefulWidget {
 class _ForYouState extends ConsumerState<ForYou> {
   @override
   Widget build(BuildContext context) {
+    final uid = ref.watch(uidProvider);
+
     return ref.watch(postsStreamProvider).when(
-          data: (posts) => ListView.builder(
-            itemCount: posts
-                .where((post) => !(post.isRetweet! &&
-                    post.repostIDs!.contains(ref.watch(uidProvider))))
-                .length,
-            itemBuilder: (context, index) {
-              return PostCard(
-                post: posts[index],
-              ).padAll(8);
-            },
-          ),
+          data: (posts) {
+            final filteredPosts = posts.where((post) {
+              final isRetweet = post.isRetweet ?? false;
+              final repostIDs = post.repostIDs ?? [];
+              return !(isRetweet && repostIDs.contains(uid));
+            }).toList();
+
+            return ListView.builder(
+              itemCount: filteredPosts.length,
+              itemBuilder: (context, index) {
+                return PostCard(post: filteredPosts[index]).padAll(8);
+              },
+            );
+          },
           error: (_, __) => const Center(child: Text("Error fetching posts")),
-          loading: () => const Center(
-            child: CircularProgressIndicator(),
-          ),
+          loading: () => const Center(child: CircularProgressIndicator()),
         );
   }
 }
